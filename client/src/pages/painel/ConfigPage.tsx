@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import {
   Save,
   Building,
@@ -10,7 +10,7 @@ import {
   Trash2,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import { supabase } from "@/lib/supabase";
+import { postgres } from "@/lib/postgres";
 
 interface Config {
   id?: string;
@@ -44,10 +44,10 @@ export default function ConfigPage() {
   }, []);
 
   async function fetchConfig() {
-    const { data, error } = await supabase.from("config").select("*").single();
+    const { data, error } = await postgres.from("config").select("*").single();
 
     if (error) {
-      toast.error("Erro ao carregar configurações");
+      toast.error("Erro ao carregar configuraÃ§Ãµes");
     } else {
       setConfig(data);
     }
@@ -70,7 +70,7 @@ export default function ConfigPage() {
       const fileName = `${field}-${Date.now()}.${ext}`;
 
       // upload
-      const { error: uploadError } = await supabase.storage
+      const { error: uploadError } = await postgres.storage
         .from("config-assets")
         .upload(fileName, file, { upsert: true });
 
@@ -81,8 +81,8 @@ export default function ConfigPage() {
         return;
       }
 
-      // URL pública
-      const { data: publicUrl } = supabase.storage
+      // URL pÃºblica
+      const { data: publicUrl } = postgres.storage
         .from("config-assets")
         .getPublicUrl(fileName);
 
@@ -104,7 +104,7 @@ export default function ConfigPage() {
   async function removeImage(field: keyof Config) {
     if (!config) return;
 
-    const { error } = await supabase
+    const { error } = await postgres
       .from("config")
       .update({ [field]: null })
       .eq("id", config.id);
@@ -115,7 +115,7 @@ export default function ConfigPage() {
     }
 
     setConfig({ ...config, [field]: null });
-    toast.success("Imagem removida! Voltou ao padrão.");
+    toast.success("Imagem removida! Voltou ao padrÃ£o.");
   }
 
   // ========================= SALVAR =========================
@@ -125,10 +125,10 @@ export default function ConfigPage() {
 
     setSaving(true);
 
-    const { error } = await supabase.from("config").upsert(config);
+    const { error } = await postgres.from("config").upsert(config);
 
     if (error) toast.error("Erro ao salvar");
-    else toast.success("Configurações atualizadas!");
+    else toast.success("ConfiguraÃ§Ãµes atualizadas!");
 
     setSaving(false);
   }
@@ -145,7 +145,7 @@ export default function ConfigPage() {
         <div className="bg-white rounded-xl shadow-sm p-6 space-y-4">
           <h3 className="text-xl font-semibold text-secondary-500 flex items-center gap-2">
             <Building className="h-5 w-5 text-primary-500" />
-            Informações da Empresa
+            InformaÃ§Ãµes da Empresa
           </h3>
 
           <div>
@@ -217,7 +217,7 @@ export default function ConfigPage() {
           <div>
             <label className="label flex items-center gap-2">
               <MapPin className="h-4 w-4" />
-              Endereço
+              EndereÃ§o
             </label>
             <input
               type="text"
@@ -253,7 +253,7 @@ export default function ConfigPage() {
           />
 
           <UploadItem
-            label="Imagem da seção Sobre"
+            label="Imagem da seÃ§Ã£o Sobre"
             current={config.imagem_sobre_url}
             field="imagem_sobre_url"
             uploading={uploading}
@@ -262,7 +262,7 @@ export default function ConfigPage() {
           />
 
           <UploadItem
-            label="Banner da Página Inicial"
+            label="Banner da PÃ¡gina Inicial"
             current={config.imagem_banner_index_url}
             field="imagem_banner_index_url"
             uploading={uploading}
@@ -309,7 +309,7 @@ export default function ConfigPage() {
             className="btn-primary flex items-center gap-2"
           >
             <Save className="h-5 w-5" />
-            {saving ? "Salvando..." : "Salvar Configurações"}
+            {saving ? "Salvando..." : "Salvar ConfiguraÃ§Ãµes"}
           </button>
         </div>
       </form>
@@ -365,10 +365,11 @@ function UploadItem({
             className="flex items-center gap-2 text-red-500 text-sm underline"
           >
             <Trash2 className="h-4 w-4" />
-            Remover e voltar ao padrão
+            Remover e voltar ao padrÃ£o
           </button>
         </div>
       )}
     </div>
   );
 }
+

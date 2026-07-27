@@ -1,13 +1,13 @@
-import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+﻿import { postgres, isDatabaseConfigured } from "@/lib/postgres";
 import { Agendamento, Funcionario } from "./agendamentos.types";
 
 /* =========================
-   Funcionários
+   FuncionÃ¡rios
 ========================= */
 export async function fetchFuncionarios(): Promise<Funcionario[]> {
-  if (!isSupabaseConfigured) return [];
+  if (!isDatabaseConfigured) return [];
 
-  const { data } = await supabase
+  const { data } = await postgres
     .from("funcionarios")
     .select("id, usuario:usuarios(nome)");
 
@@ -25,9 +25,9 @@ export async function fetchFuncionarios(): Promise<Funcionario[]> {
    Clientes
 ========================= */
 export async function fetchClientes(): Promise<{ id: string; nome: string }[]> {
-  if (!isSupabaseConfigured) return [];
+  if (!isDatabaseConfigured) return [];
 
-  const { data } = await supabase
+  const { data } = await postgres
     .from("usuarios")
     .select("id, nome")
     .eq("nivel", "Cliente")
@@ -106,7 +106,7 @@ interface FetchAgendamentosParams {
   pagina: number;
   porPagina?: number;
 
-  // ✅ ADICIONADOS
+  // âœ… ADICIONADOS
   dataInicio?: string;
   dataFim?: string;
 }
@@ -124,12 +124,12 @@ export async function fetchAgendamentos({
   dados: Agendamento[];
   total: number;
 }> {
-  if (!isSupabaseConfigured) return { dados: [], total: 0 };
+  if (!isDatabaseConfigured) return { dados: [], total: 0 };
 
-  // ✅ AGORA O CUSTOM FUNCIONA
+  // âœ… AGORA O CUSTOM FUNCIONA
   const { inicio, fim } = calcularIntervalo(periodo, dataInicio, dataFim);
 
-  let query = supabase
+  let query = postgres
     .from("agendamentos")
     .select(
       `
@@ -164,7 +164,7 @@ export async function fetchAgendamentos({
   // Buscar clientes
   const clienteIds = raw.map((a: any) => a.cliente_id);
 
-  const { data: clientes } = await supabase
+  const { data: clientes } = await postgres
     .from("usuarios")
     .select("id, nome, telefone")
     .in("id", clienteIds);
@@ -216,5 +216,6 @@ export async function fetchAgendamentos({
    Status
 ========================= */
 export async function updateStatusAgendamento(id: string, status: string) {
-  await supabase.from("agendamentos").update({ status }).eq("id", id);
+  await postgres.from("agendamentos").update({ status }).eq("id", id);
 }
+

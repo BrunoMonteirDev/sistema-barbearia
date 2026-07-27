@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import {
     Home,
@@ -13,7 +13,7 @@ import {
     ChevronDown,
     LogOut,
 } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { postgres } from "@/lib/postgres";
 
 interface HistoricoItem {
     id: string;
@@ -30,12 +30,12 @@ export default function HistoricoCortesPage() {
     const [historico, setHistorico] = useState<HistoricoItem[]>([]);
 
     const menuItems = [
-        { href: "/minha-conta", icon: Home, label: "Visão Geral", exact: true },
+        { href: "/minha-conta", icon: Home, label: "VisÃ£o Geral", exact: true },
         { href: "/minha-conta/agendamentos", icon: Calendar, label: "Agendamentos" },
         { href: "/minha-conta/dados", icon: User, label: "Meus Dados" },
         { href: "/minha-conta/pagamentos", icon: CreditCard, label: "Pagamentos" },
         { href: "/minha-conta/assinaturas", icon: FileText, label: "Assinaturas" },
-        { href: "/minha-conta/historico", icon: Clock, label: "Histórico" },
+        { href: "/minha-conta/historico", icon: Clock, label: "HistÃ³rico" },
     ];
 
     useEffect(() => {
@@ -44,10 +44,10 @@ export default function HistoricoCortesPage() {
     }, []);
 
     async function carregarUsuario() {
-        const user = (await supabase.auth.getUser()).data.user;
+        const user = (await postgres.auth.getUser()).data.user;
         if (!user) return;
 
-        const { data } = await supabase
+        const { data } = await postgres
             .from("usuarios")
             .select("nome, email, foto")
             .eq("id", user.id)
@@ -57,10 +57,10 @@ export default function HistoricoCortesPage() {
     }
 
     async function carregarHistorico() {
-        const user = (await supabase.auth.getUser()).data.user;
+        const user = (await postgres.auth.getUser()).data.user;
         if (!user) return;
 
-        const { data } = await supabase
+        const { data } = await postgres
             .from("agendamentos")
             .select("id, data, hora, servico_id")
             .eq("cliente_id", user.id)
@@ -71,7 +71,7 @@ export default function HistoricoCortesPage() {
     }
 
     async function handleLogout() {
-        await supabase.auth.signOut();
+        await postgres.auth.signOut();
         setLocation("/login");
     }
 
@@ -132,7 +132,7 @@ export default function HistoricoCortesPage() {
                 </div>
             </aside>
 
-            {/* ÁREA PRINCIPAL */}
+            {/* ÃREA PRINCIPAL */}
             <div
                 className={`flex-1 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-20"
                     }`}
@@ -140,7 +140,7 @@ export default function HistoricoCortesPage() {
                 {/* TOPO */}
                 <header className="bg-white h-16 shadow-sm flex items-center justify-between px-6 sticky top-0 z-40">
                     <h1 className="text-xl font-semibold text-secondary-500">
-                        Histórico de Cortes
+                        HistÃ³rico de Cortes
                     </h1>
 
                     <div className="flex items-center gap-4">
@@ -158,7 +158,7 @@ export default function HistoricoCortesPage() {
                                     <User className="h-4 w-4 text-white" />
                                 </div>
                                 <span className="font-medium text-gray-700">
-                                    {userData?.nome || "Usuário"}
+                                    {userData?.nome || "UsuÃ¡rio"}
                                 </span>
                                 <ChevronDown className="h-4 w-4 text-gray-500" />
                             </button>
@@ -186,7 +186,7 @@ export default function HistoricoCortesPage() {
                     </div>
                 </header>
 
-                {/* CONTEÚDO */}
+                {/* CONTEÃšDO */}
                 <main className="p-6">
                     <div className="bg-white rounded-xl shadow-sm p-6 space-y-4 max-w-3xl">
 
@@ -196,7 +196,7 @@ export default function HistoricoCortesPage() {
                                 className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
                             >
                                 <p className="font-semibold text-secondary-500">
-                                    {h.data} — {h.hora}
+                                    {h.data} â€” {h.hora}
                                 </p>
                             </div>
                         ))}
@@ -213,3 +213,4 @@ export default function HistoricoCortesPage() {
         </div>
     );
 }
+

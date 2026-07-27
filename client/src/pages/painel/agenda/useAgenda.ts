@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+﻿import { useEffect, useState } from "react";
+import { postgres, isDatabaseConfigured } from "@/lib/postgres";
 
 export interface Agendamento {
   id: string;
@@ -34,16 +34,16 @@ export function useAgenda() {
   const [totalAgendamentos, setTotalAgendamentos] = useState(0);
 
   /* =============================
-      Carregar funcionários
+      Carregar funcionÃ¡rios
   ============================== */
   useEffect(() => {
     fetchFuncionarios();
   }, []);
 
   async function fetchFuncionarios() {
-    if (!isSupabaseConfigured) return;
+    if (!isDatabaseConfigured) return;
 
-    const { data } = await supabase
+    const { data } = await postgres
       .from("funcionarios")
       .select("id, usuario:usuarios(nome)");
 
@@ -148,11 +148,11 @@ export function useAgenda() {
   ]);
 
   async function fetchAgendamentos() {
-    if (!isSupabaseConfigured) return;
+    if (!isDatabaseConfigured) return;
 
     const { inicio, fim } = calcularIntervalo();
 
-    let query = supabase
+    let query = postgres
       .from("agendamentos")
       .select(
         `
@@ -183,7 +183,7 @@ export function useAgenda() {
 
     const ids = raw.map((a: any) => a.cliente_id);
 
-    const { data: clientes } = await supabase
+    const { data: clientes } = await postgres
       .from("usuarios")
       .select("id, nome, telefone")
       .in("id", ids);
@@ -232,7 +232,7 @@ export function useAgenda() {
       Update Status
   ============================== */
   async function updateStatus(id: string, status: string) {
-    await supabase.from("agendamentos").update({ status }).eq("id", id);
+    await postgres.from("agendamentos").update({ status }).eq("id", id);
     fetchAgendamentos();
   }
 
@@ -278,8 +278,9 @@ export function useAgenda() {
     setDataFim,
     setPagina,
 
-    /* ações */
+    /* aÃ§Ãµes */
     updateStatus,
     getBadge,
   };
 }
+

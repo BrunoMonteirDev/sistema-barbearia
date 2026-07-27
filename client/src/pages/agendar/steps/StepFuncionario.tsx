@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+﻿import { useState, useEffect } from "react";
+import { postgres } from "@/lib/postgres";
 
 interface Props {
   formData: any;
@@ -17,7 +17,7 @@ export default function StepFuncionario({
   const [funcionarios, setFuncionarios] = useState<any[]>([]);
 
   useEffect(() => {
-    supabase
+    postgres
       .from("funcionarios")
       .select(`id,horarios,usuario:usuarios!funcionarios_usuario_id_fkey (nome, foto)`)
       .eq("usuario.nivel", "Funcionario")
@@ -62,9 +62,10 @@ export default function StepFuncionario({
           onClick={nextStep}
           className="btn-primary"
         >
-          Próximo
+          PrÃ³ximo
         </button>
       </div>
     </div>
   );
 }
+

@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Usuario {
+  id         String   @id @default(uuid())
+  nome       String
+  email      String   @unique
+  telefone   String?
+  dataNascimento DateTime? @map("data_nascimento")
+  senhaHash  String?  @map("senha_hash")
+  nivel      String   @default("Cliente")
+  ativo      Boolean  @default(true)
+  atendimento Boolean @default(false)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  agendamentos Agendamento[]
+
+  @@map("usuarios")
+}
+
+model Profissional {
+  id            String   @id @default(uuid())
+  nome          String
+  telefone      String?
+  email         String?  @unique
+  especialidade String?
+  ativo         Boolean  @default(true)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  agendamentos  Agendamento[]
+
+  @@map("profissionais")
+}
+
+model Servico {
+  id           String   @id @default(uuid())
+  nome         String
+  descricao    String?
+  duracao      Int
+  preco        Decimal  @db.Decimal(10, 2)
+  ativo        Boolean  @default(true)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  agendamentos Agendamento[]
+
+  @@map("servicos")
+}
+
+model Agendamento {
+  id               String      @id @default(uuid())
+  usuarioId        String      @map("usuario_id")
+  profissionalId   String      @map("profissional_id")
+  servicoId        String      @map("servico_id")
+  data             String
+  hora             String
+  status           String      @default("PENDENTE")
+  observacao       String?
+  createdAt        DateTime    @default(now()) @map("created_at")
+  updatedAt        DateTime    @updatedAt @map("updated_at")
+  usuario          Usuario     @relation(fields: [usuarioId], references: [id])
+  profissional     Profissional @relation(fields: [profissionalId], references: [id])
+  servico          Servico     @relation(fields: [servicoId], references: [id])
+
+  @@unique([profissionalId, data, hora])
+  @@map("agendamentos")
+}
+
+model Configuracao {
+  id                  String   @id @default(uuid())
+  nome                String   @default("Barbearia")
+  email               String   @default("contato@barbearia.com")
+  telefoneWhatsApp    String?  @map("telefone_whatsapp")
+  telefoneFixo        String?  @map("telefone_fixo")
+  endereco            String?
+  logo                String?
+  instagram           String?
+  tipoComissao        String?  @map("tipo_comissao")
+  textoRodape         String?  @map("texto_rodape")
+  imgBanner           String?  @map("img_banner")
+  quantidadeCartoes   Int?     @map("quantidade_cartoes")
+  textoFidelidade     String?  @map("texto_fidelidade")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  @@map("config")
+}

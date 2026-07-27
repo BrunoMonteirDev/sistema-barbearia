@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+﻿import { useEffect, useState } from "react";
+import { postgres } from "@/lib/postgres";
 import toast from "react-hot-toast";
 
 interface MetodoPagamento {
@@ -13,11 +13,11 @@ interface MetodoPagamento {
 
 const METODOS_PREDEFINIDOS = [
     "Pix",
-    "Cartão de Crédito",
-    "Cartão de Débito",
+    "CartÃ£o de CrÃ©dito",
+    "CartÃ£o de DÃ©bito",
     "Dinheiro",
     "Boleto",
-    "Transferência",
+    "TransferÃªncia",
 ];
 
 export default function MetodosPagamentoAdminPage() {
@@ -37,7 +37,7 @@ export default function MetodosPagamentoAdminPage() {
     }, []);
 
     async function carregar() {
-        const { data } = await supabase
+        const { data } = await postgres
             .from("metodos_pagamento")
             .select("*")
             .order("created_at", { ascending: false });
@@ -46,14 +46,14 @@ export default function MetodosPagamentoAdminPage() {
     }
 
     async function criar() {
-        if (!novo.tipo) return toast.error("Selecione um método");
+        if (!novo.tipo) return toast.error("Selecione um mÃ©todo");
 
         const existe = metodos.find((m) => m.tipo === novo.tipo);
-        if (existe) return toast.error("Esse método já foi cadastrado");
+        if (existe) return toast.error("Esse mÃ©todo jÃ¡ foi cadastrado");
 
         setLoading(true);
 
-        const { error } = await supabase.from("metodos_pagamento").insert({
+        const { error } = await postgres.from("metodos_pagamento").insert({
             tipo: novo.tipo,
             apelido: novo.apelido || null,
             bandeira: novo.bandeira || null,
@@ -65,7 +65,7 @@ export default function MetodosPagamentoAdminPage() {
 
         if (error) return toast.error("Erro ao cadastrar");
 
-        toast.success("Método cadastrado!");
+        toast.success("MÃ©todo cadastrado!");
 
         setNovo({
             tipo: "",
@@ -78,7 +78,7 @@ export default function MetodosPagamentoAdminPage() {
     }
 
     async function toggleAtivo(id: string, ativo: boolean) {
-        await supabase
+        await postgres
             .from("metodos_pagamento")
             .update({ ativo: !ativo })
             .eq("id", id);
@@ -87,25 +87,25 @@ export default function MetodosPagamentoAdminPage() {
     }
 
     async function remover(id: string) {
-        if (!confirm("Deseja remover este método?")) return;
+        if (!confirm("Deseja remover este mÃ©todo?")) return;
 
-        await supabase.from("metodos_pagamento").delete().eq("id", id);
+        await postgres.from("metodos_pagamento").delete().eq("id", id);
         toast.success("Removido");
         carregar();
     }
 
     const isCartao =
-        novo.tipo === "Cartão de Crédito" || novo.tipo === "Cartão de Débito";
+        novo.tipo === "CartÃ£o de CrÃ©dito" || novo.tipo === "CartÃ£o de DÃ©bito";
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 p-8">
             <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-xl">
 
                 <h2 className="text-2xl font-semibold text-center mb-8">
-                    Gerenciar Métodos de Pagamento
+                    Gerenciar MÃ©todos de Pagamento
                 </h2>
 
-                {/* BOTÕES PRINCIPAIS */}
+                {/* BOTÃ•ES PRINCIPAIS */}
                 <div className="flex gap-4 mb-8">
                     <button
                         onClick={() => setMostrarLista(false)}
@@ -147,7 +147,7 @@ export default function MetodosPagamentoAdminPage() {
                                     })
                                 }
                             >
-                                <option value="">Selecione um método</option>
+                                <option value="">Selecione um mÃ©todo</option>
                                 {METODOS_PREDEFINIDOS.map((tipo) => (
                                     <option key={tipo} value={tipo}>
                                         {tipo}
@@ -156,7 +156,7 @@ export default function MetodosPagamentoAdminPage() {
                             </select>
                         </div>
 
-                        {/* CAMPOS EXTRAS PARA CARTÃO */}
+                        {/* CAMPOS EXTRAS PARA CARTÃƒO */}
                         {isCartao && (
                             <div className="grid grid-cols-2 gap-4">
                                 <input
@@ -179,7 +179,7 @@ export default function MetodosPagamentoAdminPage() {
 
                                 <input
                                     className="border p-2 rounded col-span-2"
-                                    placeholder="Últimos 4 dígitos"
+                                    placeholder="Ãšltimos 4 dÃ­gitos"
                                     value={novo.ultimos_digitos}
                                     onChange={(e) =>
                                         setNovo({ ...novo, ultimos_digitos: e.target.value })
@@ -193,7 +193,7 @@ export default function MetodosPagamentoAdminPage() {
                             disabled={loading}
                             className="w-full py-3 rounded-lg bg-primary-500 text-white disabled:opacity-50"
                         >
-                            {loading ? "Salvando..." : "Adicionar Método"}
+                            {loading ? "Salvando..." : "Adicionar MÃ©todo"}
                         </button>
                     </div>
                 )}
@@ -237,7 +237,7 @@ export default function MetodosPagamentoAdminPage() {
 
                         {metodos.length === 0 && (
                             <p className="text-gray-500 text-center">
-                                Nenhum método cadastrado ainda.
+                                Nenhum mÃ©todo cadastrado ainda.
                             </p>
                         )}
                     </div>
@@ -246,3 +246,4 @@ export default function MetodosPagamentoAdminPage() {
         </div>
     );
 }
+

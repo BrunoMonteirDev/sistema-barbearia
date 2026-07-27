@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { User, Phone } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { postgres } from "@/lib/postgres";
 import toast from "react-hot-toast";
 
 export default function CompletarCadastroPage() {
@@ -14,7 +14,7 @@ export default function CompletarCadastroPage() {
         telefone: "",
     });
 
-    // Máscara (44) 9 0000-0000
+    // MÃ¡scara (44) 9 0000-0000
     function handleTelefoneChange(e: React.ChangeEvent<HTMLInputElement>) {
         let value = e.target.value.replace(/\D/g, "");
         if (value.length > 11) value = value.slice(0, 11);
@@ -39,15 +39,15 @@ export default function CompletarCadastroPage() {
     }, []);
 
     async function carregarDados() {
-        const { data } = await supabase.auth.getUser();
+        const { data } = await postgres.auth.getUser();
         const user = data.user;
         if (!user) {
-            toast.error("Você precisa estar logado.");
+            toast.error("VocÃª precisa estar logado.");
             setLocation("/login");
             return;
         }
 
-        const { data: perfil } = await supabase
+        const { data: perfil } = await postgres
             .from("usuarios")
             .select("nome, telefone")
             .eq("id", user.id)
@@ -58,7 +58,7 @@ export default function CompletarCadastroPage() {
                 perfil?.nome ||
                 (user.user_metadata?.nome as string) ||
                 (user.user_metadata?.full_name as string) ||
-                "Usuário",
+                "UsuÃ¡rio",
             telefone: perfil?.telefone
                 ? formatTelefone(perfil.telefone)
                 : "",
@@ -82,10 +82,10 @@ export default function CompletarCadastroPage() {
         e.preventDefault();
         setSaving(true);
 
-        const { data } = await supabase.auth.getUser();
+        const { data } = await postgres.auth.getUser();
         const user = data.user;
         if (!user) {
-            toast.error("Sessão expirada. Faça login novamente.");
+            toast.error("SessÃ£o expirada. FaÃ§a login novamente.");
             setLocation("/login");
             return;
         }
@@ -93,7 +93,7 @@ export default function CompletarCadastroPage() {
         try {
             const telefoneLimpo = formData.telefone.replace(/\D/g, "");
 
-            const { error } = await supabase
+            const { error } = await postgres
                 .from("usuarios")
                 .update({
                     nome: formData.nome,
@@ -110,8 +110,8 @@ export default function CompletarCadastroPage() {
 
             toast.success("Cadastro atualizado com sucesso!");
 
-            // buscar nível para decidir para onde mandar
-            const { data: perfil } = await supabase
+            // buscar nÃ­vel para decidir para onde mandar
+            const { data: perfil } = await postgres
                 .from("usuarios")
                 .select("nivel")
                 .eq("id", user.id)
@@ -194,3 +194,4 @@ export default function CompletarCadastroPage() {
         </div>
     );
 }
+

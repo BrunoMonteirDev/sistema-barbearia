@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import {
     Home,
@@ -13,7 +13,7 @@ import {
     ChevronDown,
     LogOut,
 } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { postgres } from "@/lib/postgres";
 import toast from "react-hot-toast";
 
 interface Agendamento {
@@ -34,12 +34,12 @@ export default function MeusAgendamentosPage() {
     const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
 
     const menuItems = [
-        { href: "/minha-conta", icon: Home, label: "Visão Geral", exact: true },
+        { href: "/minha-conta", icon: Home, label: "VisÃ£o Geral", exact: true },
         { href: "/minha-conta/agendamentos", icon: Calendar, label: "Agendamentos" },
         { href: "/minha-conta/dados", icon: User, label: "Meus Dados" },
         { href: "/minha-conta/pagamentos", icon: CreditCard, label: "Pagamentos" },
         { href: "/minha-conta/assinaturas", icon: FileText, label: "Assinaturas" },
-        { href: "/minha-conta/historico", icon: Clock, label: "Histórico" },
+        { href: "/minha-conta/historico", icon: Clock, label: "HistÃ³rico" },
     ];
 
     useEffect(() => {
@@ -48,10 +48,10 @@ export default function MeusAgendamentosPage() {
     }, []);
 
     async function carregarUsuario() {
-        const user = (await supabase.auth.getUser()).data.user;
+        const user = (await postgres.auth.getUser()).data.user;
         if (!user) return;
 
-        const { data } = await supabase
+        const { data } = await postgres
             .from("usuarios")
             .select("nome, email, foto")
             .eq("id", user.id)
@@ -60,12 +60,12 @@ export default function MeusAgendamentosPage() {
         setUserData(data);
     }
 
-    // ✅ BUSCA AGENDAMENTOS COM JOIN CORRETO
+    // âœ… BUSCA AGENDAMENTOS COM JOIN CORRETO
     async function carregarAgendamentos() {
-        const user = (await supabase.auth.getUser()).data.user;
+        const user = (await postgres.auth.getUser()).data.user;
         if (!user) return;
 
-        const { data, error } = await supabase
+        const { data, error } = await postgres
             .from("agendamentos")
             .select(`
         id,
@@ -105,10 +105,10 @@ export default function MeusAgendamentosPage() {
     async function cancelar(id: string, dataStr: string, hora: string) {
         const ts = new Date(`${dataStr}T${hora}:00`).getTime();
         if (ts - Date.now() < 60 * 60 * 1000) {
-            return toast.error("Cancelamento permitido apenas com 1 hora de antecedência.");
+            return toast.error("Cancelamento permitido apenas com 1 hora de antecedÃªncia.");
         }
 
-        await supabase
+        await postgres
             .from("agendamentos")
             .update({ status: "Cancelado" })
             .eq("id", id);
@@ -118,7 +118,7 @@ export default function MeusAgendamentosPage() {
     }
 
     async function handleLogout() {
-        await supabase.auth.signOut();
+        await postgres.auth.signOut();
         setLocation("/login");
     }
 
@@ -176,7 +176,7 @@ export default function MeusAgendamentosPage() {
                 </div>
             </aside>
 
-            {/* ÁREA PRINCIPAL */}
+            {/* ÃREA PRINCIPAL */}
             <div className={`flex-1 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-20"}`}>
                 <header className="bg-white h-16 shadow-sm flex items-center justify-between px-6 sticky top-0 z-40">
                     <h1 className="text-xl font-semibold text-secondary-500">
@@ -193,11 +193,11 @@ export default function MeusAgendamentosPage() {
                             >
                                 <div>
                                     <p className="font-semibold text-secondary-500">
-                                        {a.servicos?.[0]?.nome || "Serviço removido"}
+                                        {a.servicos?.[0]?.nome || "ServiÃ§o removido"}
                                     </p>
 
                                     <p className="text-sm text-gray-600">
-                                        {a.data} — {a.hora}
+                                        {a.data} â€” {a.hora}
                                     </p>
 
                                     <span
@@ -222,7 +222,7 @@ export default function MeusAgendamentosPage() {
 
                         {agendamentos.length === 0 && (
                             <p className="text-gray-500">
-                                Você ainda não possui agendamentos.
+                                VocÃª ainda nÃ£o possui agendamentos.
                             </p>
                         )}
                     </div>
@@ -231,3 +231,4 @@ export default function MeusAgendamentosPage() {
         </div>
     );
 }
+

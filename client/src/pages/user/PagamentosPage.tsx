@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import {
     Home,
@@ -13,7 +13,7 @@ import {
     ChevronDown,
     LogOut,
 } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { postgres } from "@/lib/postgres";
 
 export default function PagamentosPage() {
     const [location, setLocation] = useLocation();
@@ -22,12 +22,12 @@ export default function PagamentosPage() {
     const [userData, setUserData] = useState<any>(null);
 
     const menuItems = [
-        { href: "/minha-conta", icon: Home, label: "Visão Geral", exact: true },
+        { href: "/minha-conta", icon: Home, label: "VisÃ£o Geral", exact: true },
         { href: "/minha-conta/agendamentos", icon: Calendar, label: "Agendamentos" },
         { href: "/minha-conta/dados", icon: User, label: "Meus Dados" },
         { href: "/minha-conta/pagamentos", icon: CreditCard, label: "Pagamentos" },
         { href: "/minha-conta/assinaturas", icon: FileText, label: "Assinaturas" },
-        { href: "/minha-conta/historico", icon: Clock, label: "Histórico" },
+        { href: "/minha-conta/historico", icon: Clock, label: "HistÃ³rico" },
     ];
 
     useEffect(() => {
@@ -35,10 +35,10 @@ export default function PagamentosPage() {
     }, []);
 
     async function carregarUsuario() {
-        const user = (await supabase.auth.getUser()).data.user;
+        const user = (await postgres.auth.getUser()).data.user;
         if (!user) return;
 
-        const { data } = await supabase
+        const { data } = await postgres
             .from("usuarios")
             .select("nome, email, foto")
             .eq("id", user.id)
@@ -48,7 +48,7 @@ export default function PagamentosPage() {
     }
 
     async function handleLogout() {
-        await supabase.auth.signOut();
+        await postgres.auth.signOut();
         setLocation("/login");
     }
 
@@ -109,7 +109,7 @@ export default function PagamentosPage() {
                 </div>
             </aside>
 
-            {/* ÁREA PRINCIPAL */}
+            {/* ÃREA PRINCIPAL */}
             <div
                 className={`flex-1 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-20"
                     }`}
@@ -135,7 +135,7 @@ export default function PagamentosPage() {
                                     <User className="h-4 w-4 text-white" />
                                 </div>
                                 <span className="font-medium text-gray-700">
-                                    {userData?.nome || "Usuário"}
+                                    {userData?.nome || "UsuÃ¡rio"}
                                 </span>
                                 <ChevronDown className="h-4 w-4 text-gray-500" />
                             </button>
@@ -163,19 +163,19 @@ export default function PagamentosPage() {
                     </div>
                 </header>
 
-                {/* CONTEÚDO */}
+                {/* CONTEÃšDO */}
                 <main className="p-6">
                     <div className="bg-white rounded-xl shadow-sm p-6 space-y-4 max-w-2xl">
 
                         <p className="text-gray-600">
-                            Em breve você poderá cadastrar cartões para pagamento rápido.
+                            Em breve vocÃª poderÃ¡ cadastrar cartÃµes para pagamento rÃ¡pido.
                         </p>
 
                         <button
                             className="px-6 py-2 bg-gray-300 text-gray-600 rounded-lg cursor-not-allowed"
                             disabled
                         >
-                            Adicionar Cartão (em breve)
+                            Adicionar CartÃ£o (em breve)
                         </button>
 
                     </div>
@@ -184,3 +184,4 @@ export default function PagamentosPage() {
         </div>
     );
 }
+

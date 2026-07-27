@@ -1,4 +1,4 @@
-import { useState } from "react"
+﻿import { useState } from "react"
 import { ModalAgendamentoBase } from "./ModalAgendamentoBase"
 
 import { EtapaCliente } from "./etapas/EtapaCliente"
@@ -31,7 +31,7 @@ export function ModalNovoAgendamento({
     clientes,
     funcionarios,
 }: Props) {
-    // 🔒 hooks SEMPRE no topo
+    // ðŸ”’ hooks SEMPRE no topo
     const [step, setStep] = useState(1)
 
     const [clienteId, setClienteId] = useState("")
@@ -39,7 +39,7 @@ export function ModalNovoAgendamento({
     const [data, setData] = useState("")
     const [hora, setHora] = useState("")
 
-    // retorno condicional só depois dos hooks
+    // retorno condicional sÃ³ depois dos hooks
     if (!aberto) return null
 
     return (
@@ -50,7 +50,7 @@ export function ModalNovoAgendamento({
             onClose={onClose}
         >
             {/* =======================
-          ETAPA 1 — CLIENTE
+          ETAPA 1 â€” CLIENTE
       ======================= */}
             {step === 1 && (
                 <EtapaCliente
@@ -64,7 +64,7 @@ export function ModalNovoAgendamento({
             )}
 
             {/* =======================
-          ETAPA 2 — FUNCIONÁRIO
+          ETAPA 2 â€” FUNCIONÃRIO
       ======================= */}
             {step === 2 && (
                 <EtapaFuncionario
@@ -78,7 +78,7 @@ export function ModalNovoAgendamento({
             )}
 
             {/* =======================
-          ETAPA 3 — DATA
+          ETAPA 3 â€” DATA
       ======================= */}
             {step === 3 && (
                 <EtapaData
@@ -92,7 +92,7 @@ export function ModalNovoAgendamento({
             )}
 
             {/* =======================
-          ETAPA 4 — HORÁRIO
+          ETAPA 4 â€” HORÃRIO
       ======================= */}
             {step === 4 && (
                 <EtapaHorario
@@ -102,8 +102,8 @@ export function ModalNovoAgendamento({
                     onSelect={(h: string) => {
                         setHora(h)
 
-                        // 👉 aqui depois entra o INSERT no Supabase
-                        // supabase.from("agendamentos").insert(...)
+                        // 👉 aqui depois entra o INSERT no backend PostgreSQL
+                        // postgres.from("agendamentos").insert(...)
 
                         onClose()
                     }}
@@ -112,3 +112,4 @@ export function ModalNovoAgendamento({
         </ModalAgendamentoBase>
     )
 }
+

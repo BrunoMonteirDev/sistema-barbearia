@@ -1,0 +1,24 @@
+export type Nivel = 'Administrador' | 'Cliente'
+export interface Usuario { id: string; nome: string; email: string; telefone?: string | null; dataNascimento?: string | null; nivel: Nivel; ativo?: boolean }
+export interface Servico { id: string; nome: string; descricao?: string | null; preco: number; duracao: number; ativo: boolean }
+export interface Profissional { id: string; nome: string; telefone?: string | null; email?: string | null; especialidade?: string | null; ativo: boolean }
+export interface Agendamento { id: string; data: string; hora: string; status: string; observacao?: string | null; usuario?: Usuario; profissional?: Profissional; servico?: Servico }
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'
+const tokenKey = 'barbearia.token'
+export const authStorage = { get: () => localStorage.getItem(tokenKey), set: (token: string) => localStorage.setItem(tokenKey, token), clear: () => localStorage.removeItem(tokenKey) }
+
+async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+  const response = await fetch(`${API_BASE_URL}${path}`, { ...options, headers: { 'Content-Type': 'application/json', ...(authStorage.get() ? { Authorization: `Bearer ${authStorage.get()}` } : {}), ...options.headers } })
+  const data = await response.json().catch(() => ({}))
+  if (!response.ok) throw new Error(data.error || 'Não foi possível concluir a solicitação.')
+  return data as T
+}
+const body = (method: string, value?: unknown) => ({ method, body: value === undefined ? undefined : JSON.stringify(value) })
+export const api = {
+  auth: { login: (value: { email: string; password: string }) => request<{ token: string; user: Usuario }>('/auth/login', body('POST', value)), register: (value: { nome: string; email: string; password: string; telefone?: string }) => request<{ token: string; user: Usuario }>('/auth/register', body('POST', value)) },
+  usuarios: { me: () => request<Usuario>('/usuarios/me'), updateMe: (value: Partial<Usuario>) => request<Usuario>('/usuarios/me', body('PUT', value)), list: () => request<Usuario[]>('/usuarios'), create: (value: Partial<Usuario> & { senha?: string }) => request<Usuario>('/usuarios', body('POST', value)), update: (id: string, value: Partial<Usuario>) => request<Usuario>(`/usuarios/${id}`, body('PUT', value)), remove: (id: string) => request(`/usuarios/${id}`, body('DELETE')) },
+  servicos: { list: () => request<Servico[]>('/servicos'), create: (value: Partial<Servico>) => request<Servico>('/servicos', body('POST', value)), update: (id: string, value: Partial<Servico>) => request<Servico>(`/servicos/${id}`, body('PUT', value)), remove: (id: string) => request(`/servicos/${id}`, body('DELETE')) },
+  profissionais: { list: () => request<Profissional[]>('/profissionais'), listAdmin: () => request<Profissional[]>('/profissionais/admin'), create: (value: Pick<Profissional, 'nome' | 'telefone' | 'email' | 'ativo'>) => request<Profissional>('/profissionais', body('POST', value)), update: (id: string, value: Pick<Profissional, 'nome' | 'telefone' | 'email' | 'ativo'>) => request<Profissional>(`/profissionais/${id}`, body('PUT', value)), remove: (id: string) => request<Profissional>(`/profissionais/${id}`, body('DELETE')) },
+  agendamentos: { list: () => request<Agendamento[]>('/agendamentos'), create: (value: { usuarioId?: string; profissionalId: string; servicoId: string; data: string; hora: string; observacao?: string }) => request<Agendamento>('/agendamentos', body('POST', value)), update: (id: string, value: Partial<{ profissionalId: string; servicoId: string; data: string; hora: string; status: string; observacao: string }>) => request<Agendamento>(`/agendamentos/${id}`, body('PUT', value)), remove: (id: string) => request<void>(`/agendamentos/${id}`, body('DELETE')), cancel: (id: string) => request<Agendamento>(`/agendamentos/${id}/cancelar`, body('PATCH')), status: (id: string, status: string) => request<Agendamento>(`/agendamentos/${id}/status`, body('PATCH', { status })), disponibilidade: (profissionalId: string, data: string) => request<{ ocupados: string[] }>(`/agendamentos/disponibilidade?profissionalId=${profissionalId}&data=${data}`) }
+}

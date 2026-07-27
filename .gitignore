@@ -10,9 +10,18 @@ server/node_modules
 .replit
 
 # builds
+.next
 dist
 build
 coverage
+client/dist
+client/.vite
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
+
+# logs
+*.log
 
 # SO / editor
 .DS_Store

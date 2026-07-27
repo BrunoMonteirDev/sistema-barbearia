@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { Plus, Search, Edit, Trash2, Package, AlertTriangle } from 'lucide-react'
 import toast from 'react-hot-toast'
-import { supabase } from '@/lib/supabase'
+import { postgres } from '@/lib/postgres'
 
 interface Produto {
   id: string
@@ -33,7 +33,7 @@ export default function ProdutosPage() {
   }, [])
 
   async function fetchProdutos() {
-    const { data, error } = await supabase
+    const { data, error } = await postgres
       .from('produtos')
       .select('*')
       .order('nome')
@@ -80,7 +80,7 @@ export default function ProdutosPage() {
       }
 
       if (editingProduto) {
-        const { error } = await supabase
+        const { error } = await postgres
           .from('produtos')
           .update(data)
           .eq('id', editingProduto.id)
@@ -88,7 +88,7 @@ export default function ProdutosPage() {
         if (error) throw error
         toast.success('Produto atualizado com sucesso!')
       } else {
-        const { error } = await supabase.from('produtos').insert(data)
+        const { error } = await postgres.from('produtos').insert(data)
         if (error) throw error
         toast.success('Produto criado com sucesso!')
       }
@@ -104,7 +104,7 @@ export default function ProdutosPage() {
     if (!confirm('Tem certeza que deseja excluir este produto?')) return
 
     try {
-      const { error } = await supabase.from('produtos').delete().eq('id', id)
+      const { error } = await postgres.from('produtos').delete().eq('id', id)
       if (error) throw error
       toast.success('Produto excluido com sucesso!')
       fetchProdutos()
@@ -304,3 +304,4 @@ export default function ProdutosPage() {
     </div>
   )
 }
+

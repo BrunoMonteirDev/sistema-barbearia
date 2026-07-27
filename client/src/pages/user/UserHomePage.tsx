@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+﻿import { postgres } from "@/lib/postgres";
 import { useEffect, useState } from "react";
 import UserSidebar from "./UserSidebar";
 
@@ -7,10 +7,10 @@ export default function UserHomePage() {
 
     useEffect(() => {
         async function load() {
-            const user = (await supabase.auth.getUser()).data.user;
+            const user = (await postgres.auth.getUser()).data.user;
             if (!user) return;
 
-            const { data } = await supabase
+            const { data } = await postgres
                 .from("usuarios")
                 .select("nome, email, foto")
                 .eq("id", user.id)
@@ -27,15 +27,15 @@ export default function UserHomePage() {
             {/* SIDEBAR */}
             <UserSidebar />
 
-            {/* CONTEÚDO PRINCIPAL */}
+            {/* CONTEÃšDO PRINCIPAL */}
             <div className="flex-1 p-8">
 
-                {/* TÍTULO */}
+                {/* TÃTULO */}
                 <h1 className="text-2xl font-bold text-gray-800 mb-6">
                     Minha Conta
                 </h1>
 
-                {/* GRID DE CARDS (MESMO PADRÃO DO ADMIN) */}
+                {/* GRID DE CARDS (MESMO PADRÃƒO DO ADMIN) */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 
                     <div className="bg-white rounded-lg shadow p-5">
@@ -44,18 +44,18 @@ export default function UserHomePage() {
                     </div>
 
                     <div className="bg-white rounded-lg shadow p-5">
-                        <p className="text-sm text-gray-500">Próximo horário</p>
+                        <p className="text-sm text-gray-500">PrÃ³ximo horÃ¡rio</p>
                         <p className="text-2xl font-bold text-gray-800">-</p>
                     </div>
 
                     <div className="bg-white rounded-lg shadow p-5">
-                        <p className="text-sm text-gray-500">Último corte</p>
+                        <p className="text-sm text-gray-500">Ãšltimo corte</p>
                         <p className="text-2xl font-bold text-gray-800">-</p>
                     </div>
 
                 </div>
 
-                {/* CARD DE DADOS DO USUÁRIO */}
+                {/* CARD DE DADOS DO USUÃRIO */}
                 <div className="bg-white rounded-lg shadow p-6">
 
                     <h2 className="text-xl font-semibold mb-4 text-gray-800">
@@ -90,3 +90,4 @@ export default function UserHomePage() {
         </div>
     );
 }
+

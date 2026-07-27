@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+﻿import { useEffect, useState } from "react";
+import { postgres } from "@/lib/postgres";
 
 function toDateLocal(dateStr: string) {
   const [y, m, d] = dateStr.split("-").map(Number);
@@ -19,7 +19,7 @@ export function useHorarios(funcionarioId: string, data: string) {
       "quarta-feira": "quarta",
       "quinta-feira": "quinta",
       "sexta-feira": "sexta",
-      sábado: "sabado",
+      "sábado": "sabado",
       sabado: "sabado",
       domingo: "domingo",
     };
@@ -38,23 +38,25 @@ export function useHorarios(funcionarioId: string, data: string) {
     async function fetchAll() {
       setLoading(true);
 
-      const { data: funcs } = await supabase
+      const { data: funcs } = await postgres
         .from("funcionarios")
         .select("horarios")
         .eq("id", funcionarioId)
         .maybeSingle();
 
-      if (funcs?.horarios) {
+      const horariosDoFuncionario = (funcs as any)?.horarios
+
+      if (horariosDoFuncionario) {
         const diaBr = toDateLocal(data).toLocaleDateString("pt-BR", {
           weekday: "long",
         });
 
         const chave = mapearDia(diaBr);
 
-        setHorarios(funcs.horarios[chave] || []);
+        setHorarios(horariosDoFuncionario[chave] || []);
       }
 
-      const { data: agendados } = await supabase
+      const { data: agendados } = await postgres
         .from("agendamentos")
         .select("hora")
         .eq("funcionario_id", funcionarioId)
@@ -78,3 +80,4 @@ export function useHorarios(funcionarioId: string, data: string) {
     loading,
   };
 }
+

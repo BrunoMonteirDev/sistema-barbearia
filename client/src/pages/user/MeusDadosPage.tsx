@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import {
     Home,
@@ -13,7 +13,7 @@ import {
     Camera,
     Key,
 } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { postgres } from "@/lib/postgres";
 import toast from "react-hot-toast";
 
 export default function MeusDadosPage() {
@@ -32,12 +32,12 @@ export default function MeusDadosPage() {
     const [loading, setLoading] = useState(false);
 
     const menuItems = [
-        { href: "/minha-conta", icon: Home, label: "Visão Geral" },
+        { href: "/minha-conta", icon: Home, label: "VisÃ£o Geral" },
         { href: "/minha-conta/agendamentos", icon: Calendar, label: "Agendamentos" },
         { href: "/minha-conta/dados", icon: User, label: "Meus Dados" },
         { href: "/minha-conta/pagamentos", icon: CreditCard, label: "Pagamentos" },
         { href: "/minha-conta/assinaturas", icon: FileText, label: "Assinaturas" },
-        { href: "/minha-conta/historico", icon: Clock, label: "Histórico" },
+        { href: "/minha-conta/historico", icon: Clock, label: "HistÃ³rico" },
     ];
 
     useEffect(() => {
@@ -45,10 +45,10 @@ export default function MeusDadosPage() {
     }, []);
 
     async function carregarUsuario() {
-        const user = (await supabase.auth.getUser()).data.user;
+        const user = (await postgres.auth.getUser()).data.user;
         if (!user) return;
 
-        const { data } = await supabase
+        const { data } = await postgres
             .from("usuarios")
             .select("*")
             .eq("id", user.id)
@@ -65,34 +65,34 @@ export default function MeusDadosPage() {
         });
     }
 
-    // ✅ UPLOAD COM EXCLUSÃO AUTOMÁTICA DA FOTO ANTIGA
+    // âœ… UPLOAD COM EXCLUSÃƒO AUTOMÃTICA DA FOTO ANTIGA
     async function uploadFotoAuto(file: File) {
-        const user = (await supabase.auth.getUser()).data.user;
+        const user = (await postgres.auth.getUser()).data.user;
         if (!user) return;
 
         try {
             toast.loading("Enviando imagem...", { id: "upload" });
 
-            // ✅ BUSCA FOTO ANTIGA NO BANCO
-            const { data: oldUser } = await supabase
+            // âœ… BUSCA FOTO ANTIGA NO BANCO
+            const { data: oldUser } = await postgres
                 .from("usuarios")
                 .select("foto")
                 .eq("id", user.id)
                 .single();
 
-            // ✅ SE TIVER FOTO ANTIGA → APAGA DO STORAGE
+            // âœ… SE TIVER FOTO ANTIGA â†’ APAGA DO STORAGE
             if (oldUser?.foto) {
                 const oldPath = oldUser.foto.split("/").pop()?.split("?")[0];
                 if (oldPath) {
-                    await supabase.storage.from("avatars").remove([oldPath]);
+                    await postgres.storage.from("avatars").remove([oldPath]);
                 }
             }
 
-            // ✅ NOVO ARQUIVO COM NOME ÚNICO
+            // âœ… NOVO ARQUIVO COM NOME ÃšNICO
             const ext = file.name.split(".").pop();
             const fileName = `${user.id}-${Date.now()}.${ext}`;
 
-            const { error: uploadError } = await supabase.storage
+            const { error: uploadError } = await postgres.storage
                 .from("avatars")
                 .upload(fileName, file);
 
@@ -101,11 +101,11 @@ export default function MeusDadosPage() {
                 return;
             }
 
-            const publicUrl = supabase.storage
+            const publicUrl = postgres.storage
                 .from("avatars")
                 .getPublicUrl(fileName).data.publicUrl;
 
-            const { error: updateError } = await supabase
+            const { error: updateError } = await postgres
                 .from("usuarios")
                 .update({ foto: publicUrl })
                 .eq("id", user.id);
@@ -127,10 +127,10 @@ export default function MeusDadosPage() {
         try {
             setLoading(true);
 
-            const user = (await supabase.auth.getUser()).data.user;
+            const user = (await postgres.auth.getUser()).data.user;
             if (!user) return;
 
-            await supabase
+            await postgres
                 .from("usuarios")
                 .update({
                     nome: form.nome,
@@ -152,9 +152,9 @@ export default function MeusDadosPage() {
             return toast.error("Senha muito curta");
 
         if (form.novaSenha !== form.confirmarSenha)
-            return toast.error("Senhas não coincidem");
+            return toast.error("Senhas nÃ£o coincidem");
 
-        const { error } = await supabase.auth.updateUser({
+        const { error } = await postgres.auth.updateUser({
             password: form.novaSenha,
         });
 
@@ -170,7 +170,7 @@ export default function MeusDadosPage() {
     }
 
     async function handleLogout() {
-        await supabase.auth.signOut();
+        await postgres.auth.signOut();
         setLocation("/login");
     }
 
@@ -215,7 +215,7 @@ export default function MeusDadosPage() {
                 </div>
             </aside>
 
-            {/* CONTEÚDO */}
+            {/* CONTEÃšDO */}
             <div className={`flex-1 ${sidebarOpen ? "ml-64" : "ml-20"}`}>
                 <header className="bg-white h-16 shadow-sm flex items-center px-6">
                     <h1 className="text-xl font-semibold text-secondary-500">Meus Dados</h1>
@@ -241,7 +241,7 @@ export default function MeusDadosPage() {
                                         onChange={(e) => {
                                             const file = e.target.files?.[0];
                                             if (!file) return;
-                                            uploadFotoAuto(file); // ✅ upload + apaga antiga
+                                            uploadFotoAuto(file); // âœ… upload + apaga antiga
                                         }}
                                     />
                                 </label>
@@ -260,7 +260,7 @@ export default function MeusDadosPage() {
                                 value={form.telefone}
                                 onChange={(e) => setForm({ ...form, telefone: e.target.value })} />
 
-                            <input className="w-full border rounded-lg px-4 py-2" placeholder="Endereço"
+                            <input className="w-full border rounded-lg px-4 py-2" placeholder="EndereÃ§o"
                                 value={form.endereco}
                                 onChange={(e) => setForm({ ...form, endereco: e.target.value })} />
                         </div>
@@ -291,7 +291,7 @@ export default function MeusDadosPage() {
                             disabled={loading}
                             className="w-full bg-primary-500 text-white py-3 rounded-lg"
                         >
-                            {loading ? "Salvando..." : "Salvar Alterações"}
+                            {loading ? "Salvando..." : "Salvar AlteraÃ§Ãµes"}
                         </button>
 
                     </div>
@@ -300,3 +300,4 @@ export default function MeusDadosPage() {
         </div>
     );
 }
+

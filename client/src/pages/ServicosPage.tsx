@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { Scissors, Clock } from "lucide-react";
-import { supabase, isSupabaseConfigured } from "@/lib/supabase";
-import { mockServicos } from "@/lib/mockData";
+import { api } from "@/lib/api";
 
 interface Servico {
   id: string;
@@ -22,22 +21,12 @@ export default function ServicosPage() {
   }, []);
 
   async function fetchServicos() {
-    if (!isSupabaseConfigured) {
-      setServicos(mockServicos);
-      setLoading(false);
-      return;
-    }
-
-    const { data, error } = await supabase
-      .from("servicos")
-      .select("*")
-      .eq("ativo", true)
-      .order("nome");
-
-    if (!error && data) {
-      setServicos(data);
-    } else {
-      setServicos(mockServicos);
+    try {
+      const data = await api.servicos.list();
+      setServicos(data as Servico[]);
+    } catch (error) {
+      console.error(error);
+      setServicos([]);
     }
 
     setLoading(false);

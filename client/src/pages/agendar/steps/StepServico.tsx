@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+﻿import { useState, useEffect } from "react";
+import { postgres } from "@/lib/postgres";
 
 interface Props {
     formData: any;
@@ -17,14 +17,14 @@ export default function StepServico({
     const [servicos, setServicos] = useState<any[]>([]);
 
     useEffect(() => {
-        supabase.from("servicos").select("*").eq("ativo", true).then(({ data }) => {
+        postgres.from("servicos").select("*").eq("ativo", true).then(({ data }) => {
             setServicos(data ?? []);
         });
     }, []);
 
     return (
         <div className="card">
-            <h3 className="text-xl font-semibold mb-6">Escolha o serviço</h3>
+            <h3 className="text-xl font-semibold mb-6">Escolha o serviÃ§o</h3>
 
             <div className="grid grid-cols-2 gap-4">
                 {servicos.map((s: any) => (
@@ -62,9 +62,10 @@ export default function StepServico({
                     onClick={nextStep}
                     className="btn-primary"
                 >
-                    Próximo
+                    PrÃ³ximo
                 </button>
             </div>
         </div>
     );
 }
+

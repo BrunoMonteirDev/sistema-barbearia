@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
+﻿import { useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'wouter'
 import { UserCog } from 'lucide-react'
 import toast from 'react-hot-toast'
-import { supabase } from '@/lib/supabase'
+import { postgres } from '@/lib/postgres'
 import { useAuth } from '@/contexts/AuthContext'
 
 import { Funcionario, WeekdayKey } from './funcionarios/funcionarios.types'
@@ -33,7 +33,7 @@ export default function FuncionariosPage() {
     const [copiarDeId, setCopiarDeId] = useState('')
     const [salvando, setSalvando] = useState(false)
 
-    // 🔐 Auth
+    // ðŸ” Auth
     useEffect(() => {
         if (!authLoading && !user) setLocation('/login')
     }, [user, authLoading, setLocation])
@@ -42,11 +42,11 @@ export default function FuncionariosPage() {
         if (!authLoading && user) carregarFuncionarios()
     }, [authLoading, user])
 
-    // ✅ BUSCAR FUNCIONÁRIOS
+    // âœ… BUSCAR FUNCIONÃRIOS
     async function carregarFuncionarios() {
         setLoading(true)
 
-        const { data, error } = await supabase
+        const { data, error } = await postgres
             .from('funcionarios')
             .select(
                 `
@@ -62,7 +62,7 @@ export default function FuncionariosPage() {
             )
 
         if (error) {
-            toast.error('Erro ao buscar funcionários')
+            toast.error('Erro ao buscar funcionÃ¡rios')
             setLoading(false)
             return
         }
@@ -85,7 +85,7 @@ export default function FuncionariosPage() {
         setLoading(false)
     }
 
-    // ✅ ABRIR MODAL HORÁRIOS
+    // âœ… ABRIR MODAL HORÃRIOS
     function abrirModalHorarios(func: Funcionario) {
         setSelectedFuncionario(func)
         setHorariosEdicao(func.horarios || criarHorariosVazio())
@@ -94,12 +94,12 @@ export default function FuncionariosPage() {
         setModalAberto(true)
     }
 
-    // ✅ ABRIR MODAL EDIÇÃO
+    // âœ… ABRIR MODAL EDIÃ‡ÃƒO
     function abrirModalEdicao(func: Funcionario) {
         setFuncionarioEditando(func)
     }
 
-    // ✅ TOGGLE HORÁRIO
+    // âœ… TOGGLE HORÃRIO
     function toggleHorario(slot: string) {
         if (!horariosEdicao) return
 
@@ -118,7 +118,7 @@ export default function FuncionariosPage() {
         })
     }
 
-    // ✅ MARCAR TODOS
+    // âœ… MARCAR TODOS
     function marcarTodosDoDia() {
         if (!horariosEdicao) return
 
@@ -134,7 +134,7 @@ export default function FuncionariosPage() {
         }))
     }
 
-    // ✅ LIMPAR DIA
+    // âœ… LIMPAR DIA
     function limparDia() {
         if (!horariosEdicao) return
 
@@ -144,27 +144,27 @@ export default function FuncionariosPage() {
         }))
     }
 
-    // ✅ COPIAR DE OUTRO FUNCIONÁRIO
+    // âœ… COPIAR DE OUTRO FUNCIONÃRIO
     function copiarDeOutroFuncionario() {
         if (!horariosEdicao || !copiarDeId) return
 
         const origem = funcionarios.find((f) => f.id === copiarDeId)
 
         if (!origem) {
-            toast.error('Funcionário de origem não encontrado')
+            toast.error('FuncionÃ¡rio de origem nÃ£o encontrado')
             return
         }
 
         setHorariosEdicao(normalizarHorarios(origem.horarios))
     }
 
-    // ✅ SALVAR HORÁRIOS
+    // âœ… SALVAR HORÃRIOS
     async function salvarHorarios() {
         if (!selectedFuncionario || !horariosEdicao) return
 
         setSalvando(true)
 
-        await supabase
+        await postgres
             .from('funcionarios')
             .update({ horarios: horariosEdicao })
             .eq('id', selectedFuncionario.id)
@@ -190,7 +190,7 @@ export default function FuncionariosPage() {
         <div className="space-y-6">
             <h2 className="text-2xl font-bold flex items-center gap-2">
                 <UserCog />
-                Funcionários & Horários
+                FuncionÃ¡rios & HorÃ¡rios
             </h2>
 
             <FuncionariosTable
@@ -229,3 +229,4 @@ export default function FuncionariosPage() {
         </div>
     )
 }
+

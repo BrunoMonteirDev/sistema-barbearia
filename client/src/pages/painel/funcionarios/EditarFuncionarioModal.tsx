@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import { supabase } from '@/lib/supabase'
+import { postgres } from '@/lib/postgres'
 import { Funcionario } from './funcionarios.types'
 
 interface Props {
@@ -25,7 +25,7 @@ export default function EditarFuncionarioModal({
     useEffect(() => {
         if (!funcionario) return
 
-        console.log("🔄 Modal abriu com funcionário:", funcionario)
+        console.log("ðŸ”„ Modal abriu com funcionÃ¡rio:", funcionario)
 
         setNome(funcionario.usuario.nome || '')
         setFotoPreview(funcionario.usuario?.foto || null)
@@ -38,7 +38,7 @@ export default function EditarFuncionarioModal({
         const file = e.target.files?.[0]
         if (!file) return
 
-        console.log("📸 Imagem selecionada:", file)
+        console.log("ðŸ“¸ Imagem selecionada:", file)
 
         setArquivo(file)
         setFotoPreview(URL.createObjectURL(file))
@@ -47,9 +47,9 @@ export default function EditarFuncionarioModal({
     async function salvar() {
         if (!funcionario) return
 
-        console.log("▶️ Iniciando salvar()...")
-        console.log("📦 Dados do form:", { nome, arquivo })
-        console.log("🆔 ID do usuário:", funcionario.usuario_id)
+        console.log("â–¶ï¸ Iniciando salvar()...")
+        console.log("ðŸ“¦ Dados do form:", { nome, arquivo })
+        console.log("ðŸ†” ID do usuÃ¡rio:", funcionario.usuario_id)
 
         try {
             setSalvando(true)
@@ -60,43 +60,43 @@ export default function EditarFuncionarioModal({
             // 1) UPLOAD DA IMAGEM NO STORAGE
             // =====================================================
             if (arquivo) {
-                console.log("⬆️ Enviando nova imagem para o Storage...")
+                console.log("â¬†ï¸ Enviando nova imagem para o Storage...")
 
                 const nomeArquivo = `${funcionario.usuario_id}-${Date.now()}`
 
-                const { data: uploaded, error: uploadError } = await supabase.storage
+                const { data: uploaded, error: uploadError } = await postgres.storage
                     .from('avatars')
                     .upload(nomeArquivo, arquivo, { upsert: true })
 
-                console.log("📤 Resultado upload:", uploaded, uploadError)
+                console.log("ðŸ“¤ Resultado upload:", uploaded, uploadError)
 
                 if (uploadError) {
-                    console.error("❌ Erro no upload:", uploadError)
+                    console.error("âŒ Erro no upload:", uploadError)
                     toast.error('Erro ao subir imagem')
                     setSalvando(false)
                     return
                 }
 
-                const { data: publicUrl } = supabase.storage
+                const { data: publicUrl } = postgres.storage
                     .from('avatars')
                     .getPublicUrl(nomeArquivo)
 
-                console.log("🌐 URL pública gerada:", publicUrl)
+                console.log("ðŸŒ URL pÃºblica gerada:", publicUrl)
 
                 fotoUrl = publicUrl.publicUrl
             }
 
             // =====================================================
-            // 2) ATUALIZAR NA TABELA USUÁRIOS
+            // 2) ATUALIZAR NA TABELA USUÃRIOS
             // =====================================================
-            console.log("📝 Atualizando tabela usuarios...")
-            console.log("➡️ Enviando update:", {
+            console.log("ðŸ“ Atualizando tabela usuarios...")
+            console.log("âž¡ï¸ Enviando update:", {
                 id: funcionario.usuario_id,
                 nome,
                 foto: fotoUrl,
             })
 
-            const { data: updated, error } = await supabase
+            const { data: updated, error } = await postgres
                 .from('usuarios')
                 .update({
                     nome,
@@ -105,25 +105,25 @@ export default function EditarFuncionarioModal({
                 .eq('id', funcionario.usuario_id)
                 .select()
 
-            console.log("🧾 Retorno UPDATE usuarios:")
-            console.log("🔹 data:", updated)
-            console.log("🔹 error:", error)
+            console.log("ðŸ§¾ Retorno UPDATE usuarios:")
+            console.log("ðŸ”¹ data:", updated)
+            console.log("ðŸ”¹ error:", error)
 
             if (error) {
-                console.error("❌ Erro ao atualizar usuário:", error)
-                toast.error('Erro ao atualizar funcionário')
+                console.error("âŒ Erro ao atualizar usuÃ¡rio:", error)
+                toast.error('Erro ao atualizar funcionÃ¡rio')
                 setSalvando(false)
                 return
             }
 
-            toast.success('Funcionário atualizado com sucesso!')
-            console.log("✅ Atualização finalizada com sucesso")
+            toast.success('FuncionÃ¡rio atualizado com sucesso!')
+            console.log("âœ… AtualizaÃ§Ã£o finalizada com sucesso")
 
             await atualizarLista()
             fechar()
 
         } catch (err) {
-            console.error("💥 ERRO GERAL NO TRY/CATCH:", err)
+            console.error("ðŸ’¥ ERRO GERAL NO TRY/CATCH:", err)
             toast.error('Erro ao salvar')
         } finally {
             setSalvando(false)
@@ -135,7 +135,7 @@ export default function EditarFuncionarioModal({
             <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 space-y-4">
 
                 <h3 className="text-lg font-semibold">
-                    Editar funcionário: {funcionario.usuario.nome}
+                    Editar funcionÃ¡rio: {funcionario.usuario.nome}
                 </h3>
 
                 {/* PREVIEW */}
@@ -184,7 +184,7 @@ export default function EditarFuncionarioModal({
                     )}
                 </div>
 
-                {/* BOTÕES */}
+                {/* BOTÃ•ES */}
                 <div className="flex justify-end gap-3 pt-2">
                     <button
                         onClick={fechar}
@@ -205,3 +205,4 @@ export default function EditarFuncionarioModal({
         </div>
     )
 }
+

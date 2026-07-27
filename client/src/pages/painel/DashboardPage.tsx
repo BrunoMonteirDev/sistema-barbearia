@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import {
   Calendar,
   Users,
@@ -8,7 +8,7 @@ import {
   CheckCircle,
   Phone
 } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
+import { postgres } from '@/lib/postgres'
 
 interface Stats {
   agendamentosHoje: number
@@ -44,27 +44,27 @@ export default function DashboardPage() {
     try {
       const today = getTodayLocal()
 
-      // ✅ AGENDAMENTOS DE HOJE
-      const { count: agendamentosHoje } = await supabase
+      // âœ… AGENDAMENTOS DE HOJE
+      const { count: agendamentosHoje } = await postgres
         .from("agendamentos")
         .select("*", { count: "exact", head: true })
         .eq("data", today)
         .in("status", ["Confirmado", "Agendado"])
 
-      // ✅ TOTAL DE CLIENTES
-      const { count: clientesTotal } = await supabase
+      // âœ… TOTAL DE CLIENTES
+      const { count: clientesTotal } = await postgres
         .from("usuarios")
         .select("*", { count: "exact", head: true })
 
-      // ✅ CONFIRMADOS
-      const { count: agendamentosConfirmados } = await supabase
+      // âœ… CONFIRMADOS
+      const { count: agendamentosConfirmados } = await postgres
         .from("agendamentos")
         .select("*", { count: "exact", head: true })
         .eq("status", "Confirmado")
         .gte("data", today)
 
-      // ✅ PRÓXIMOS AGENDAMENTOS (SÓ CONFIRMADOS E AGENDADOS)
-      const { data: agendamentosRaw } = await supabase
+      // âœ… PRÃ“XIMOS AGENDAMENTOS (SÃ“ CONFIRMADOS E AGENDADOS)
+      const { data: agendamentosRaw } = await postgres
         .from("agendamentos")
         .select("*")
         .gte("data", today)
@@ -79,24 +79,24 @@ export default function DashboardPage() {
       const funcionariosIds = safeAgendamentos.map(a => a.funcionario_id).filter(Boolean)
       const servicosIds = safeAgendamentos.map(a => a.servico_id)
 
-      const { data: clientes } = await supabase
+      const { data: clientes } = await postgres
         .from("usuarios")
         .select("id, nome, telefone")
         .in("id", clientesIds)
 
-      const { data: funcionariosRaw } = await supabase
+      const { data: funcionariosRaw } = await postgres
         .from("funcionarios")
         .select("id, usuario_id")
         .in("id", funcionariosIds)
 
       const funcionariosUsuarioIds = funcionariosRaw?.map(f => f.usuario_id) || []
 
-      const { data: funcionariosUsuarios } = await supabase
+      const { data: funcionariosUsuarios } = await postgres
         .from("usuarios")
         .select("id, nome")
         .in("id", funcionariosUsuarioIds)
 
-      const { data: servicos } = await supabase
+      const { data: servicos } = await postgres
         .from("servicos")
         .select("id, nome, preco")
         .in("id", servicosIds)
@@ -124,7 +124,7 @@ export default function DashboardPage() {
       setLoading(false)
 
     } catch (err) {
-      console.error("❌ ERRO NO DASHBOARD:", err)
+      console.error("âŒ ERRO NO DASHBOARD:", err)
       setLoading(false)
     }
   }
@@ -146,7 +146,7 @@ export default function DashboardPage() {
     { title: 'Agendamentos Hoje', value: stats.agendamentosHoje, icon: Calendar },
     { title: 'Total de Clientes', value: stats.clientesTotal, icon: Users },
     { title: 'Confirmados', value: stats.agendamentosConfirmados, icon: CheckCircle },
-    { title: 'Faturamento do Mês', value: `R$ ${stats.faturamentoMes.toFixed(2).replace('.', ',')}`, icon: DollarSign },
+    { title: 'Faturamento do MÃªs', value: `R$ ${stats.faturamentoMes.toFixed(2).replace('.', ',')}`, icon: DollarSign },
   ]
 
   function agendamentoBg(data: string) {
@@ -178,13 +178,13 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* PRÓXIMOS AGENDAMENTOS */}
+      {/* PRÃ“XIMOS AGENDAMENTOS */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         <div className="bg-white rounded-xl shadow-sm p-6">
           <h3 className="text-lg font-semibold text-secondary-500 mb-4 flex items-center gap-2">
             <Clock className="h-5 w-5 text-primary-500" />
-            Próximos Agendamentos
+            PrÃ³ximos Agendamentos
           </h3>
 
           {loading ? (
@@ -210,7 +210,7 @@ export default function DashboardPage() {
                     </p>
 
                     <p className="text-xs text-gray-400">
-                      {ag.data} às {ag.hora} — {ag.funcionario?.nome}
+                      {ag.data} Ã s {ag.hora} â€” {ag.funcionario?.nome}
                     </p>
 
                     <span
@@ -220,7 +220,7 @@ export default function DashboardPage() {
                     </span>
                   </div>
 
-                  {/* ✅ BOTÃO WHATSAPP SEMPRE VISÍVEL */}
+                  {/* âœ… BOTÃƒO WHATSAPP SEMPRE VISÃVEL */}
                   <a
                     href={
                       ag.cliente?.telefone
@@ -275,3 +275,4 @@ export default function DashboardPage() {
     </div>
   )
 }
+

@@ -1,493 +1,79 @@
-import { useEffect, useState } from "react";
-import { supabase, isSupabaseConfigured } from "@/lib/supabase";
-import { Clock } from "lucide-react";
+import { useEffect, useMemo, useState } from 'react'
+import { CalendarPlus, Eye, Pencil, Trash2, XCircle } from 'lucide-react'
+import toast from 'react-hot-toast'
+import { api, type Agendamento, type Profissional, type Servico, type Usuario } from '@/lib/api'
+import { ConfirmDialog } from '@/components/ui/modal'
 
-/* ============================
-   Interfaces
-============================= */
-interface Agendamento {
-  id: string;
-  data: string;
-  hora: string;
-  status: string;
-  cliente: { nome: string; telefone: string };
-  servico: { nome: string; preco: number };
-  funcionario: { usuario: { nome: string } } | null;
-}
-
-interface Funcionario {
-  id: string;
-  usuario: { nome: string };
-}
+type FormData = { usuarioId: string; profissionalId: string; servicoId: string; data: string; hora: string; status: string }
+const emptyForm: FormData = { usuarioId: '', profissionalId: '', servicoId: '', data: '', hora: '', status: 'PENDENTE' }
+const statusLabels: Record<string, string> = { PENDENTE: 'Pendente', CONFIRMADO: 'Confirmado', CONCLUIDO: 'Concluído', CANCELADO: 'Cancelado' }
+const statusStyle: Record<string, string> = { PENDENTE: 'bg-amber-100 text-amber-800', CONFIRMADO: 'bg-blue-100 text-blue-800', CONCLUIDO: 'bg-green-100 text-green-800', CANCELADO: 'bg-red-100 text-red-800' }
 
 export default function AgendamentosPage() {
-  const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
-  const [funcionarios, setFuncionarios] = useState<Funcionario[]>([]);
+  const [items, setItems] = useState<Agendamento[]>([])
+  const [clientes, setClientes] = useState<Usuario[]>([])
+  const [profissionais, setProfissionais] = useState<Profissional[]>([])
+  const [servicos, setServicos] = useState<Servico[]>([])
+  const [filtros, setFiltros] = useState({ cliente: '', profissional: '', data: '', status: '' })
+  const [modal, setModal] = useState<'novo' | 'editar' | 'visualizar' | null>(null)
+  const [selected, setSelected] = useState<Agendamento | null>(null)
+  const [form, setForm] = useState<FormData>(emptyForm)
+  const [pendingAction, setPendingAction] = useState<{ type: 'cancelar' | 'excluir'; item: Agendamento } | null>(null)
 
-  /* Filtros */
-  const statusOptions = ["Todos", "Agendado", "Confirmado", "Concluido", "Cancelado"];
-  const [statusFiltro, setStatusFiltro] = useState("Todos");
-  const [funcFiltro, setFuncFiltro] = useState("Todos");
-  const [ordenarPor, setOrdenarPor] = useState("data");
-
-  /* Período */
-  const [periodo, setPeriodo] = useState("todos");
-  const [dataInicio, setDataInicio] = useState("");
-  const [dataFim, setDataFim] = useState("");
-
-  /* Paginação */
-  const [pagina, setPagina] = useState(1);
-  const porPagina = 10;
-
-  const [totalAgendamentos, setTotalAgendamentos] = useState(0);
-
-  /* Inicial */
+  const load = () => { void api.agendamentos.list().then(setItems).catch(error => toast.error(error.message)) }
   useEffect(() => {
-    fetchFuncionarios();
-  }, []);
+    load()
+    void Promise.all([api.usuarios.list(), api.profissionais.list(), api.servicos.list()]).then(([usuarios, profs, servs]) => {
+      setClientes(usuarios.filter(usuario => usuario.nivel === 'Cliente'))
+      setProfissionais(profs)
+      setServicos(servs)
+    }).catch(error => toast.error(error.message))
+  }, [])
 
-  useEffect(() => {
-    fetchAgendamentos();
-  }, [statusFiltro, funcFiltro, periodo, dataInicio, dataFim, ordenarPor, pagina]);
+  const filteredItems = useMemo(() => items.filter(item =>
+    (!filtros.cliente || item.usuario?.id === filtros.cliente) &&
+    (!filtros.profissional || item.profissional?.id === filtros.profissional) &&
+    (!filtros.data || item.data === filtros.data) &&
+    (!filtros.status || item.status === filtros.status)
+  ), [filtros, items])
 
-  /* ============================
-     Funcionários
-  ============================= */
-  async function fetchFuncionarios() {
-    if (!isSupabaseConfigured) return;
+  const openNew = () => { setForm(emptyForm); setSelected(null); setModal('novo') }
+  const openEdit = (item: Agendamento) => { setSelected(item); setForm({ usuarioId: item.usuario?.id ?? '', profissionalId: item.profissional?.id ?? '', servicoId: item.servico?.id ?? '', data: item.data, hora: item.hora, status: item.status }); setModal('editar') }
+  const closeModal = () => { setModal(null); setSelected(null) }
+  const setField = (field: keyof FormData, value: string) => setForm(current => ({ ...current, [field]: value }))
 
-    const { data } = await supabase
-      .from("funcionarios")
-      .select("id, usuario:usuarios(nome)");
-
-    if (data) {
-      const mapped = data.map((f: any) => ({
-        id: f.id,
-        usuario: { nome: Array.isArray(f.usuario) ? f.usuario[0]?.nome : f.usuario?.nome }
-      }));
-      setFuncionarios(mapped);
-    }
-  }
-
-  /* ============================
-     ✅ DATA LOCAL SEM UTC BUG
-  ============================= */
-  function hojeStr() {
-    const d = new Date();
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  }
-
-  function somarDias(dias: number) {
-    const d = new Date();
-    d.setDate(d.getDate() + dias);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  }
-
-  /* ============================
-     ✅ INTERVALO TOTALMENTE CORRIGIDO
-  ============================= */
-  function calcularIntervalo() {
-    const hoje = hojeStr();
-    let inicio: string | null = null;
-    let fim: string | null = null;
-
-    switch (periodo) {
-      case "todos":
-        inicio = hoje;
-        break;
-
-      case "hoje":
-        inicio = hoje;
-        fim = hoje;
-        break;
-
-      case "7dias":
-        inicio = hoje;
-        fim = somarDias(7);
-        break;
-
-      case "30dias":
-        inicio = hoje;
-        fim = somarDias(30);
-        break;
-
-      case "semanal": {
-        const d = new Date();
-        const diasRestantes = 6 - d.getDay();
-        inicio = hoje;
-        fim = somarDias(diasRestantes);
-        break;
+  const save = async () => {
+    if (!form.profissionalId || !form.servicoId || !form.data || !form.hora || (modal === 'novo' && !form.usuarioId)) return toast.error('Preencha todos os campos obrigatórios.')
+    try {
+      if (modal === 'novo') await api.agendamentos.create(form)
+      if (modal === 'editar' && selected) {
+        const dadosAtualizados = { profissionalId: form.profissionalId, servicoId: form.servicoId, data: form.data, hora: form.hora, status: form.status }
+        await api.agendamentos.update(selected.id, dadosAtualizados)
       }
+      toast.success(modal === 'novo' ? 'Agendamento criado.' : 'Agendamento atualizado.')
+      closeModal(); load()
+    } catch (error) { toast.error(error instanceof Error ? error.message : 'Não foi possível salvar.') }
+  }
 
-      case "mensal": {
-        const d = new Date();
-        const ano = d.getFullYear();
-        const mes = d.getMonth();
-        const ultimoDia = new Date(ano, mes + 1, 0).getDate();
-        inicio = hoje;
-        fim = `${ano}-${String(mes + 1).padStart(2, "0")}-${ultimoDia}`;
-        break;
-      }
-
-      case "anual": {
-        const ano = new Date().getFullYear();
-        inicio = hoje;
-        fim = `${ano}-12-31`;
-        break;
-      }
-
-      case "custom":
-        inicio = dataInicio || null;
-        fim = dataFim || null;
-        break;
+  const confirmAction = async () => {
+    if (!pendingAction) return
+    try {
+      if (pendingAction.type === 'cancelar') await api.agendamentos.cancel(pendingAction.item.id)
+      else await api.agendamentos.remove(pendingAction.item.id)
+      toast.success(pendingAction.type === 'cancelar' ? 'Agendamento cancelado.' : 'Agendamento excluído.')
+      setPendingAction(null)
+      load()
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Não foi possível concluir a ação.')
     }
-
-    return { inicio, fim };
   }
 
-  /* ============================
-     Buscar agendamentos
-  ============================= */
-  async function fetchAgendamentos() {
-    if (!isSupabaseConfigured) return;
-
-    const { inicio, fim } = calcularIntervalo();
-
-    let query = supabase
-      .from("agendamentos")
-      .select(`
-        id,
-        data,
-        hora,
-        status,
-        cliente_id,
-        servico:servicos(nome, preco),
-        funcionario:funcionarios(usuario:usuarios(nome))
-      `)
-      .order("data", { ascending: true })
-      .order("hora", { ascending: true });
-
-    if (inicio) query.gte("data", inicio);
-    if (fim) query.lte("data", fim);
-    if (statusFiltro !== "Todos") query.eq("status", statusFiltro);
-    if (funcFiltro !== "Todos") query.eq("funcionario_id", funcFiltro);
-
-    const { data: raw } = await query;
-
-    if (!raw || raw.length === 0) {
-      setAgendamentos([]);
-      setTotalAgendamentos(0);
-      return;
-    }
-
-    const ids = raw.map((a: any) => a.cliente_id);
-
-    const { data: clientes } = await supabase
-      .from("usuarios")
-      .select("id, nome, telefone")
-      .in("id", ids);
-
-    const clienteMap = new Map();
-    clientes?.forEach((c) => clienteMap.set(c.id, c));
-
-    const joined: Agendamento[] = raw.map((a: any) => {
-      const serv = Array.isArray(a.servico) ? a.servico[0] : a.servico;
-      const func = Array.isArray(a.funcionario) ? a.funcionario[0] : a.funcionario;
-      const cli = clienteMap.get(a.cliente_id) || { nome: "", telefone: "" };
-
-      return {
-        id: a.id,
-        data: a.data,
-        hora: a.hora,
-        status: a.status,
-        cliente: { nome: cli.nome, telefone: cli.telefone },
-        servico: serv,
-        funcionario: func ? { usuario: { nome: func.usuario?.nome ?? "" } } : null,
-      };
-    });
-
-    if (ordenarPor === "profissional") {
-      joined.sort((a, b) =>
-        (a.funcionario?.usuario.nome ?? "").localeCompare(
-          b.funcionario?.usuario.nome ?? ""
-        )
-      );
-    }
-
-    setTotalAgendamentos(joined.length);
-
-    const start = (pagina - 1) * porPagina;
-    setAgendamentos(joined.slice(start, start + porPagina));
-  }
-
-  /* ============================
-     Update Status
-  ============================= */
-  async function updateStatus(id: string, status: string) {
-    await supabase.from("agendamentos").update({ status }).eq("id", id);
-    fetchAgendamentos();
-  }
-
-  /* ============================
-     Badges inteligentes
-  ============================= */
-  function getBadge(ag: Agendamento) {
-    const agora = new Date();
-    const horaAg = new Date(`${ag.data}T${ag.hora}`);
-    const diffMin = (horaAg.getTime() - agora.getTime()) / 60000;
-
-    if (diffMin < -5)
-      return { label: "Atrasado", classe: "bg-red-100 text-red-600" };
-
-    if (Math.abs(diffMin) <= 5)
-      return { label: "Agora", classe: "bg-blue-100 text-blue-600" };
-
-    if (diffMin <= 60)
-      return { label: "Em breve", classe: "bg-yellow-100 text-yellow-600" };
-
-    return null;
-  }
-
-  /* ============================
-     Render
-  ============================= */
-  return (
-    <div className="w-full">
-      <div className="flex justify-between mb-6 items-center">
-        <h2 className="text-2xl font-semibold text-secondary-500">Agendamentos</h2>
-        <span className="text-gray-600 text-sm">
-          {totalAgendamentos} resultado(s)
-        </span>
-      </div>
-
-      {/* Filtros */}
-      <div className="bg-white p-4 rounded-lg shadow-sm flex flex-wrap gap-4 mb-6">
-        {/* Período */}
-        <div className="flex flex-col">
-          <label className="admin-label">Período</label>
-          <select
-            value={periodo}
-            onChange={(e) => {
-              setPeriodo(e.target.value);
-              setPagina(1);
-            }}
-            className="admin-select w-48"
-          >
-            <option value="todos">Próximos</option>
-            <option value="hoje">Hoje</option>
-            <option value="7dias">Próximos 7 dias</option>
-            <option value="30dias">Próximos 30 dias</option>
-            <option value="semanal">Resto da semana</option>
-            <option value="mensal">Resto do mês</option>
-            <option value="anual">Resto do ano</option>
-            <option value="custom">Intervalo personalizado</option>
-          </select>
-        </div>
-
-        {periodo === "custom" && (
-          <>
-            <div className="flex flex-col">
-              <label className="admin-label">Início</label>
-              <input
-                type="date"
-                className="admin-input"
-                value={dataInicio}
-                onChange={(e) => setDataInicio(e.target.value)}
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <label className="admin-label">Fim</label>
-              <input
-                type="date"
-                className="admin-input"
-                value={dataFim}
-                onChange={(e) => setDataFim(e.target.value)}
-              />
-            </div>
-          </>
-        )}
-
-        {/* Status */}
-        <div className="flex flex-col">
-          <label className="admin-label">Status</label>
-          <select
-            value={statusFiltro}
-            onChange={(e) => setStatusFiltro(e.target.value)}
-            className="admin-select w-48"
-          >
-            {statusOptions.map((s) => (
-              <option key={s}>{s}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Funcionário */}
-        <div className="flex flex-col">
-          <label className="admin-label">Profissional</label>
-          <select
-            value={funcFiltro}
-            onChange={(e) => setFuncFiltro(e.target.value)}
-            className="admin-select w-48"
-          >
-            <option value="Todos">Todos</option>
-            {funcionarios.map((f) => (
-              <option key={f.id} value={f.id}>
-                {f.usuario.nome}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Ordenar */}
-        <div className="flex flex-col">
-          <label className="admin-label">Ordenar por</label>
-          <select
-            value={ordenarPor}
-            onChange={(e) => setOrdenarPor(e.target.value)}
-            className="admin-select w-48"
-          >
-            <option value="data">Data</option>
-            <option value="profissional">Profissional</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Lista */}
-      <div className="space-y-4">
-        {agendamentos.map((ag) => {
-          const badge = getBadge(ag);
-          const isPast = new Date(`${ag.data}T${ag.hora}`) < new Date();
-
-          return (
-            <div
-              key={ag.id}
-              className={`bg-white p-4 rounded-lg shadow grid grid-cols-1 md:grid-cols-5 gap-4 transition ${isPast ? "opacity-50" : ""}`}
-            >
-              {/* Horário */}
-              <div className="flex items-center gap-4">
-                <div className="bg-red-100 text-red-500 p-3 rounded-full">
-                  <Clock className="h-6 w-6" />
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-semibold text-secondary-500">
-                    {ag.hora}
-                  </h3>
-                  <p className="text-gray-500 capitalize text-sm leading-tight">
-                    {ag.data.split("-").reverse().join("/")}
-                  </p>
-
-
-
-                  {badge && (
-                    <span className={`inline-block mt-1 px-2 py-1 text-xs rounded ${badge.classe}`}>
-                      {badge.label}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Cliente */}
-              <div>
-                <p className="font-semibold text-secondary-500 mb-1">Cliente</p>
-                <p className="text-gray-600">{ag.cliente.nome}</p>
-                <p className="text-gray-500 text-sm">{ag.cliente.telefone}</p>
-              </div>
-
-              {/* Serviço */}
-              <div>
-                <p className="font-semibold text-secondary-500 mb-1">Serviço</p>
-                <p className="text-gray-600">{ag.servico.nome}</p>
-                <p className="text-primary-500 font-bold text-sm">
-                  R$ {ag.servico.preco.toFixed(2).replace(".", ",")}
-                </p>
-              </div>
-
-              {/* Profissional */}
-              <div>
-                <p className="font-semibold text-secondary-500 mb-1">Profissional</p>
-                <p className="text-gray-600">
-                  {ag.funcionario?.usuario.nome || "—"}
-                </p>
-              </div>
-
-              {/* Status + Ações */}
-              <div className="flex flex-col items-start md:items-end gap-2">
-                <span
-                  className={`px-3 py-1 text-sm rounded-full w-fit ${ag.status === "Concluido"
-                    ? "bg-blue-100 text-blue-600"
-                    : ag.status === "Cancelado"
-                      ? "bg-red-100 text-red-600"
-                      : ag.status === "Confirmado"
-                        ? "bg-green-100 text-green-600"
-                        : "bg-gray-200 text-gray-600"
-                    }`}
-                >
-                  {ag.status}
-                </span>
-
-                <p className="text-xs text-gray-400 font-medium mt-1">Ações</p>
-
-                <div className="flex items-center gap-2 mt-1">
-                  {ag.status === "Agendado" && (
-                    <>
-                      <button
-                        onClick={() => updateStatus(ag.id, "Confirmado")}
-                        className="p-2 bg-green-100 text-green-600 rounded-lg hover:bg-green-200 transition-colors"
-                      >
-                        Confirmar
-                      </button>
-
-                      <button
-                        onClick={() => updateStatus(ag.id, "Cancelado")}
-                        className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
-                      >
-                        Cancelar
-                      </button>
-                    </>
-                  )}
-
-                  {ag.status === "Confirmado" && (
-                    <button
-                      onClick={() => updateStatus(ag.id, "Concluido")}
-                      className="px-3 py-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors text-xs font-medium"
-                    >
-                      Concluir Corte
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Paginação */}
-      <div className="flex justify-between items-center mt-6">
-        <button
-          disabled={pagina === 1}
-          onClick={() => setPagina((p) => p - 1)}
-          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-        >
-          Anterior
-        </button>
-
-        <span className="text-gray-600">Página {pagina}</span>
-
-        <button
-          onClick={() => setPagina((p) => p + 1)}
-          className="px-3 py-1 bg-gray-200 rounded"
-        >
-          Próxima
-        </button>
-      </div>
-    </div>
-  );
+  return <section className="space-y-6"><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center"><div><h1 className="text-2xl font-bold text-secondary-500">Agendamentos</h1><p className="text-sm text-gray-500">Gerencie os horários da barbearia.</p></div><button onClick={openNew} className="btn-primary inline-flex items-center justify-center gap-2"><CalendarPlus className="h-5 w-5" />Novo agendamento</button></div>
+    <div className="grid gap-4 rounded-xl bg-white p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-4"><Filter label="Cliente" value={filtros.cliente} onChange={value => setFiltros(current => ({ ...current, cliente: value }))}><option value="">Todos os clientes</option>{clientes.map(cliente => <option key={cliente.id} value={cliente.id}>{cliente.nome}</option>)}</Filter><Filter label="Funcionário" value={filtros.profissional} onChange={value => setFiltros(current => ({ ...current, profissional: value }))}><option value="">Todos os funcionários</option>{profissionais.map(profissional => <option key={profissional.id} value={profissional.id}>{profissional.nome}</option>)}</Filter><label className="text-sm font-medium text-gray-700">Data<input type="date" value={filtros.data} onChange={event => setFiltros(current => ({ ...current, data: event.target.value }))} className="mt-1 w-full rounded border border-gray-300 px-3 py-2" /></label><Filter label="Status" value={filtros.status} onChange={value => setFiltros(current => ({ ...current, status: value }))}><option value="">Todos os status</option>{Object.entries(statusLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</Filter></div>
+    <div className="overflow-x-auto rounded-xl bg-white shadow-sm"><table className="min-w-full text-left text-sm"><thead className="border-b bg-gray-50 text-xs uppercase text-gray-500"><tr>{['Cliente', 'Funcionário', 'Serviço', 'Data', 'Hora', 'Valor', 'Status', 'Ações'].map(header => <th className="whitespace-nowrap px-4 py-3 font-semibold" key={header}>{header}</th>)}</tr></thead><tbody className="divide-y">{filteredItems.map(item => <tr key={item.id} className="hover:bg-gray-50"><td className="px-4 py-3 font-medium">{item.usuario?.nome ?? '—'}</td><td className="px-4 py-3">{item.profissional?.nome ?? '—'}</td><td className="px-4 py-3">{item.servico?.nome ?? '—'}</td><td className="px-4 py-3">{item.data}</td><td className="px-4 py-3">{item.hora}</td><td className="px-4 py-3">{item.servico ? Number(item.servico.preco).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '—'}</td><td className="px-4 py-3"><span className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusStyle[item.status] ?? 'bg-gray-100 text-gray-700'}`}>{statusLabels[item.status] ?? item.status}</span></td><td className="px-4 py-3"><div className="flex gap-2"><Action label="Visualizar" onClick={() => { setSelected(item); setModal('visualizar') }}><Eye className="h-4 w-4" /></Action><Action label="Editar" onClick={() => openEdit(item)}><Pencil className="h-4 w-4" /></Action><Action label="Cancelar" onClick={() => setPendingAction({ type: 'cancelar', item })} disabled={item.status === 'CANCELADO'}><XCircle className="h-4 w-4" /></Action><Action label="Excluir" onClick={() => setPendingAction({ type: 'excluir', item })}><Trash2 className="h-4 w-4" /></Action></div></td></tr>)}{filteredItems.length === 0 && <tr><td colSpan={8} className="px-4 py-10 text-center text-gray-500">Nenhum agendamento encontrado.</td></tr>}</tbody></table></div>
+    {modal && <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"><div role="dialog" aria-modal="true" aria-labelledby="modal-title" className="w-full max-w-2xl rounded-xl bg-white p-6 shadow-xl"><div className="mb-5 flex items-center justify-between"><h2 id="modal-title" className="text-xl font-bold">{modal === 'novo' ? 'Novo agendamento' : modal === 'editar' ? 'Editar agendamento' : 'Detalhes do agendamento'}</h2><button onClick={closeModal} aria-label="Fechar">×</button></div>{modal === 'visualizar' && selected ? <div className="grid gap-3 sm:grid-cols-2"><Detail label="Cliente" value={selected.usuario?.nome} /><Detail label="Funcionário" value={selected.profissional?.nome} /><Detail label="Serviço" value={selected.servico?.nome} /><Detail label="Valor" value={selected.servico ? Number(selected.servico.preco).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : undefined} /><Detail label="Data" value={selected.data} /><Detail label="Hora" value={selected.hora} /><Detail label="Status" value={statusLabels[selected.status] ?? selected.status} /></div> : <div className="grid gap-4 sm:grid-cols-2">{modal === 'novo' && <Filter label="Cliente" value={form.usuarioId} onChange={value => setField('usuarioId', value)}><option value="">Selecione</option>{clientes.map(cliente => <option key={cliente.id} value={cliente.id}>{cliente.nome}</option>)}</Filter>}<Filter label="Funcionário" value={form.profissionalId} onChange={value => setField('profissionalId', value)}><option value="">Selecione</option>{profissionais.map(profissional => <option key={profissional.id} value={profissional.id}>{profissional.nome}</option>)}</Filter><Filter label="Serviço" value={form.servicoId} onChange={value => setField('servicoId', value)}><option value="">Selecione</option>{servicos.map(servico => <option key={servico.id} value={servico.id}>{servico.nome}</option>)}</Filter><label className="text-sm font-medium text-gray-700">Data<input type="date" value={form.data} onChange={event => setField('data', event.target.value)} className="mt-1 w-full rounded border border-gray-300 px-3 py-2" /></label><label className="text-sm font-medium text-gray-700">Hora<input type="time" value={form.hora} onChange={event => setField('hora', event.target.value)} className="mt-1 w-full rounded border border-gray-300 px-3 py-2" /></label><Filter label="Status" value={form.status} onChange={value => setField('status', value)}>{Object.entries(statusLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</Filter></div>}<div className="mt-6 flex justify-end gap-3"><button onClick={closeModal} className="rounded px-4 py-2 text-gray-700 hover:bg-gray-100">Fechar</button>{modal !== 'visualizar' && <button onClick={save} className="btn-primary">Salvar</button>}</div></div></div>}{pendingAction && <ConfirmDialog title={pendingAction.type === 'cancelar' ? 'Cancelar agendamento' : 'Excluir agendamento'} message={`${pendingAction.type === 'cancelar' ? 'Deseja cancelar' : 'Deseja excluir definitivamente'} o agendamento de ${pendingAction.item.usuario?.nome ?? 'cliente'}?`} confirmLabel={pendingAction.type === 'cancelar' ? 'Cancelar agendamento' : 'Excluir'} danger onConfirm={() => { void confirmAction() }} onClose={() => setPendingAction(null)} />}</section>
 }
+
+function Filter({ label, value, onChange, children }: { label: string; value: string; onChange: (value: string) => void; children: React.ReactNode }) { return <label className="text-sm font-medium text-gray-700">{label}<select value={value} onChange={event => onChange(event.target.value)} className="mt-1 w-full rounded border border-gray-300 bg-white px-3 py-2">{children}</select></label> }
+function Action({ label, onClick, disabled, children }: { label: string; onClick: () => void; disabled?: boolean; children: React.ReactNode }) { return <button type="button" onClick={onClick} disabled={disabled} aria-label={label} title={label} className="rounded p-2 text-secondary-500 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40">{children}</button> }
+function Detail({ label, value }: { label: string; value?: string }) { return <div><p className="text-sm text-gray-500">{label}</p><p className="font-medium">{value ?? '—'}</p></div> }
