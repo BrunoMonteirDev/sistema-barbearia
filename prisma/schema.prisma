@@ -33,6 +33,7 @@ model Profissional {
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
   agendamentos  Agendamento[]
+  disponibilidades DisponibilidadeProfissional[]
 
   @@map("profissionais")
 }
@@ -68,6 +69,17 @@ model Agendamento {
 
   @@unique([profissionalId, data, hora])
   @@map("agendamentos")
+}
+
+model DisponibilidadeProfissional {
+  id              String       @id @default(uuid())
+  profissionalId  String       @map("profissional_id")
+  diaSemana       Int          @map("dia_semana")
+  hora            String
+  profissional    Profissional @relation(fields: [profissionalId], references: [id], onDelete: Cascade)
+
+  @@unique([profissionalId, diaSemana, hora])
+  @@map("profissionais_disponibilidades")
 }
 
 model Configuracao {

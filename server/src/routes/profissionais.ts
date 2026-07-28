@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { prisma } from '../lib/prisma'
 import { authenticate, requireAdmin } from '../middlewares/auth'
+import { isValidBlock } from '../services/horarios.service'
 
 const router = Router()
 
@@ -34,6 +35,51 @@ router.get('/admin', authenticate, requireAdmin, async (_req, res) => {
   } catch (error) {
     console.error(error)
     return res.status(500).json({ error: 'Erro ao listar profissionais.' })
+  }
+})
+
+router.get('/:id/disponibilidade', authenticate, requireAdmin, async (req, res) => {
+  try {
+    const horarios = await prisma.disponibilidadeProfissional.findMany({
+      where: { profissionalId: req.params.id },
+      orderBy: [{ diaSemana: 'asc' }, { hora: 'asc' }],
+    })
+    const disponibilidade = horarios.reduce<Record<number, string[]>>((acc, item) => {
+      acc[item.diaSemana] = [...(acc[item.diaSemana] ?? []), item.hora]
+      return acc
+    }, {})
+    return res.json(disponibilidade)
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ error: 'Erro ao listar horários do funcionário.' })
+  }
+})
+
+router.put('/:id/disponibilidade', authenticate, requireAdmin, async (req, res) => {
+  try {
+    const disponibilidade = req.body.disponibilidade
+    if (!disponibilidade || typeof disponibilidade !== 'object' || Array.isArray(disponibilidade)) {
+      return res.status(400).json({ error: 'Disponibilidade inválida.' })
+    }
+
+    const profissional = await prisma.profissional.findUnique({ where: { id: req.params.id } })
+    if (!profissional) return res.status(404).json({ error: 'Funcionário não encontrado.' })
+
+    const blocos = Object.entries(disponibilidade).flatMap(([dia, horas]) => {
+      const diaSemana = Number(dia)
+      if (!Number.isInteger(diaSemana) || diaSemana < 0 || diaSemana > 6 || !Array.isArray(horas)) return []
+      return [...new Set(horas)].filter(isValidBlock).map(hora => ({ profissionalId: req.params.id, diaSemana, hora }))
+    })
+
+    await prisma.$transaction([
+      prisma.disponibilidadeProfissional.deleteMany({ where: { profissionalId: req.params.id } }),
+      ...(blocos.length ? [prisma.disponibilidadeProfissional.createMany({ data: blocos })] : []),
+    ])
+
+    return res.json({ ok: true })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ error: 'Erro ao salvar horários do funcionário.' })
   }
 })
 

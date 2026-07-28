@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { prisma } from '../lib/prisma'
 import { requireAdmin } from '../middlewares/auth'
+import { escolherPrimeiroProfissionalDisponivel, isValidBlock, listarHorariosDisponiveis, obterBlocos, validarDisponibilidade } from '../services/horarios.service'
 
 const router = Router()
 const appointmentStatuses = ['PENDENTE', 'CONFIRMADO', 'CONCLUIDO', 'CANCELADO']
@@ -13,9 +14,7 @@ function isValidDate(value: unknown) {
 }
 
 function isValidTime(value: unknown) {
-  if (typeof value !== 'string' || !/^\d{2}:\d{2}$/.test(value)) return false
-  const [hour, minute] = value.split(':').map(Number)
-  return hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59
+  return isValidBlock(value)
 }
 
 function isValidStatus(value: unknown) {
@@ -47,9 +46,15 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { profissionalId, servicoId, data, hora, observacao } = req.body
-    if (typeof profissionalId !== 'string' || typeof servicoId !== 'string' || !isValidDate(data) || !isValidTime(hora)) {
-      return res.status(400).json({ error: 'Profissional, serviço, data e hora válidos são obrigatórios.' })
+    const { servicoId, data, hora, observacao } = req.body
+    let { profissionalId } = req.body
+    if ((profissionalId !== 'sem-preferencia' && typeof profissionalId !== 'string') || typeof servicoId !== 'string' || !isValidDate(data) || !isValidTime(hora)) {
+      return res.status(400).json({ error: 'Profissional, serviço, data e hora em blocos de 30 minutos são obrigatórios.' })
+    }
+
+    if (profissionalId === 'sem-preferencia') {
+      profissionalId = await escolherPrimeiroProfissionalDisponivel(servicoId, data, hora)
+      if (!profissionalId) return res.status(409).json({ error: 'Nenhum funcionário disponível para este horário.' })
     }
 
     const usuarioId = req.auth!.nivel === 'Administrador' && typeof req.body.usuarioId === 'string' ? req.body.usuarioId : req.auth!.sub
@@ -59,8 +64,8 @@ router.post('/', async (req, res) => {
     ])
     if (!disponivel || !usuario) return res.status(400).json({ error: 'Cliente, profissional ou serviço indisponível.' })
 
-    const conflito = await prisma.agendamento.findFirst({ where: { profissionalId, data, hora, status: { not: 'CANCELADO' } } })
-    if (conflito) return res.status(409).json({ error: 'Este horário já está reservado.' })
+    const horarioDisponivel = await validarDisponibilidade(profissionalId, servicoId, data, hora)
+    if (!horarioDisponivel) return res.status(409).json({ error: 'Este horário não está disponível para a duração do serviço.' })
 
     const agendamento = await prisma.agendamento.create({ data: { usuarioId, profissionalId, servicoId, data, hora, observacao } })
     return res.status(201).json(agendamento)
@@ -71,10 +76,17 @@ router.post('/', async (req, res) => {
 })
 
 router.get('/disponibilidade', async (req, res) => {
-  const { profissionalId, data } = req.query
-  if (typeof profissionalId !== 'string' || !isValidDate(data)) return res.status(400).json({ error: 'Profissional e data válidos são obrigatórios.' })
-  const ocupados = await prisma.agendamento.findMany({ where: { profissionalId, data, status: { not: 'CANCELADO' } }, select: { hora: true } })
-  return res.json({ ocupados: ocupados.map(({ hora }) => hora) })
+  const { profissionalId, servicoId, data } = req.query
+  if (typeof profissionalId !== 'string' || typeof servicoId !== 'string' || !isValidDate(data)) return res.status(400).json({ error: 'Profissional, serviço e data válidos são obrigatórios.' })
+  if (profissionalId === 'sem-preferencia') {
+    const horarios: string[] = []
+    for (const hora of obterBlocos()) {
+      if (await escolherPrimeiroProfissionalDisponivel(servicoId, data, hora)) horarios.push(hora)
+    }
+    return res.json({ horarios })
+  }
+  const horarios = await listarHorariosDisponiveis(profissionalId, servicoId, data)
+  return res.json({ horarios })
 })
 
 router.patch('/:id/cancelar', async (req, res) => {
@@ -104,8 +116,8 @@ router.put('/:id', requireAdmin, async (req, res) => {
     return res.status(400).json({ error: 'Profissional ou serviço indisponível.' })
   }
 
-  const conflito = await prisma.agendamento.findFirst({ where: { profissionalId, data, hora, status: { not: 'CANCELADO' }, id: { not: agendamento.id } } })
-  if (conflito) return res.status(409).json({ error: 'Este horário já está reservado.' })
+  const horarioDisponivel = await validarDisponibilidade(profissionalId, servicoId, data, hora, agendamento.id)
+  if (!horarioDisponivel) return res.status(409).json({ error: 'Este horário não está disponível para a duração do serviço.' })
 
   return res.json(await prisma.agendamento.update({
     where: { id: agendamento.id },
