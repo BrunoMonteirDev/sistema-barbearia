@@ -6,7 +6,7 @@ import { escolherPrimeiroProfissionalDisponivel, isValidBlock, listarHorariosDis
 const router = Router()
 const appointmentStatuses = ['PENDENTE', 'CONFIRMADO', 'CONCLUIDO', 'CANCELADO']
 
-function isValidDate(value: unknown) {
+function isValidDate(value: unknown): value is string {
   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false
   const [year, month, day] = value.split('-').map(Number)
   const date = new Date(Date.UTC(year, month - 1, day))
@@ -89,19 +89,19 @@ router.get('/disponibilidade', async (req, res) => {
   return res.json({ horarios })
 })
 
-router.patch('/:id/cancelar', async (req, res) => {
+router.patch<{ id: string }>('/:id/cancelar', async (req, res) => {
   const agendamento = await prisma.agendamento.findUnique({ where: { id: req.params.id } })
   if (!agendamento) return res.status(404).json({ error: 'Agendamento não encontrado.' })
   if (req.auth!.nivel !== 'Administrador' && agendamento.usuarioId !== req.auth!.sub) return res.status(403).json({ error: 'Sem permissão para cancelar este agendamento.' })
   return res.json(await prisma.agendamento.update({ where: { id: agendamento.id }, data: { status: 'CANCELADO' } }))
 })
 
-router.patch('/:id/status', requireAdmin, async (req, res) => {
+router.patch<{ id: string }>('/:id/status', requireAdmin, async (req, res) => {
   if (!isValidStatus(req.body.status)) return res.status(400).json({ error: 'Status inválido.' })
   return res.json(await prisma.agendamento.update({ where: { id: req.params.id }, data: { status: req.body.status } }))
 })
 
-router.put('/:id', requireAdmin, async (req, res) => {
+router.put<{ id: string }>('/:id', requireAdmin, async (req, res) => {
   const agendamento = await prisma.agendamento.findUnique({ where: { id: req.params.id } })
   if (!agendamento) return res.status(404).json({ error: 'Agendamento não encontrado.' })
   if ((req.body.data !== undefined && !isValidDate(req.body.data)) || (req.body.hora !== undefined && !isValidTime(req.body.hora)) || (req.body.status !== undefined && !isValidStatus(req.body.status))) {
@@ -125,7 +125,7 @@ router.put('/:id', requireAdmin, async (req, res) => {
   }))
 })
 
-router.delete('/:id', requireAdmin, async (req, res) => {
+router.delete<{ id: string }>('/:id', requireAdmin, async (req, res) => {
   const agendamento = await prisma.agendamento.findUnique({ where: { id: req.params.id } })
   if (!agendamento) return res.status(404).json({ error: 'Agendamento não encontrado.' })
   await prisma.agendamento.delete({ where: { id: agendamento.id } })

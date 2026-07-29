@@ -42,15 +42,14 @@ Entre os principais recursos estão:
 
 ## Frontend
 
-- Next.js
 - React
 - TypeScript
 - Tailwind CSS
-- shadcn/ui
+- Vite
 
 ## Backend
 
-- Next.js Route Handlers
+- Express
 - Prisma ORM
 - PostgreSQL
 
@@ -72,10 +71,10 @@ O sistema seguirá uma arquitetura simples e organizada.
 Cliente
       │
       ▼
-Interface (Next.js)
+Interface (React + Vite)
       │
       ▼
-API (Route Handlers)
+API (Express)
       │
       ▼
 Prisma ORM
@@ -91,18 +90,15 @@ Toda a arquitetura foi planejada para facilitar a manutenção, aprendizado e ap
 # 📁 Estrutura do Projeto
 
 ```
-src/
-│
-├── app/
-├── components/
-├── hooks/
-├── lib/
+client/
+├── src/
+└── package.json
+
+server/
+├── src/
 ├── prisma/
-├── services/
-├── types/
-├── utils/
-│
-public/
+└── package.json
+
 docs/
 ```
 
@@ -260,16 +256,20 @@ Projeto desenvolvido exclusivamente para fins acadêmicos.
 
 ## Executar localmente
 
-Em dois terminais, na raiz do projeto, execute:
+Em dois terminais, execute:
 
 ```bash
-npm run dev:api
+cd server
+npm install
+npm run dev
 ```
 
 ```bash
-npm run dev:client
+cd client
+npm install
+npm run dev
 ```
 
-A API deve ficar disponível em `http://localhost:3001` e o cliente em `http://localhost:5000`. Para validar a API, acesse `http://localhost:3001/api/health`.
+A API fica disponível em `http://localhost:3001` e o cliente em `http://localhost:5000`. Para validar a API, acesse `http://localhost:3001/api/health`.
 
-O cliente React/Vite consome a API Express em `/api`. A API usa Prisma/PostgreSQL e autenticação JWT. Configure `DATABASE_URL` e `JWT_SECRET` seguindo `.env.example`, aplique a migration e execute `npm run seed`.
+O cliente React/Vite consome a API Express em `/api`. A API usa Prisma/PostgreSQL e autenticação JWT. Configure `server/.env` com `DATABASE_URL` e `JWT_SECRET`. Para preparar o Prisma, dentro de `server/`, execute `npm run prisma:generate`; para popular dados de demonstração, execute `npm run seed`.

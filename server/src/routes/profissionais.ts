@@ -38,7 +38,7 @@ router.get('/admin', authenticate, requireAdmin, async (_req, res) => {
   }
 })
 
-router.get('/:id/disponibilidade', authenticate, requireAdmin, async (req, res) => {
+router.get<{ id: string }>('/:id/disponibilidade', authenticate, requireAdmin, async (req, res) => {
   try {
     const horarios = await prisma.disponibilidadeProfissional.findMany({
       where: { profissionalId: req.params.id },
@@ -55,7 +55,7 @@ router.get('/:id/disponibilidade', authenticate, requireAdmin, async (req, res) 
   }
 })
 
-router.put('/:id/disponibilidade', authenticate, requireAdmin, async (req, res) => {
+router.put<{ id: string }>('/:id/disponibilidade', authenticate, requireAdmin, async (req, res) => {
   try {
     const disponibilidade = req.body.disponibilidade
     if (!disponibilidade || typeof disponibilidade !== 'object' || Array.isArray(disponibilidade)) {
@@ -95,7 +95,7 @@ router.post('/', authenticate, requireAdmin, async (req, res) => {
   }
 })
 
-router.put('/:id', authenticate, requireAdmin, async (req, res) => {
+router.put<{ id: string }>('/:id', authenticate, requireAdmin, async (req, res) => {
   try {
     const data = getPayload(req.body)
     if (!hasValidData(data)) return res.status(400).json({ error: 'Informe nome, telefone e e-mail válidos.' })
@@ -107,7 +107,7 @@ router.put('/:id', authenticate, requireAdmin, async (req, res) => {
   }
 })
 
-router.delete('/:id', authenticate, requireAdmin, async (req, res) => {
+router.delete<{ id: string }>('/:id', authenticate, requireAdmin, async (req, res) => {
   try {
     const profissional = await prisma.profissional.update({ where: { id: req.params.id }, data: { ativo: false } })
     return res.json(profissional)

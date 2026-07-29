@@ -1,10 +1,9 @@
 import dotenv from 'dotenv'
-import path from 'path'
 import { PrismaClient } from '@prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 import bcrypt from 'bcryptjs'
 
-dotenv.config({ path: path.resolve(process.cwd(), 'server', '.env') })
+dotenv.config()
 
 const connectionString = process.env.DATABASE_URL
 if (!connectionString) throw new Error('DATABASE_URL não foi configurada.')

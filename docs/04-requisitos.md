@@ -293,6 +293,10 @@ Alta
 ## Critérios de aceitação
 
 - Horários ocupados não aparecem.
+
+## Configuração pelo administrador
+
+O administrador pode definir a disponibilidade semanal de cada profissional em intervalos de 30 minutos, marcar ou limpar todos os horários de um dia e copiar os horários de outro dia.
 - Dois clientes não conseguem reservar o mesmo horário.
 
 ---

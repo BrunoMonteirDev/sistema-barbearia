@@ -1,8 +1,8 @@
-# Transição para API Prisma
+# Arquitetura ativa: Vite, Express e Prisma
 
-O cliente React/Vite consome a API Express em `/api`. O Express é uma etapa de transição antes da futura migração para Next.js.
+O cliente React/Vite em `client/` consome a API Express em `server/` pelo prefixo `/api`. Cada aplicação possui suas próprias dependências e comandos de execução.
 
-O banco de dados é PostgreSQL e todo acesso passa pelo Prisma. Configure `DATABASE_URL` e `JWT_SECRET` conforme `.env.example`, aplique a migration inicial e execute `npm run seed` para os dados de demonstração.
+O banco de dados é PostgreSQL e todo acesso passa pelo Prisma, localizado em `server/prisma/`. Configure `server/.env` com `DATABASE_URL` e `JWT_SECRET`, execute `npm run prisma:generate` dentro de `server/` e use `npm run seed` apenas quando quiser os dados de demonstração.
 
 Autenticação usa JWT. Administradores gerenciam recursos do painel; clientes só acessam o próprio perfil e os próprios agendamentos. Supabase, mocks, pagamentos, assinaturas, produtos e upload de imagens não fazem parte deste ciclo.
 

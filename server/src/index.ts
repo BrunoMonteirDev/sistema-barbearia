@@ -1,7 +1,6 @@
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
-import path from 'path'
 import authRoutes from './routes/auth'
 import servicosRoutes from './routes/servicos'
 import profissionaisRoutes from './routes/profissionais'
@@ -10,7 +9,7 @@ import configuracoesRoutes from './routes/configuracoes'
 import usuariosRoutes from './routes/usuarios'
 import { authenticate, requireAdmin } from './middlewares/auth'
 
-dotenv.config({ path: path.resolve(process.cwd(), 'server', '.env') })
+dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT || 3001
