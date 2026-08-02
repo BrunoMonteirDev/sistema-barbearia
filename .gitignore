@@ -6,6 +6,7 @@ server/node_modules
 # ambientes
 .env
 .env.*
+!.env.evolution.example
 .local
 .replit
 
