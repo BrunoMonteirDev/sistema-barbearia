@@ -8,9 +8,14 @@ export function destinoAposLoginGoogle(cadastroConcluido: boolean | undefined) {
   return cadastroConcluido === false ? '/concluir-cadastro' : '/minha-conta'
 }
 
+function destinoSeguro(retorno: string | null) {
+  return retorno?.startsWith('/') && !retorno.startsWith('//') ? retorno : null
+}
+
 export default function LoginPage() {
   const { signIn, signInGoogle, signUp, user } = useAuth()
   const [, go] = useLocation()
+  const retorno = destinoSeguro(new URLSearchParams(window.location.search).get('retorno'))
   const [register, setRegister] = useState(false)
   const [nome, setNome] = useState('')
   const [email, setEmail] = useState('')
@@ -30,7 +35,7 @@ export default function LoginPage() {
       if (register) await signUp(nome, email, senha)
       else await signIn(email, senha)
       toast.success('Acesso realizado.')
-      go(register ? '/minha-conta' : '/')
+      go(retorno ?? (register ? '/minha-conta' : '/'))
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Erro ao autenticar.')
     }
@@ -41,7 +46,10 @@ export default function LoginPage() {
     try {
       const usuario = await signInGoogle(idToken)
       toast.success('Acesso realizado com Google.')
-      setDestinoGoogle(destinoAposLoginGoogle(usuario.cadastroConcluido))
+      const destino = usuario.cadastroConcluido === false
+        ? `/concluir-cadastro${retorno ? `?retorno=${encodeURIComponent(retorno)}` : ''}`
+        : retorno ?? destinoAposLoginGoogle(usuario.cadastroConcluido)
+      setDestinoGoogle(destino)
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Não foi possível entrar com Google.')
     } finally {

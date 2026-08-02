@@ -5,12 +5,21 @@ Este checklist registra verificacoes que dependem de navegador, dispositivo,
 credenciais ou avaliacao humana. Elas nao sao substituidas pelos testes Vitest e
 Supertest. Preencha data, responsavel e resultado ao executar cada item.
 
-1. AGENDA ADMINISTRATIVA
+1. AGENDAMENTO ONLINE
+[ ] Selecionar profissional, serviço, data e horário: a revisão deve aparecer
+    antes de qualquer criação de agendamento.
+[ ] Cliente sem sessão: confirmar na revisão abre o login e, após entrar,
+    retorna à revisão com todos os dados preservados.
+[ ] Calendário: conferir grade, navegação por setas e dropdowns de mês/ano;
+    meses passados do ano atual e datas anteriores devem estar indisponíveis.
+[ ] Conferir que horários aparecem somente depois da seleção de uma data.
+
+2. AGENDA ADMINISTRATIVA
 [ ] Desktop: verificar visao diaria, semanal, filtros e navegacao entre datas.
 [ ] Mobile: verificar rolagem horizontal/vertical, blocos de agenda e acoes.
 [ ] Confirmar, concluir, cancelar e remarcar em um agendamento de teste.
 
-2. ACESSIBILIDADE
+3. ACESSIBILIDADE
 [ ] Tab/Shift+Tab: foco visivel em menu, formularios, cards e botoes.
 [ ] Setas: navegar somente por controles acionaveis, sem alterar inputs.
 [ ] Modal: foco preso, Esc fecha e foco retorna ao controle que abriu o modal.
@@ -20,14 +29,14 @@ Supertest. Preencha data, responsavel e resultado ao executar cada item.
     Performance, Best Practices e SEO.
 [ ] Leitor de tela: validar nomes de botoes, erros, avisos temporarios e status.
 
-3. LOGIN GOOGLE EM PRODUCAO
+4. LOGIN GOOGLE EM PRODUCAO
 [ ] Confirmar VITE_GOOGLE_CLIENT_ID no ambiente publicado, nunca no repositorio.
 [ ] Login de conta nova abre conclusao de cadastro uma unica vez.
 [ ] Cadastro pendente continua bloqueando conta e agendamento apos novo login.
 [ ] Conta local de e-mail Google verificado e vinculada sem duplicar usuario.
 [ ] Conta desativada reativa como pendente e exige conclusao novamente.
 
-4. WHATSAPP / EVOLUTION EM AMBIENTE CONTROLADO
+5. WHATSAPP / EVOLUTION EM AMBIENTE CONTROLADO
 [ ] Criar instancia, conectar QR, desconectar e reconectar pelo painel.
 [ ] Confirmar envio manual de criacao, remarcacao, cancelamento e status.
 [ ] Confirmar que nao ha envio automatico com a opcao principal desligada.
@@ -36,12 +45,12 @@ Supertest. Preencha data, responsavel e resultado ao executar cada item.
 [ ] Simular Evolution indisponivel: operacao de agendamento permanece concluida
     e o diagnostico registra a falha.
 
-5. PRIVACIDADE E OPERACAO
+6. PRIVACIDADE E OPERACAO
 [ ] Responsavel legal revisa privacidade, termos, cookies e base legal LGPD.
 [ ] Definir encarregado/canal de contato, retencao e processo de solicitacao de dados.
 [ ] Definir politica operacional de consentimento, frequencia e conteudo WhatsApp.
 
-6. REGISTRO DE EXECUCAO
+7. REGISTRO DE EXECUCAO
 Data: ____________________
 Responsavel: ______________
 Ambiente/URL: ______________

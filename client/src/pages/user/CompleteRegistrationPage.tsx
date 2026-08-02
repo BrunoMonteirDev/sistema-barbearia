@@ -17,7 +17,8 @@ export default function CompleteRegistrationPage() {
       const usuarioAtualizado = await api.usuarios.concluirCadastro({ nome, telefone });
       atualizarUsuario(usuarioAtualizado);
       toast.success("Cadastro concluído.");
-      go("/minha-conta");
+      const retorno = new URLSearchParams(window.location.search).get("retorno");
+      go(retorno?.startsWith("/") && !retorno.startsWith("//") ? retorno : "/minha-conta");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Não foi possível concluir o cadastro.");
     }

@@ -1,9 +1,11 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import {
   ArrowLeft,
   ArrowRight,
   CalendarDays,
   Check,
+  ChevronLeft,
+  ChevronRight,
   Clock3,
   Scissors,
   UserRound,
@@ -16,21 +18,42 @@ import { arredondarDuracaoParaBloco } from "@/utils/horarios";
 
 const SEM_PREFERENCIA = "sem-preferencia";
 const hoje = new Date().toLocaleDateString("en-CA");
+const nomesDosMeses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+const diasDaSemana = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+const anoAtual = new Date().getFullYear();
+const mesAtual = new Date().getMonth();
+const anosDisponiveis = Array.from({ length: 6 }, (_, indice) => anoAtual + indice);
+
+function formatarDataLocal(data: Date) {
+  return `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, "0")}-${String(data.getDate()).padStart(2, "0")}`;
+}
 
 export default function AgendarPage() {
   const { user } = useAuth();
   const [, go] = useLocation();
   const voltarParaAgendamentos = new URLSearchParams(window.location.search).get("origem") === "meus-agendamentos";
-  const [etapa, setEtapa] = useState(1);
+  const dadosDaRevisao = useMemo(() => {
+    const parametros = new URLSearchParams(window.location.search);
+    const profissionalId = parametros.get("profissionalId");
+    const servicoId = parametros.get("servicoId");
+    const data = parametros.get("data");
+    const hora = parametros.get("hora");
+    return parametros.get("revisao") === "1" && profissionalId && servicoId && data && hora
+      ? { profissionalId, servicoId, data, hora }
+      : null;
+  }, []);
+  const preservarHorarioInicial = useRef(Boolean(dadosDaRevisao));
+  const [etapa, setEtapa] = useState(dadosDaRevisao ? 4 : 1);
   const [servicos, setServicos] = useState<Servico[]>([]);
   const [profissionais, setProfissionais] = useState<Profissional[]>([]);
   const [horarios, setHorarios] = useState<string[]>([]);
   const [loadingHorarios, setLoadingHorarios] = useState(false);
-  const [form, setForm] = useState({
-    profissionalId: "",
-    servicoId: "",
-    data: "",
-    hora: "",
+  const [mesExibido, setMesExibido] = useState(() => {
+    const dataInicial = dadosDaRevisao?.data ? new Date(`${dadosDaRevisao.data}T12:00:00`) : new Date();
+    return new Date(dataInicial.getFullYear(), dataInicial.getMonth(), 1);
+  });
+  const [form, setForm] = useState(dadosDaRevisao ?? {
+    profissionalId: "", servicoId: "", data: "", hora: "",
   });
 
   useEffect(() => {
@@ -52,12 +75,22 @@ export default function AgendarPage() {
     () => servicos.find((servico) => servico.id === form.servicoId),
     [servicos, form.servicoId],
   );
-  const proximosDias = useMemo(() => Array.from({ length: 7 }, (_, index) => {
-    const data = new Date(); data.setDate(data.getDate() + index)
-    return { valor: data.toLocaleDateString('en-CA'), dia: data.toLocaleDateString('pt-BR', { weekday: 'short' }).replace('.', ''), numero: data.getDate() }
-  }), []);
+  const diasDoCalendario = useMemo(() => {
+    const primeiroDia = new Date(mesExibido.getFullYear(), mesExibido.getMonth(), 1);
+    const quantidadeDeDias = new Date(mesExibido.getFullYear(), mesExibido.getMonth() + 1, 0).getDate();
+    return Array.from({ length: primeiroDia.getDay() + quantidadeDeDias }, (_, indice) => {
+      const dia = indice - primeiroDia.getDay() + 1;
+      return dia > 0 ? new Date(mesExibido.getFullYear(), mesExibido.getMonth(), dia) : null;
+    });
+  }, [mesExibido]);
+  const mesesDisponiveis = useMemo(
+    () => nomesDosMeses.map((nome, indice) => ({ nome, indice })).filter(({ indice }) => mesExibido.getFullYear() !== anoAtual || indice >= mesAtual),
+    [mesExibido],
+  );
+  const mesAnteriorBloqueado = mesExibido.getFullYear() === new Date().getFullYear() && mesExibido.getMonth() === new Date().getMonth();
   useEffect(() => {
-    setForm((current) => ({ ...current, hora: "" }));
+    if (preservarHorarioInicial.current) preservarHorarioInicial.current = false;
+    else setForm((current) => ({ ...current, hora: "" }));
     setHorarios([]);
     if (!form.profissionalId || !form.servicoId || !form.data) return;
     setLoadingHorarios(true);
@@ -85,10 +118,23 @@ export default function AgendarPage() {
   };
   const submit = async (event: FormEvent) => {
     event.preventDefault();
-    if (!user) return go("/login");
+    if (etapa !== 4) {
+      toast.error("Revise os dados do agendamento antes de confirmar.");
+      return;
+    }
+    const retornoDaRevisao = `/agendamento?${new URLSearchParams({
+      revisao: "1",
+      profissionalId: form.profissionalId,
+      servicoId: form.servicoId,
+      data: form.data,
+      hora: form.hora,
+    }).toString()}`;
+    if (!user) {
+      return go(`/login?retorno=${encodeURIComponent(retornoDaRevisao)}`);
+    }
     if (user.cadastroConcluido === false) {
       toast.error("Conclua seu cadastro antes de confirmar um agendamento.");
-      return go("/concluir-cadastro");
+      return go(`/concluir-cadastro?retorno=${encodeURIComponent(retornoDaRevisao)}`);
     }
     if (!horarios.includes(form.hora))
       return toast.error("Selecione um horário disponível.");
@@ -247,7 +293,30 @@ export default function AgendarPage() {
                 <p className="mt-1 text-sm text-slate-600">
                   Selecione uma data para visualizar os horários disponíveis.
                 </p>
-                <div className="mt-6"><p className="text-sm font-semibold text-slate-800">Selecione uma data</p><div className="mt-3 grid grid-cols-4 gap-2 sm:grid-cols-7">{proximosDias.map(dia => <button key={dia.valor} type="button" onClick={() => setForm(current => ({ ...current, data: dia.valor, hora: '' }))} className={`rounded-lg border px-2 py-3 text-center transition-colors ${form.data === dia.valor ? 'border-primary-700 bg-primary-700 text-white' : 'border-slate-200 bg-white text-slate-700 hover:border-secondary-500'}`}><span className="block text-xs font-semibold uppercase">{dia.dia}</span><span className="mt-1 block text-lg font-bold">{dia.numero}</span></button>)}</div><label className="mt-4 block text-sm font-medium text-slate-700">Ou escolha outra data<input required min={hoje} className="input-field mt-1" type="date" value={form.data} onChange={(event) => setForm(current => ({ ...current, data: event.target.value, hora: '' }))} /></label></div>
+                <div className="mt-6 rounded-xl border border-slate-200 p-4 sm:p-5">
+                  <div className="flex items-center justify-between gap-3">
+                    <button type="button" aria-label="Mês anterior" disabled={mesAnteriorBloqueado} onClick={() => setMesExibido(atual => new Date(atual.getFullYear(), atual.getMonth() - 1, 1))} className="rounded-md p-2 text-slate-700 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"><ChevronLeft className="h-5 w-5" /></button>
+                    <div className="flex items-center gap-2">
+                      <label className="sr-only" htmlFor="mes-calendario">Mês</label>
+                      <select id="mes-calendario" aria-label="Selecionar mês" value={mesExibido.getMonth()} onChange={event => setMesExibido(atual => new Date(atual.getFullYear(), Number(event.target.value), 1))} className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm font-bold text-slate-900 focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-200">
+                        {mesesDisponiveis.map(({ nome, indice }) => <option key={nome} value={indice}>{nome}</option>)}
+                      </select>
+                      <label className="sr-only" htmlFor="ano-calendario">Ano</label>
+                      <select id="ano-calendario" aria-label="Selecionar ano" value={mesExibido.getFullYear()} onChange={event => setMesExibido(atual => { const ano = Number(event.target.value); return new Date(ano, ano === anoAtual ? Math.max(atual.getMonth(), mesAtual) : atual.getMonth(), 1) })} className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm font-bold text-slate-900 focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-200">
+                        {anosDisponiveis.map(ano => <option key={ano} value={ano}>{ano}</option>)}
+                      </select>
+                    </div>
+                    <button type="button" aria-label="Próximo mês" onClick={() => setMesExibido(atual => new Date(atual.getFullYear(), atual.getMonth() + 1, 1))} className="rounded-md p-2 text-slate-700 hover:bg-slate-100"><ChevronRight className="h-5 w-5" /></button>
+                  </div>
+                  <div className="mt-4 grid grid-cols-7 overflow-hidden rounded-lg border border-slate-200 text-center" role="grid" aria-label={`Calendário de ${nomesDosMeses[mesExibido.getMonth()]} de ${mesExibido.getFullYear()}`}>
+                    {diasDaSemana.map((dia, indice) => <span key={dia} className={`border-b border-slate-200 bg-slate-50 py-2 text-xs font-bold uppercase text-slate-500 ${indice < 6 ? "border-r" : ""}`}>{dia}</span>)}
+                    {diasDoCalendario.map((data, indice) => data ? (() => {
+                      const valor = formatarDataLocal(data);
+                      const indisponivel = valor < hoje;
+                      return <button key={valor} type="button" disabled={indisponivel} aria-label={data.toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric" })} onClick={() => setForm(atual => ({ ...atual, data: valor, hora: "" }))} className={`aspect-square border-b border-slate-200 text-sm font-semibold transition-colors ${indice % 7 < 6 ? "border-r" : ""} ${form.data === valor ? "bg-primary-700 text-white" : "text-slate-800 hover:bg-secondary-50"} disabled:cursor-not-allowed disabled:text-slate-300 disabled:hover:bg-transparent`}>{data.getDate()}</button>;
+                    })() : <span key={`vazio-${indice}`} aria-hidden="true" className={`border-b border-slate-200 ${indice % 7 < 6 ? "border-r" : ""}`} />)}
+                  </div>
+                </div>
                 {servicoSelecionado && (
                   <p className="mt-3 rounded-md bg-slate-50 p-3 text-sm text-slate-700">
                     Duração do serviço:{" "}
@@ -319,7 +388,7 @@ export default function AgendarPage() {
                 <ArrowRight className="h-4 w-4" />
               </button>
             ) : (
-              <button className="btn-primary gap-2" disabled={!form.hora}>
+              <button type="submit" className="btn-primary gap-2" disabled={!form.hora}>
                 Confirmar agendamento
                 <Check className="h-4 w-4" />
               </button>

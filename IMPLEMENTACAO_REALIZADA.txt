@@ -33,6 +33,13 @@ Agendamento
 - Opção sem preferência de profissional quando houver disponibilidade.
 - Exibição de horários livres com validação no backend de jornada, duração e conflito.
 - Revisão obrigatória com profissional, serviço, data, horário, duração e valor.
+- O cliente só é autenticado ao aceitar a revisão; após login ou conclusão de
+  cadastro, o sistema retorna à mesma revisão com os dados preservados.
+- A criação é bloqueada fora da etapa de revisão, inclusive em envios acidentais
+  do formulário por teclado.
+- A seleção de data usa calendário mensal com grade, navegação por setas e
+  seletores de mês/ano; dias e meses anteriores ao atual ficam indisponíveis.
+- Os horários só são carregados e exibidos depois que uma data é selecionada.
 
 Agenda e regras
 - Dashboard e painel de gestão de agendamentos.
