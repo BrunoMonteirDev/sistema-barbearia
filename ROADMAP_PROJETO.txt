@@ -47,6 +47,7 @@ Já entregue:
   incluindo o histórico da alteração.
 - Integração real de autenticação: política de senha forte, hash no cadastro,
   sessão de conta ativa e bloqueio de conta desativada.
+- Integração real do status ATRASADO conforme a tolerância configurada.
 
 Próximos itens:
 - Cobrir autenticação, permissões, usuários, profissionais, serviços,

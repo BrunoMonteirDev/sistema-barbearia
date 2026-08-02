@@ -78,6 +78,8 @@ Histórico
   e o registro do evento no histórico.
 - Cadastro público aplica a política de senha forte; senhas são armazenadas em
   hash, e contas desativadas não podem mais iniciar sessão.
+- Integração real comprova a atualização automática de agendamento confirmado
+  para ATRASADO conforme a tolerância configurada.
 - Cobertura é medida com limite global de 80%; o relatório atual aponta as
   lacunas restantes no cliente e servidor, impedindo aprovação enganosa.
 - Regressões de notificações automáticas cobrem o padrão desativado e o disparo

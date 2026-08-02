@@ -98,4 +98,18 @@ describe('API - conflito real de agendamento', () => {
     await prisma.usuario.update({ where: { id: usuario!.id }, data: { ativo: false } })
     await request(app).post('/api/auth/login').send({ email: 'conta.ativa@teste.local', password: 'SenhaForte!9' }).expect(401)
   })
+
+  it('marca atendimento passado como atrasado conforme a tolerancia configurada', async () => {
+    const cliente = await prisma.usuario.create({ data: { nome: 'Cliente atraso', email: 'cliente.atraso@teste.local', senhaHash: 'hash' } })
+    const profissional = await prisma.profissional.create({ data: { nome: 'Profissional de teste' } })
+    const servico = await prisma.servico.create({ data: { nome: 'Servico de teste', duracao: 30, preco: 30 } })
+    const agendamento = await prisma.agendamento.create({ data: { usuarioId: cliente.id, profissionalId: profissional.id, servicoId: servico.id, data: '2020-01-01', hora: '10:00', status: 'CONFIRMADO' } })
+    await prisma.configuracao.create({ data: { toleranciaAtrasoMinutos: 0 } })
+    const authorization = `Bearer ${signToken({ id: cliente.id, nivel: 'Cliente' })}`
+
+    const resposta = await request(app).get('/api/agendamentos').set('authorization', authorization).expect(200)
+
+    expect(resposta.body[0]).toMatchObject({ id: agendamento.id, status: 'ATRASADO' })
+    expect((await prisma.agendamento.findUnique({ where: { id: agendamento.id } }))?.status).toBe('ATRASADO')
+  })
 })
