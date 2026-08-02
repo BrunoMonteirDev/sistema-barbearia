@@ -94,13 +94,16 @@ Histórico
   do tradutor em desktop e mobile.
 - Ativação visual oficial do botão VLibras adicionada; o componente agora usa
   a classe `active` exigida pelo script externo.
+- Inicialização do VLibras adaptada para SPA: quando o script chega após o
+  carregamento da página, a rotina oficial de montagem é executada e o widget
+  é posicionado no canto inferior direito.
 - Tela de login ganhou retorno explícito ao menu inicial. A consulta de sessão
   só é feita quando existe token armazenado, eliminando o 401 esperado de
   usuários desconectados no console do navegador.
 - Alto contraste ajustado para normalizar superfícies utilitárias, textos,
   ícones, links e bordas: nenhum status, link ou ícone permanece em cor escura
   sobre fundo preto, e as interações de hover continuam perceptíveis.
-- Última validação concluída com build do cliente/servidor e 60 testes passando.
+- Última validação concluída com build do cliente/servidor e 61 testes passando.
 
 4. PENDÊNCIAS PRINCIPAIS
 

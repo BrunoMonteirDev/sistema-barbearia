@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 
 declare global {
-  interface Window { VLibras?: { Widget: new (url: string) => unknown } }
+  interface Window { VLibras?: { Widget: new (config: { rootPath: string; position: string }) => unknown } }
 }
 
 const scriptId = "vlibras-plugin";
@@ -22,8 +22,12 @@ export function VLibras() {
     topoRef.current?.setAttribute("vw-plugin-top-wrapper", "");
     const iniciar = () => {
       if (window.VLibras && !document.documentElement.dataset.vlibrasInicializado) {
-        new window.VLibras.Widget("https://vlibras.gov.br/app");
+        new window.VLibras.Widget({ rootPath: "https://vlibras.gov.br/app", position: "BR" });
         document.documentElement.dataset.vlibrasInicializado = "true";
+        // O plugin oficial conclui sua montagem no evento window.onload. Em
+        // uma SPA, o script pode ser incluído depois que esse evento já ocorreu.
+        // Nesse caso, acionamos a rotina uma vez para criar o botão do widget.
+        if (document.readyState === "complete") window.onload?.(new Event("load"));
       }
     };
     const existente = document.getElementById(scriptId) as HTMLScriptElement | null;
@@ -34,6 +38,7 @@ export function VLibras() {
     script.async = true;
     script.onload = iniciar;
     document.body.appendChild(script);
+    iniciar();
     return () => { script.onload = null; };
   }, [localizacao]);
 

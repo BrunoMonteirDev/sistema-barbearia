@@ -10,6 +10,7 @@ describe("VLibras", () => {
   afterEach(() => {
     document.getElementById("vlibras-plugin")?.remove();
     delete document.documentElement.dataset.vlibrasInicializado;
+    delete window.VLibras;
   });
 
   it("carrega o plugin nas páginas públicas", () => {
@@ -26,5 +27,15 @@ describe("VLibras", () => {
     const { container } = render(<VLibras />);
     expect(container).toBeEmptyDOMElement();
     expect(document.getElementById("vlibras-plugin")).toBeNull();
+  });
+
+  it("inicializa o widget quando o script é incluído depois do carregamento da SPA", () => {
+    localizacao.valor = "/";
+    const Widget = vi.fn();
+    window.VLibras = { Widget: Widget as unknown as new (config: { rootPath: string; position: string }) => unknown };
+
+    render(<VLibras />);
+
+    expect(Widget).toHaveBeenCalledWith({ rootPath: "https://vlibras.gov.br/app", position: "BR" });
   });
 });

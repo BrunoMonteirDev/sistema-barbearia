@@ -70,6 +70,8 @@ Próximos itens:
 - VLibras integrado em páginas públicas e de conta.
 - Estrutura oficial do widget validada para exibir seu botão de acesso em
   desktop e mobile.
+- Widget inicializado corretamente mesmo quando o script externo é carregado
+  depois do evento de carregamento da página (cenário de SPA).
 - Login oferece retorno ao início e não executa consulta de perfil sem sessão.
 - Alto contraste revisado: superfícies, textos, ícones, links, bordas e estados
   de hover usam combinações legíveis sobre o fundo escuro.
