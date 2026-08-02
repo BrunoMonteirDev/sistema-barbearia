@@ -137,6 +137,21 @@ Histórico
   sobre fundo preto, e as interações de hover continuam perceptíveis.
 - Última validação concluída com build do cliente/servidor e 66 testes passando.
 
+5. PRIVACIDADE, TERMOS, COOKIES E EXCLUSÃO DE CONTA
+
+- Foram criadas páginas públicas para Política de privacidade, Termos de uso e
+  Política de cookies/armazenamento local, acessíveis pelo rodapé da página
+  inicial e interligadas entre si.
+- Um aviso de privacidade e cookies é apresentado uma vez por navegador. Ele
+  esclarece o uso de armazenamento essencial para sessão e acessibilidade e
+  aponta os serviços de terceiros Google e VLibras.
+- A área Minha conta passou a permitir a exclusão da própria conta mediante a
+  confirmação textual "EXCLUIR MINHA CONTA". A operação desativa a conta em vez
+  de apagar registros de agendamento, encerra a sessão e retorna à página inicial.
+- A API recebeu DELETE /api/usuarios/me, protegido por autenticação e com a
+  mesma confirmação obrigatória. Testes de regressão cobrem confirmação inválida
+  e a desativação da própria conta.
+
 4. PENDÊNCIAS PRINCIPAIS
 
 A expansão da cobertura de testes, a agenda administrativa visual em calendário,

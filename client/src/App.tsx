@@ -12,6 +12,8 @@ import CompleteRegistrationPage from '@/pages/user/CompleteRegistrationPage'
 import { AcessibilidadeControls } from '@/components/AcessibilidadeControls'
 import { VLibras } from '@/components/VLibras'
 import { KeyboardArrowNavigation } from '@/components/KeyboardArrowNavigation'
+import { CookieNotice } from '@/components/CookieNotice'
+import LegalPage from '@/pages/LegalPage'
 
 export default function App() {
   return <AuthProvider>
@@ -34,10 +36,14 @@ export default function App() {
     <AcessibilidadeControls />
     <KeyboardArrowNavigation />
     <VLibras />
+    <CookieNotice />
     <Switch>
       <Route path="/" component={HomePage} />
       <Route path="/login" component={LoginPage} />
       <Route path="/agendamento" component={AgendarPage} />
+      <Route path="/privacidade" component={() => <LegalPage kind="privacidade" />} />
+      <Route path="/termos" component={() => <LegalPage kind="termos" />} />
+      <Route path="/cookies" component={() => <LegalPage kind="cookies" />} />
       <Route path="/painel/:rest*" component={() => <AdminRoute component={PainelPage} />} />
       <Route path="/painel" component={() => <AdminRoute component={PainelPage} />} />
       <Route path="/minha-conta/agendamentos" component={() => <UserRoute component={UserAppointmentsPage} />} />

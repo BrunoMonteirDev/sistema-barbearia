@@ -106,6 +106,15 @@ Próximos itens:
 - Registrar decisões novas: usuário unificado, Funcionário, e-mail opcional
   pelo admin, ATRASADO, regras e histórico.
 
+10. PRIVACIDADE E CONFORMIDADE                                  [EM ANDAMENTO]
+- [CONCLUÍDO] Páginas públicas de privacidade, termos de uso e cookies.
+- [CONCLUÍDO] Aviso de armazenamento local/cookies essenciais.
+- [CONCLUÍDO] Exclusão segura da própria conta por desativação, preservando o
+  histórico necessário de agendamentos.
+- [PENDENTE] Revisar textos jurídicos com responsável legal e definir canal de
+  contato do encarregado de dados, prazo de retenção e procedimento formal de
+  atendimento a solicitações LGPD.
+
 ONDE ESTAMOS AGORA
 
 O sistema já entrega os fluxos centrais de uma barbearia. O próximo passo é

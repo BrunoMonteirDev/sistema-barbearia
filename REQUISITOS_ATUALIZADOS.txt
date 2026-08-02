@@ -87,6 +87,19 @@ O ID token deverá ser validado exclusivamente no servidor contra o Client ID
 configurado por variável de ambiente. Contas Google recém-criadas permanecem
 com cadastro pendente até a conclusão dos dados obrigatórios.
 
+RF18 - Privacidade, termos e cookies [IMPLEMENTADO PARCIAL]
+O sistema deverá disponibilizar publicamente Política de privacidade, Termos de
+uso e Política de cookies/armazenamento local. Deverá informar o uso de itens
+essenciais para sessão e acessibilidade e indicar quando serviços de terceiros,
+como Google e VLibras, forem utilizados. A revisão jurídica dos textos e a
+definição do canal formal LGPD permanecem pendentes.
+
+RF19 - Exclusão de conta [IMPLEMENTADO]
+O usuário autenticado deverá conseguir solicitar a exclusão da própria conta na
+área Minha conta, confirmando expressamente a ação. A exclusão desativará o
+acesso e encerrará a sessão, preservando registros de agendamento quando forem
+necessários para integridade, histórico, segurança ou obrigação legal.
+
 4. REQUISITOS NÃO FUNCIONAIS
 
 RNF01 - Arquitetura e portabilidade [IMPLEMENTADO]

@@ -188,6 +188,10 @@ export default function HomePage() {
           </div>
         )}
       </section>
+      <footer className="border-t border-slate-200 bg-white px-5 py-6 text-center text-sm text-slate-600">
+        <p>© 2026 Barbearia. Agendamentos simples e seguros.</p>
+        <div className="mt-3 flex justify-center gap-5"><Link href="/privacidade" className="hover:text-primary-700 hover:underline">Privacidade</Link><Link href="/termos" className="hover:text-primary-700 hover:underline">Termos de uso</Link><Link href="/cookies" className="hover:text-primary-700 hover:underline">Cookies</Link></div>
+      </footer>
     </main>
   );
 }

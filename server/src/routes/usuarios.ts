@@ -54,6 +54,13 @@ router.put('/me/concluir-cadastro', async (req, res) => {
   return res.json(mapUsuario(usuario))
 })
 
+router.delete('/me', async (req, res) => {
+  const confirmacao = typeof req.body.confirmacao === 'string' ? req.body.confirmacao.trim().toUpperCase() : ''
+  if (confirmacao !== 'EXCLUIR MINHA CONTA') return res.status(400).json({ error: 'Digite EXCLUIR MINHA CONTA para confirmar a exclusão.' })
+  await usuarioService.excluirPropriaConta(req.auth!.sub)
+  return res.json({ success: true })
+})
+
 router.use(requireAdmin)
 
 router.get('/', async (_req, res) => {

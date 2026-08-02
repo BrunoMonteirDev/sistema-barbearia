@@ -85,5 +85,12 @@ export const usuarioService = {
       where: { id },
       data: { ativo: false }
     })
+  },
+
+  async excluirPropriaConta(id: string) {
+    return prisma.usuario.update({
+      where: { id },
+      data: { ativo: false }
+    })
   }
 }

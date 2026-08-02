@@ -3,7 +3,7 @@ import request from "supertest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
-  listar: vi.fn(), buscarPorId: vi.fn(), criar: vi.fn(), atualizar: vi.fn(), atualizarPerfil: vi.fn(), remover: vi.fn(),
+  listar: vi.fn(), buscarPorId: vi.fn(), criar: vi.fn(), atualizar: vi.fn(), atualizarPerfil: vi.fn(), remover: vi.fn(), excluirPropriaConta: vi.fn(),
 }));
 vi.mock("../services/usuario.service", () => ({ usuarioService: mocks }));
 
@@ -46,5 +46,16 @@ describe("rotas de usuários", () => {
     mocks.remover.mockResolvedValue({ id: "u-2", ativo: false });
     await request(app).delete("/usuarios/u-2").set("x-role", "admin").expect(200, { success: true });
     expect(mocks.remover).toHaveBeenCalledWith("u-2");
+  });
+
+  it("requires explicit confirmation to delete own account", async () => {
+    await request(app).delete("/usuarios/me").send({ confirmacao: "EXCLUIR" }).expect(400);
+    expect(mocks.excluirPropriaConta).not.toHaveBeenCalled();
+  });
+
+  it("deactivates own account after confirmation", async () => {
+    mocks.excluirPropriaConta.mockResolvedValue({ id: "usuario-logado", ativo: false });
+    await request(app).delete("/usuarios/me").send({ confirmacao: "EXCLUIR MINHA CONTA" }).expect(200, { success: true });
+    expect(mocks.excluirPropriaConta).toHaveBeenCalledWith("usuario-logado");
   });
 });
