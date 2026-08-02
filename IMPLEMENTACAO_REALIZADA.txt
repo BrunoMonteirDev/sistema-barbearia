@@ -176,6 +176,9 @@ Histórico
 - Painel administrativo recebeu a aba WhatsApp: consulta de status, criação de
   instância, QR Code para conexão e reconexão. Falhas externas são isoladas e
   não interrompem nenhum fluxo de agendamento.
+- Notificações deixaram de ser automáticas. Ações de status, conclusão e
+  cancelamento sugerem o envio ao responsável, que confirma ou recusa; o backend
+  exige telefone do cliente antes de transmitir qualquer mensagem.
 
 4. PENDÊNCIAS PRINCIPAIS
 

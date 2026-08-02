@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { prisma } from "../lib/prisma";
-import { requireAdmin } from "../middlewares/auth";
+import { requireAdmin, requireStaff } from "../middlewares/auth";
 import {
   escolherPrimeiroProfissionalDisponivel,
   isValidBlock,
@@ -133,7 +133,6 @@ router.post("/", async (req, res) => {
     const agendamento = await prisma.agendamento.create({
       data: { usuarioId, profissionalId, servicoId, data, hora, observacao },
     });
-    void notificacaoService.enviar(agendamento.id, 'CRIACAO').catch(console.error);
     return res.status(201).json(agendamento);
   } catch (error) {
     console.error(error);
@@ -203,7 +202,6 @@ router.patch("/:id/cancelar", async (req, res) => {
   }
   const atualizado = await prisma.agendamento.update({ where: { id: agendamento.id }, data: { status: "CANCELADO" } });
   await prisma.historicoAgendamento.create({ data: { agendamentoId: agendamento.id, autorId: req.auth!.sub, tipo: "CANCELAMENTO", dadosAnteriores: { status: agendamento.status }, dadosNovos: { status: "CANCELADO" } } });
-  void notificacaoService.enviar(agendamento.id, 'CANCELAMENTO').catch(console.error);
   return res.json(atualizado);
 });
 
@@ -227,7 +225,6 @@ router.patch("/:id/remarcar", async (req, res) => {
   if (!(await validarDisponibilidade(profissionalId, servicoId, data, hora, agendamento.id))) return res.status(409).json({ error: "Este horário não está disponível." });
   const atualizado = await prisma.agendamento.update({ where: { id: agendamento.id }, data: { data, hora, profissionalId, servicoId } });
   await prisma.historicoAgendamento.create({ data: { agendamentoId: agendamento.id, autorId: req.auth!.sub, tipo: "REMARCACAO", dadosAnteriores: { data: agendamento.data, hora: agendamento.hora, profissionalId: agendamento.profissionalId, servicoId: agendamento.servicoId }, dadosNovos: { data, hora, profissionalId, servicoId } } });
-  void notificacaoService.enviar(agendamento.id, 'REMARCACAO').catch(console.error);
   return res.json(atualizado);
 });
 
@@ -240,6 +237,18 @@ router.patch("/:id/status", requireAdmin, async (req, res) => {
   await prisma.historicoAgendamento.create({ data: { agendamentoId: agendamento.id, autorId: req.auth!.sub, tipo: "ATUALIZACAO_STATUS", dadosAnteriores: { status: agendamento.status }, dadosNovos: { status: req.body.status } } });
   return res.json(atualizado);
 });
+
+router.post('/:id/notificar', requireStaff, async (req, res) => {
+  const tipo = req.body.tipo
+  if (!['CRIACAO', 'REMARCACAO', 'CANCELAMENTO', 'ATUALIZACAO'].includes(tipo)) return res.status(400).json({ error: 'Tipo de notificação inválido.' })
+  try {
+    await notificacaoService.podeEnviar(String(req.params.id))
+    await notificacaoService.enviar(String(req.params.id), tipo)
+    return res.status(201).json({ ok: true })
+  } catch (error) {
+    return res.status(400).json({ error: error instanceof Error ? error.message : 'Não foi possível enviar a notificação.' })
+  }
+})
 
 router.put("/:id", requireAdmin, async (req, res) => {
   const agendamento = await prisma.agendamento.findUnique({

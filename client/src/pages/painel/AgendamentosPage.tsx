@@ -72,6 +72,7 @@ export default function AgendamentosPage() {
     type: "cancelar" | "excluir";
     item: Agendamento;
   } | null>(null);
+  const [notificationPrompt, setNotificationPrompt] = useState<{ item: Agendamento; tipo: 'CRIACAO' | 'REMARCACAO' | 'CANCELAMENTO' | 'ATUALIZACAO' } | null>(null);
   const [criandoCliente, setCriandoCliente] = useState(false);
   const [novoCliente, setNovoCliente] = useState({ nome: "", telefone: "" });
   const [buscaCliente, setBuscaCliente] = useState("");
@@ -229,6 +230,7 @@ export default function AgendamentosPage() {
           ? "Agendamento cancelado."
           : "Agendamento excluído.",
       );
+      if (pendingAction.type === 'cancelar') setNotificationPrompt({ item: { ...pendingAction.item, status: 'CANCELADO' }, tipo: 'CANCELAMENTO' });
       setPendingAction(null);
       load();
     } catch (error) {
@@ -244,6 +246,7 @@ export default function AgendamentosPage() {
     try {
       await api.agendamentos.status(item.id, "CONFIRMADO");
       toast.success("Agendamento confirmado.");
+      setNotificationPrompt({ item: { ...item, status: 'CONFIRMADO' }, tipo: 'ATUALIZACAO' });
       load();
     } catch (error) {
       toast.error(
@@ -258,6 +261,7 @@ export default function AgendamentosPage() {
     try {
       await api.agendamentos.status(item.id, "CONCLUIDO");
       toast.success("Agendamento concluído.");
+      setNotificationPrompt({ item: { ...item, status: 'CONCLUIDO' }, tipo: 'ATUALIZACAO' });
       load();
     } catch (error) {
       toast.error(
@@ -666,6 +670,18 @@ export default function AgendamentosPage() {
             void confirmAction();
           }}
           onClose={() => setPendingAction(null)}
+        />
+      )}
+      {notificationPrompt && (
+        <ConfirmDialog
+          title="Enviar notificação por WhatsApp?"
+          message={notificationPrompt.item.usuario?.telefone ? `Deseja avisar ${notificationPrompt.item.usuario?.nome ?? 'o cliente'} sobre esta atualização?` : 'O cliente não possui telefone cadastrado. Não é possível enviar uma notificação por WhatsApp.'}
+          confirmLabel="Enviar mensagem"
+          onConfirm={() => {
+            if (!notificationPrompt.item.usuario?.telefone) { toast.error('O cliente não possui telefone cadastrado para receber WhatsApp.'); setNotificationPrompt(null); return; }
+            void api.agendamentos.notificar(notificationPrompt.item.id, notificationPrompt.tipo).then(() => { toast.success('Notificação enviada.'); setNotificationPrompt(null); }).catch((error) => toast.error(error instanceof Error ? error.message : 'Não foi possível enviar a notificação.'));
+          }}
+          onClose={() => setNotificationPrompt(null)}
         />
       )}
     </section>

@@ -159,3 +159,9 @@ RF18 - Gestão da instância WhatsApp [IMPLEMENTADO]
 O administrador poderá consultar o estado da Evolution API, criar a instância
 local, exibir QR Code para conectá-la e solicitar reconexão. A chave global não
 é exposta ao navegador; permanece exclusivamente no ambiente do backend.
+
+RF19 - Consentimento operacional para notificações [IMPLEMENTADO]
+Nenhuma notificação é enviada automaticamente. Após uma alteração relevante,
+o responsável escolhe explicitamente se deseja avisar o cliente. O envio exige
+telefone cadastrado; a interface informa a ausência e a API rejeita tentativas
+sem número. Administrador e funcionário são os únicos perfis autorizados.

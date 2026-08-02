@@ -1,7 +1,7 @@
 import { prisma } from '../lib/prisma'
 import { evolutionService } from './evolution.service'
 
-type TipoNotificacao = 'CRIACAO' | 'REMARCACAO' | 'CANCELAMENTO'
+export type TipoNotificacao = 'CRIACAO' | 'REMARCACAO' | 'CANCELAMENTO' | 'ATUALIZACAO'
 
 function numeroWhatsApp(valor: string | null | undefined) {
   const digitos = valor?.replace(/\D/g, '') ?? ''
@@ -9,11 +9,16 @@ function numeroWhatsApp(valor: string | null | undefined) {
 }
 
 function mensagem(tipo: TipoNotificacao, agendamento: { data: string; hora: string; profissional: { nome: string }; servico: { nome: string } }) {
-  const acao = tipo === 'CRIACAO' ? 'confirmado' : tipo === 'REMARCACAO' ? 'remarcado' : 'cancelado'
+  const acao = tipo === 'CRIACAO' ? 'confirmado' : tipo === 'REMARCACAO' ? 'remarcado' : tipo === 'CANCELAMENTO' ? 'cancelado' : 'atualizado'
   return `Seu agendamento foi ${acao}: ${agendamento.servico.nome} com ${agendamento.profissional.nome}, em ${agendamento.data} às ${agendamento.hora}.`
 }
 
 export const notificacaoService = {
+  async podeEnviar(agendamentoId: string) {
+    const agendamento = await prisma.agendamento.findUnique({ where: { id: agendamentoId }, include: { usuario: true } })
+    if (!agendamento) throw new Error('Agendamento não encontrado.')
+    if (!numeroWhatsApp(agendamento.usuario.telefone)) throw new Error('O cliente não possui telefone cadastrado para receber WhatsApp.')
+  },
   async enviar(agendamentoId: string, tipo: TipoNotificacao) {
     const agendamento = await prisma.agendamento.findUnique({ where: { id: agendamentoId }, include: { usuario: true, profissional: true, servico: true } })
     if (!agendamento) return
