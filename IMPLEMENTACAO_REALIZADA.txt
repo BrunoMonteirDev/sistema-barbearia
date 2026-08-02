@@ -70,6 +70,8 @@ Histórico
   pública sem acessar a base de desenvolvimento.
 - Integração real cobre a rejeição de conflito para dois agendamentos que
   ocupam o mesmo intervalo de um profissional.
+- Cobertura é medida com limite global de 80%; o relatório atual aponta as
+  lacunas restantes no cliente e servidor, impedindo aprovação enganosa.
 - Cobertura adicional das APIs de regras de negócio, incluindo criação inicial,
   limites numéricos e persistência das configurações válidas.
 - Cobertura do CRUD administrativo de usuários: perfil próprio, permissão,

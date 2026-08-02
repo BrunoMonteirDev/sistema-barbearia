@@ -47,6 +47,15 @@ Próximos itens:
 - Alcançar 100% dos fluxos críticos de autenticação/agendamento.
 - Alcançar 80% de linhas, funções, branches e statements da base ativa.
 
+Medição mais recente (02/08/2026):
+- Cliente: 60,85% de linhas, 54,43% statements, 51,09% branches e 45,45%
+  funções. A maior lacuna está nas telas administrativas.
+- Servidor: 51,07% de linhas, 48,18% statements, 37,07% branches e 54,83%
+  funções. As maiores lacunas estão nas rotas de agendamento e nos serviços de
+  Evolution/notificação.
+- A configuração falha quando a meta de 80% não é atingida; portanto a cobertura
+  não pode ser aprovada silenciosamente.
+
 5. AGENDA ADMINISTRATIVA EM CALENDÁRIO                         [CONCLUÍDO]
 - Visão diária entregue com profissionais em colunas, horários em linhas,
   navegação por data, filtros e ações rápidas.
