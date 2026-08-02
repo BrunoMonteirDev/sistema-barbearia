@@ -66,6 +66,7 @@ Próximos itens:
 7. ACESSIBILIDADE                                               [EM ANDAMENTO]
 - Preferências persistidas entregues: alto contraste, texto maior e redução
   de animações, além de foco visível global.
+- Modal reutilizável revisado para foco preso, Esc e retorno de foco.
 - Preferências persistidas: alto contraste, tamanho de fonte e redução de animações.
 - Revisão de labels, erros, foco, teclado, modais, ARIA e status sem depender só de cor.
 - VLibras, Lighthouse, teclado e leitor de tela.
