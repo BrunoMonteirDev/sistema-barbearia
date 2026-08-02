@@ -80,6 +80,8 @@ Histórico
   hash, e contas desativadas não podem mais iniciar sessão.
 - Integração real comprova a atualização automática de agendamento confirmado
   para ATRASADO conforme a tolerância configurada.
+- Integração real bloqueia remarcação do cliente fora da antecedência e preserva
+  os dados originais do agendamento.
 - Cobertura é medida com limite global de 80%; o relatório atual aponta as
   lacunas restantes no cliente e servidor, impedindo aprovação enganosa.
 - Regressões de notificações automáticas cobrem o padrão desativado e o disparo

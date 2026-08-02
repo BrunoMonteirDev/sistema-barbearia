@@ -48,6 +48,8 @@ Já entregue:
 - Integração real de autenticação: política de senha forte, hash no cadastro,
   sessão de conta ativa e bloqueio de conta desativada.
 - Integração real do status ATRASADO conforme a tolerância configurada.
+- Integração real do prazo de remarcação: cliente fora da antecedência não altera
+  o atendimento nem produz histórico.
 
 Próximos itens:
 - Cobrir autenticação, permissões, usuários, profissionais, serviços,
