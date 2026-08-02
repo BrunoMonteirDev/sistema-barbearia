@@ -4,6 +4,12 @@ Sistema Web de Agendamento para Barbearias desenvolvido como Trabalho de Conclus
 
 O sistema tem como objetivo modernizar o gerenciamento de agendamentos em barbearias, oferecendo uma plataforma web intuitiva para clientes e administradores, com foco em organização, acessibilidade e facilidade de uso.
 
+> Situação documental: os documentos numerados registram a modelagem acadêmica
+> inicial. O estado técnico e funcional vigente está em
+> `../REQUISITOS_ATUALIZADOS.txt`, `../IMPLEMENTACAO_REALIZADA.txt` e
+> `../ROADMAP_PROJETO.txt`. A arquitetura implementada é React/Vite + Express
+> + Prisma + PostgreSQL + JWT.
+
 ---
 
 # 📖 Sobre o Projeto
@@ -42,15 +48,14 @@ Entre os principais recursos estão:
 
 ## Frontend
 
-- Next.js
 - React
+- Vite
 - TypeScript
 - Tailwind CSS
-- shadcn/ui
 
 ## Backend
 
-- Next.js Route Handlers
+- Express
 - Prisma ORM
 - PostgreSQL
 
@@ -72,10 +77,10 @@ O sistema seguirá uma arquitetura simples e organizada.
 Cliente
       │
       ▼
-Interface (Next.js)
+Interface (React + Vite)
       │
       ▼
-API (Route Handlers)
+API REST (Express + JWT)
       │
       ▼
 Prisma ORM
@@ -84,7 +89,10 @@ Prisma ORM
 PostgreSQL
 ```
 
-Toda a arquitetura foi planejada para facilitar a manutenção, aprendizado e apresentação do projeto durante a banca.
+O cliente é executado em `http://localhost:5000` e a API em
+`http://localhost:3001`. Toda a persistência passa pelo Prisma. A arquitetura
+foi planejada para facilitar a manutenção, aprendizado e apresentação durante
+a banca.
 
 ---
 

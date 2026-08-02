@@ -6,6 +6,11 @@ Plano de Desenvolvimento do Sistema
 
 Versão inicial: MVP 0.1
 
+> Nota de manutenção (02/08/2026): este é o roadmap histórico do planejamento
+> inicial. O roadmap operacional vigente está em `../ROADMAP_PROJETO.txt`; ele
+> registra as entregas reais e as pendências atuais. A arquitetura atual é
+> React/Vite + Express + Prisma + PostgreSQL + JWT.
+
 ---
 
 # Atualizacao de interface

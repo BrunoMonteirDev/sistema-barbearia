@@ -169,6 +169,9 @@ Status: [EM ANDAMENTO]
 - Segundo lote removido após confirmação de ausência de consumidores; o cliente
   não possui mais referências a Supabase/Postgres.
 - Atualizar documentação para React/Vite + Express + Prisma + JWT.
+- [CONCLUÍDO] Documentação central (guia de desenvolvimento, README técnico,
+  especificação, decisões e roadmap histórico) alinhada à arquitetura atual;
+  documentos históricos identificam o roadmap operacional como fonte vigente.
 - Registrar decisões novas: usuário unificado, Funcionário, e-mail opcional
   pelo admin, ATRASADO, regras e histórico.
 

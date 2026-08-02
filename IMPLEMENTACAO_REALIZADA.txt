@@ -305,6 +305,9 @@ usuários nem concluir agendamentos, inclusive se sair e retornar ao sistema.
 5. LIMPEZA DE CÓDIGO
 
 - Não há referências ativas a Supabase ou Next.js no cliente ou servidor.
+- A documentação central foi alinhada à arquitetura efetiva React/Vite +
+  Express + Prisma + PostgreSQL + JWT. Os documentos históricos agora apontam
+  explicitamente para os requisitos e roadmap operacionais vigentes.
 - Removidas as páginas sem rota nem consumidores: a antiga página pública de
   serviços e o painel financeiro legado. O CRUD administrativo de serviços
   permanece ativo.

@@ -10,6 +10,40 @@ O objetivo é manter histórico das escolhas realizadas, evitando dúvidas futur
 
 ---
 
+# DEC-016
+
+# Arquitetura atual com React/Vite e Express
+
+## Status
+
+Aceita
+
+## Decisão
+
+Adotar React/Vite no cliente e uma API REST Express no servidor, usando
+Prisma como única camada de persistência, PostgreSQL como banco e JWT para
+sessões autenticadas.
+
+## Contexto
+
+Os documentos iniciais registravam Next.js como intenção. A implementação em
+produção local evoluiu para aplicações separadas `client` e `server`, já
+cobertas por testes e scripts próprios.
+
+## Motivo
+
+A estrutura atual é simples de executar, separa claramente interface e API e
+corresponde ao código efetivamente mantido no repositório. Esta decisão
+substitui DEC-001 somente quanto à escolha do framework; o registro histórico
+da decisão original permanece para fins acadêmicos.
+
+## Impacto
+
+Documentação, instruções de desenvolvimento e diagramas novos devem referir
+React/Vite + Express. Não planejar migração para Next.js sem nova decisão.
+
+---
+
 # DEC-015
 
 # Dialogos padronizados para formularios e confirmacoes

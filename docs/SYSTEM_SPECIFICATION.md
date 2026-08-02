@@ -4,7 +4,13 @@
 
 Sistema Web de Agendamento para Barbearias
 
-Versão inicial: MVP 0.1
+Versão de referência: 2.1 (02/08/2026)
+
+> Nota de manutenção: este documento preserva a especificação acadêmica
+> original. Para requisitos e estado de implementação atuais, consultar
+> `../REQUISITOS_ATUALIZADOS.txt`, `../IMPLEMENTACAO_REALIZADA.txt` e
+> `../ROADMAP_PROJETO.txt`. A arquitetura efetiva é React/Vite + Express +
+> Prisma + PostgreSQL + JWT, e não Next.js.
 
 ---
 

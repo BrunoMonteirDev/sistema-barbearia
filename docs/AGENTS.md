@@ -67,13 +67,10 @@ Todas as implementações devem utilizar preferencialmente as tecnologias abaixo
 
 ## Framework
 
-Next.js
+React com Vite.
 
-Utilizar:
-
-- App Router
-- Server Components quando possível
-- Client Components apenas quando necessário
+Utilizar componentes funcionais, TypeScript e a organização já existente em
+`client/src`. O cliente se comunica com a API HTTP em `/api`.
 
 
 ## Linguagem
@@ -107,25 +104,10 @@ Lucide React
 
 # Backend
 
-O backend será desenvolvido utilizando recursos nativos do Next.js.
-
-Utilizar:
-
-- Route Handlers
-- Server Actions quando adequado
-- Services para regras de negócio
-
-
-Não utilizar inicialmente:
-
-- Express
-- NestJS
-- outros frameworks backend
-
-
-Motivo:
-
-O próprio Next.js atende o escopo do projeto e reduz complexidade.
+O backend é uma API REST em Express, localizada em `server/src`. As rotas
+validam entrada, autenticação JWT e autorização; as regras de negócio devem
+permanecer em serviços/utilitários testáveis. Não introduzir outro framework
+backend sem registrar a decisão técnica.
 
 ---
 
@@ -397,7 +379,9 @@ Antes de alterar o banco:
 4. Atualizar documentação.
 
 
-Nunca alterar banco manualmente sem registrar.
+Nunca alterar banco manualmente sem registrar. Toda mudança estrutural exige
+uma migration versionada em `server/prisma/migrations` e atualização da
+documentação aplicável.
 
 
 ---
