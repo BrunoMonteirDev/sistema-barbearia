@@ -15,6 +15,8 @@ Supertest. Preencha data, responsavel e resultado ao executar cada item.
 [ ] Conferir que horários aparecem somente depois da seleção de uma data.
 [ ] Em desktop/tablet, conferir que calendário e horários ficam lado a lado;
     em celular, a leitura deve continuar confortável em uma única coluna.
+[ ] Cancelar um agendamento e criar outro para o mesmo profissional, data e
+    horário: a nova reserva deve ser confirmada sem erro interno.
 
 2. AGENDA ADMINISTRATIVA
 [ ] Desktop: verificar visao diaria, semanal, filtros e navegacao entre datas.

@@ -42,6 +42,9 @@ Agendamento
 - Os horários só são carregados e exibidos depois que uma data é selecionada.
 - Em telas médias ou maiores, o calendário e os horários disponíveis ficam lado
   a lado, com espaçamento compacto para reduzir a rolagem vertical.
+- Horários cancelados deixam de ocupar a agenda no banco de dados e podem ser
+  reservados novamente; uma disputa de reserva simultânea retorna conflito
+  (409), em vez de erro interno (500).
 
 Agenda e regras
 - Dashboard e painel de gestão de agendamentos.

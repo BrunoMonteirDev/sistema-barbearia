@@ -73,7 +73,7 @@ model Agendamento {
   historicos      HistoricoAgendamento[]
   notificacoes    NotificacaoAgendamento[]
 
-  @@unique([profissionalId, data, hora])
+  @@index([profissionalId, data, hora])
   @@map("agendamentos")
 }
 

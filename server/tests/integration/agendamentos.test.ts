@@ -38,6 +38,18 @@ describe('API - conflito real de agendamento', () => {
     expect(await prisma.agendamento.count()).toBe(1)
   })
 
+  it('permite reservar novamente um horário cujo agendamento anterior foi cancelado', async () => {
+    const cliente = await prisma.usuario.create({ data: { nome: 'Cliente de teste', email: 'cliente.reagendamento@teste.local', senhaHash: 'hash' } })
+    const profissional = await prisma.profissional.create({ data: { nome: 'Profissional de teste' } })
+    const servico = await prisma.servico.create({ data: { nome: 'Servico de 30 minutos', duracao: 30, preco: 50 } })
+    await prisma.disponibilidadeProfissional.create({ data: { profissionalId: profissional.id, diaSemana: 1, hora: '10:00' } })
+    await prisma.agendamento.create({ data: { usuarioId: cliente.id, profissionalId: profissional.id, servicoId: servico.id, data: dataTeste, hora: '10:00', status: 'CANCELADO' } })
+    const authorization = `Bearer ${signToken({ id: cliente.id, nivel: 'Cliente' })}`
+
+    await request(app).post('/api/agendamentos').set('authorization', authorization).send({ profissionalId: profissional.id, servicoId: servico.id, data: dataTeste, hora: '10:00' }).expect(201)
+    expect(await prisma.agendamento.count()).toBe(2)
+  })
+
   it('permite que o administrador cancele fora da antecedencia e registra o historico', async () => {
     const cliente = await prisma.usuario.create({ data: { nome: 'Cliente de teste', email: 'cliente.cancelamento@teste.local', senhaHash: 'hash' } })
     const administrador = await prisma.usuario.create({ data: { nome: 'Admin de teste', email: 'admin.cancelamento@teste.local', senhaHash: 'hash', nivel: 'Administrador' } })

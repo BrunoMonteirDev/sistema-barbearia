@@ -141,6 +141,9 @@ router.post("/", async (req, res) => {
     void notificacaoService.enviarSeAutomatico(agendamento.id, 'CRIACAO');
     return res.status(201).json(agendamento);
   } catch (error) {
+    if (typeof error === "object" && error && "code" in error && error.code === "P2002") {
+      return res.status(409).json({ error: "Este horário acabou de ser reservado. Escolha outro horário disponível." });
+    }
     console.error(error);
     return res.status(500).json({ error: "Erro ao criar agendamento." });
   }
