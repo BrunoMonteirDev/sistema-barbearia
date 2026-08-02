@@ -36,4 +36,18 @@ describe('API - conflito real de agendamento', () => {
     expect(resposta.body.error).toMatch(/n.o est.*dispon.vel/i)
     expect(await prisma.agendamento.count()).toBe(1)
   })
+
+  it('permite que o administrador cancele fora da antecedencia e registra o historico', async () => {
+    const cliente = await prisma.usuario.create({ data: { nome: 'Cliente de teste', email: 'cliente.cancelamento@teste.local', senhaHash: 'hash' } })
+    const administrador = await prisma.usuario.create({ data: { nome: 'Admin de teste', email: 'admin.cancelamento@teste.local', senhaHash: 'hash', nivel: 'Administrador' } })
+    const profissional = await prisma.profissional.create({ data: { nome: 'Profissional de teste' } })
+    const servico = await prisma.servico.create({ data: { nome: 'Servico de teste', duracao: 30, preco: 30 } })
+    const agendamento = await prisma.agendamento.create({ data: { usuarioId: cliente.id, profissionalId: profissional.id, servicoId: servico.id, data: '2020-01-01', hora: '10:00', status: 'CONFIRMADO' } })
+    const authorization = `Bearer ${signToken({ id: administrador.id, nivel: 'Administrador' })}`
+
+    await request(app).patch(`/api/agendamentos/${agendamento.id}/cancelar`).set('authorization', authorization).expect(200)
+
+    expect((await prisma.agendamento.findUnique({ where: { id: agendamento.id } }))?.status).toBe('CANCELADO')
+    expect(await prisma.historicoAgendamento.findFirst({ where: { agendamentoId: agendamento.id, autorId: administrador.id, tipo: 'CANCELAMENTO' } })).toBeTruthy()
+  })
 })

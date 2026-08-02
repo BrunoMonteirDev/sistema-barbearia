@@ -39,6 +39,8 @@ Já entregue:
   somente após habilitação explícita por evento.
 - Testes de lembrete automático: momento configurado e ausência de reenvio após
   entrega registrada.
+- Integração real para conflito de horário e cancelamento administrativo fora do
+  prazo, incluindo a criação de histórico.
 
 Próximos itens:
 - Cobrir autenticação, permissões, usuários, profissionais, serviços,
