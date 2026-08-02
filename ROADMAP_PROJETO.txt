@@ -68,6 +68,10 @@ Próximos itens:
 - Bloquear a aba de usuários e a confirmação de agendamento até a conclusão.
 - Aplicar o bloqueio também após logout e um novo login.
 - Cobrir autenticação, redirecionamento e bloqueios com testes automatizados.
+- [CONCLUÍDO] Bloqueio persistente da área de usuários e da confirmação de
+  agendamento para contas Google com cadastro pendente.
+- [CONCLUÍDO] Conclusão atualiza a sessão atual e libera a navegação sem novo
+  login.
 
 7. ACESSIBILIDADE                                               [EM ANDAMENTO]
 - Preferências persistidas entregues: alto contraste, texto maior e redução

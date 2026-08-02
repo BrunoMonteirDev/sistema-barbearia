@@ -151,6 +151,10 @@ Histórico
 - A API recebeu DELETE /api/usuarios/me, protegido por autenticação e com a
   mesma confirmação obrigatória. Testes de regressão cobrem confirmação inválida
   e a desativação da própria conta.
+- Login Google finalizado: contas com cadastro pendente são bloqueadas da área
+  Minha conta e de Meus agendamentos, e também não conseguem confirmar uma
+  reserva. A conclusão atualiza a sessão em memória imediatamente, sem exigir
+  novo login. Testes verificam o redirecionamento e a liberação após conclusão.
 
 4. PENDÊNCIAS PRINCIPAIS
 

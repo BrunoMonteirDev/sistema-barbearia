@@ -6,7 +6,7 @@ import { api } from "@/lib/api";
 import { formatarTelefoneBrasileiro } from "@/utils/telefone";
 
 export default function CompleteRegistrationPage() {
-  const { user } = useAuth();
+  const { user, atualizarUsuario } = useAuth();
   const [, go] = useLocation();
   const [nome, setNome] = useState(user?.nome ?? "");
   const [telefone, setTelefone] = useState(user?.telefone ?? "");
@@ -14,7 +14,8 @@ export default function CompleteRegistrationPage() {
   const salvar = async (event: FormEvent) => {
     event.preventDefault();
     try {
-      await api.usuarios.concluirCadastro({ nome, telefone });
+      const usuarioAtualizado = await api.usuarios.concluirCadastro({ nome, telefone });
+      atualizarUsuario(usuarioAtualizado);
       toast.success("Cadastro concluído.");
       go("/minha-conta");
     } catch (error) {

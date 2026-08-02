@@ -86,6 +86,10 @@ export default function AgendarPage() {
   const submit = async (event: FormEvent) => {
     event.preventDefault();
     if (!user) return go("/login");
+    if (user.cadastroConcluido === false) {
+      toast.error("Conclua seu cadastro antes de confirmar um agendamento.");
+      return go("/concluir-cadastro");
+    }
     if (!horarios.includes(form.hora))
       return toast.error("Selecione um horário disponível.");
     try {
