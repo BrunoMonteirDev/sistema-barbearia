@@ -102,6 +102,37 @@ html.acessibilidade-alto-contraste th {
   color: #fff !important;
 }
 
+/*
+ * Tailwind aplica várias cores diretamente nas classes utilitárias (por
+ * exemplo, text-secondary-700 e bg-blue-100). Sem estas regras, um texto
+ * escuro ou branco pode permanecer sobre uma cor muito parecida no modo de
+ * alto contraste. Unificamos superfícies coloridas em preto e seu conteúdo
+ * em branco para manter uma relação de contraste consistente.
+ */
+html.acessibilidade-alto-contraste [class*="bg-"] {
+  background-color: #000 !important;
+  background-image: none !important;
+}
+
+html.acessibilidade-alto-contraste [class*="text-"] {
+  color: #fff !important;
+}
+
+html.acessibilidade-alto-contraste a,
+html.acessibilidade-alto-contraste svg {
+  color: inherit !important;
+}
+
+html.acessibilidade-alto-contraste [class*="border-"],
+html.acessibilidade-alto-contraste hr {
+  border-color: #fff !important;
+}
+
+html.acessibilidade-alto-contraste button:hover,
+html.acessibilidade-alto-contraste a:hover {
+  background-color: #1f2937 !important;
+}
+
 html.acessibilidade-alto-contraste button,
 html.acessibilidade-alto-contraste input,
 html.acessibilidade-alto-contraste select,
