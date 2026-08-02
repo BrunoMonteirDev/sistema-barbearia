@@ -29,6 +29,7 @@ Já entregue:
 - Testes de senha, telefone, antecedência e remarcação.
 - Testes de disponibilidade, autenticação, permissões, cancelamento e regras
   administrativas.
+- Testes de CRUD e permissões de usuários.
 
 Próximos itens:
 - Cobrir autenticação, permissões, usuários, profissionais, serviços,
