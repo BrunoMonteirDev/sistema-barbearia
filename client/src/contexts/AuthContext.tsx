@@ -4,7 +4,10 @@ type Auth = { user: Usuario | null; loading: boolean; signIn: (email: string, pa
 const Context = createContext<Auth | undefined>(undefined)
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<Usuario | null>(null); const [loading, setLoading] = useState(true)
-  useEffect(() => { api.usuarios.me().then(setUser).catch(authStorage.clear).finally(() => setLoading(false)) }, [])
+  useEffect(() => {
+    if (!authStorage.get()) { setLoading(false); return }
+    api.usuarios.me().then(setUser).catch(authStorage.clear).finally(() => setLoading(false))
+  }, [])
   const signIn = async (email: string, password: string) => { const result = await api.auth.login({ email, password }); authStorage.set(result.token); setUser(result.user) }
   const signUp = async (nome: string, email: string, password: string) => { const result = await api.auth.register({ nome, email, password }); authStorage.set(result.token); setUser(result.user) }
   const signOut = () => { authStorage.clear(); setUser(null) }

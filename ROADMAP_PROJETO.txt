@@ -70,6 +70,7 @@ Próximos itens:
 - VLibras integrado em páginas públicas e de conta.
 - Estrutura oficial do widget validada para exibir seu botão de acesso em
   desktop e mobile.
+- Login oferece retorno ao início e não executa consulta de perfil sem sessão.
 - Alto contraste revisado: superfícies, textos, ícones, links, bordas e estados
   de hover usam combinações legíveis sobre o fundo escuro.
 - Preferências persistidas: alto contraste, tamanho de fonte e redução de animações.

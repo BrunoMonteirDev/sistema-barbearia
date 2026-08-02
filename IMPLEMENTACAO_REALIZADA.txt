@@ -92,6 +92,11 @@ Histórico
 - Estrutura do VLibras corrigida para usar os atributos oficiais do plugin
   (vw-access-button e vw-plugin-wrapper), garantindo a criação do botão azul
   do tradutor em desktop e mobile.
+- Ativação visual oficial do botão VLibras adicionada; o componente agora usa
+  a classe `active` exigida pelo script externo.
+- Tela de login ganhou retorno explícito ao menu inicial. A consulta de sessão
+  só é feita quando existe token armazenado, eliminando o 401 esperado de
+  usuários desconectados no console do navegador.
 - Alto contraste ajustado para normalizar superfícies utilitárias, textos,
   ícones, links e bordas: nenhum status, link ou ícone permanece em cor escura
   sobre fundo preto, e as interações de hover continuam perceptíveis.

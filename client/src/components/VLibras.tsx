@@ -38,5 +38,5 @@ export function VLibras() {
   }, [localizacao]);
 
   if (localizacao.startsWith("/painel")) return null;
-  return <div ref={raizRef} className="enabled"><div ref={botaoRef} /><div ref={conteudoRef}><div ref={topoRef} /></div></div>;
+  return <div ref={raizRef} className="enabled"><div ref={botaoRef} className="active" /><div ref={conteudoRef}><div ref={topoRef} className="vw-plugin-top-wrapper" /></div></div>;
 }
