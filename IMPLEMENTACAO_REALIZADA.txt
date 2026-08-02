@@ -255,6 +255,9 @@ usuários nem concluir agendamentos, inclusive se sair e retornar ao sistema.
   conta no banco PostgreSQL isolado de testes.
 - A API também bloqueia diretamente a criação de agendamento por uma conta com
   cadastro pendente, não dependendo somente da proteção da interface.
+- Teste de integração valida as configurações administrativas: acesso restrito
+  ao administrador, persistência das regras e exposição pública limitada aos
+  dados de contato usados pela interface.
 
 5. LIMPEZA DE CÓDIGO
 

@@ -156,6 +156,31 @@ describe('API - conflito real de agendamento', () => {
     expect(await prisma.agendamento.count()).toBe(0)
   })
 
+  it('protege as configuracoes administrativas e expoe somente o contato publico', async () => {
+    const administrador = await prisma.usuario.create({ data: { nome: 'Admin configuracao', email: 'admin.configuracao@teste.local', senhaHash: 'hash', nivel: 'Administrador' } })
+    const cliente = await prisma.usuario.create({ data: { nome: 'Cliente configuracao', email: 'cliente.configuracao@teste.local', senhaHash: 'hash' } })
+    const tokenAdmin = `Bearer ${signToken({ id: administrador.id, nivel: 'Administrador' })}`
+    const tokenCliente = `Bearer ${signToken({ id: cliente.id, nivel: 'Cliente' })}`
+
+    await request(app).get('/api/configuracoes/regras').expect(401)
+    await request(app).get('/api/configuracoes/regras').set('authorization', tokenCliente).expect(403)
+    await request(app)
+      .put('/api/configuracoes')
+      .set('authorization', tokenAdmin)
+      .send({ telefoneWhatsApp: '44999999999', email: 'contato@teste.local', instagram: 'barbearia.teste' })
+      .expect(201)
+    await request(app)
+      .put('/api/configuracoes/regras')
+      .set('authorization', tokenAdmin)
+      .send({ antecedenciaCancelamentoHoras: 24, antecedenciaRemarcacaoHoras: 12, toleranciaAtrasoMinutos: 15 })
+      .expect(200)
+
+    const publico = await request(app).get('/api/configuracoes-publicas').expect(200)
+    expect(publico.body).toEqual({ telefoneWhatsApp: '44999999999', email: 'contato@teste.local', instagram: 'barbearia.teste' })
+    const regras = await request(app).get('/api/configuracoes/regras').set('authorization', tokenAdmin).expect(200)
+    expect(regras.body).toEqual({ antecedenciaCancelamentoHoras: 24, antecedenciaRemarcacaoHoras: 12, toleranciaAtrasoMinutos: 15 })
+  })
+
   it('marca atendimento passado como atrasado conforme a tolerancia configurada', async () => {
     const cliente = await prisma.usuario.create({ data: { nome: 'Cliente atraso', email: 'cliente.atraso@teste.local', senhaHash: 'hash' } })
     const profissional = await prisma.profissional.create({ data: { nome: 'Profissional de teste' } })

@@ -188,6 +188,8 @@ ATUALIZAÇÃO — QUALIDADE DO LOGIN GOOGLE (02/08/2026)
   conta após login Google.
 - [CONCLUÍDO] A API de agendamentos recusa uma solicitação de conta pendente;
   há teste de regressão contra o contorno da interface por chamada direta.
+- [CONCLUÍDO] Teste de integração cobre permissões e persistência das
+  configurações administrativas e a rota pública de contato.
 
 ATUALIZAÇÃO — EVOLUTION API (02/08/2026)
 

@@ -200,3 +200,8 @@ telefone e registra permanentemente o cadastro como concluído.
 RN14 - Bloqueio de agendamento por cadastro pendente [IMPLEMENTADO]
 O backend deve recusar a criação de agendamento para qualquer cliente cujo
 cadastro ainda não esteja concluído, inclusive em chamadas diretas à API.
+
+RN15 - Proteção das configurações [IMPLEMENTADO]
+Somente administradores podem consultar ou alterar configurações e regras de
+negócio. A consulta pública retorna exclusivamente telefone de WhatsApp, e-mail
+e Instagram necessários à comunicação na interface.
