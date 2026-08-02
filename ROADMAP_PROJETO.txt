@@ -58,11 +58,9 @@ Já entregue:
 Próximos itens:
 - Cobrir autenticação, permissões, usuários, profissionais, serviços,
   disponibilidade, agendamentos e status.
-- Criar PostgreSQL exclusivo para testes de integração. A infraestrutura já
-  exige DATABASE_URL_TEST diferente da URL de desenvolvimento e com "test" no
-  nome; container Docker isolado disponível na porta 5433. O schema é aplicado
-  com db push somente no banco descartável, pois o repositório não possui a
-  migration inicial histórica.
+- PostgreSQL exclusivo para testes de integração: DATABASE_URL_TEST diferente
+  da URL de desenvolvimento, container Docker isolado na porta 5433 e migration
+  inicial versionada. Um banco vazio foi validado com `prisma migrate deploy`.
 - Alcançar 100% dos fluxos críticos de autenticação/agendamento.
 - Alcançar 80% de linhas, funções, branches e statements da base ativa.
 
@@ -206,6 +204,10 @@ ATUALIZAÇÃO — QUALIDADE DO LOGIN GOOGLE (02/08/2026)
   por integração para cliente proprietário, outro cliente e administrador.
 - [CONCLUÍDO] Disponibilidade profissional validada por unidade e integração,
   preservando horários existentes quando a nova configuração for inválida.
+- [CONCLUÍDO] Edição administrativa completa do agendamento coberta por
+  integração: permissão, disponibilidade e histórico auditável.
+- [CONCLUÍDO] Migration inicial criada e aplicada com sucesso em PostgreSQL
+  vazio, removendo a dependência de `db push` para reproduzir o schema.
 
 ATUALIZAÇÃO — EVOLUTION API (02/08/2026)
 

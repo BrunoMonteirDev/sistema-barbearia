@@ -276,6 +276,8 @@ usuários nem concluir agendamentos, inclusive se sair e retornar ao sistema.
 - A edição administrativa completa de agendamentos foi protegida por teste de
   integração: apenas administradores podem executá-la, a nova agenda precisa
   estar disponível e cada mudança gera o registro de auditoria correspondente.
+- A migration inicial do banco foi reconstruída e validada em PostgreSQL vazio
+  com `prisma migrate deploy`; ambientes novos não dependem mais de `db push`.
 
 5. LIMPEZA DE CÓDIGO
 
