@@ -130,7 +130,8 @@ Operações e disponibilidade são validadas no backend; métricas formais são 
 
 RNF06 - Qualidade e manutenção [EM ANDAMENTO]
 Manter documentação e testes. Meta: 80% de cobertura da base ativa e 100% dos
-fluxos críticos de autenticação e agendamento.
+fluxos críticos de autenticação e agendamento. Há PostgreSQL exclusivo para
+integrações em Docker, sem compartilhamento com a base de desenvolvimento.
 
 5. MODELO DE DADOS ATUAL
 

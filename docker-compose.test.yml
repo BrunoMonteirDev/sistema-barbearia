@@ -1,0 +1,21 @@
+services:
+  postgres-test:
+    image: postgres:15-alpine
+    container_name: barbearia_postgres_test
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: barbearia_test
+      POSTGRES_USER: barbearia_test
+      POSTGRES_PASSWORD: barbearia_test_local
+    ports:
+      - "127.0.0.1:5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U barbearia_test -d barbearia_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    volumes:
+      - barbearia_postgres_test:/var/lib/postgresql/data
+
+volumes:
+  barbearia_postgres_test:

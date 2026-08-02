@@ -41,7 +41,9 @@ Próximos itens:
   disponibilidade, agendamentos e status.
 - Criar PostgreSQL exclusivo para testes de integração. A infraestrutura já
   exige DATABASE_URL_TEST diferente da URL de desenvolvimento e com "test" no
-  nome; falta disponibilizar esse banco.
+  nome; container Docker isolado disponível na porta 5433. O schema é aplicado
+  com db push somente no banco descartável, pois o repositório não possui a
+  migration inicial histórica.
 - Alcançar 100% dos fluxos críticos de autenticação/agendamento.
 - Alcançar 80% de linhas, funções, branches e statements da base ativa.
 
