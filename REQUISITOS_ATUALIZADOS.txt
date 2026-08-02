@@ -1,6 +1,6 @@
 SISTEMA WEB DE AGENDAMENTO PARA BARBEARIAS
 Documento de requisitos atualizado
-Versão 2.0 - 01/08/2026
+Versão 2.1 - 02/08/2026
 
 1. OBJETIVO
 
@@ -70,12 +70,15 @@ RF14 - Agenda em calendário [IMPLEMENTADO]
 Exibir agenda diária/semanal por profissional, com filtros e ações rápidas.
 
 RF15 - Notificações WhatsApp [IMPLEMENTADO PARCIAL]
-Integrar Quepasa para confirmação, cancelamento e remarcação. Falha de envio não
-pode impedir a operação principal.
+Usar Evolution API local para mensagens de criação, remarcação, cancelamento,
+status e lembrete. Falha de envio não pode impedir a operação principal.
+O painel permite editar um modelo por evento. O envio manual exige confirmação
+do administrador ou funcionário e telefone cadastrado no cliente.
 
-A camada de envio assíncrono e registro de diagnóstico está implementada. O
-disparo real depende das variáveis QUEPASA_API_URL e QUEPASA_API_TOKEN e da
-validação do contrato da instância Quepasa escolhida.
+O modo automático é opcional, desativado inicialmente e configurável por tipo de
+evento. O lembrete automático tem antecedência de 5 minutos a 7 dias e não deve
+ser reenviado após entrega registrada. A validação de envio real em ambiente
+controlado e a política formal de consentimento permanecem pendentes.
 
 RF16 - VLibras [PENDENTE]
 Integrar VLibras às páginas públicas e à conta do usuário.
@@ -161,10 +164,12 @@ local, exibir QR Code para conectá-la e solicitar reconexão. A chave global n�
 é exposta ao navegador; permanece exclusivamente no ambiente do backend.
 
 RF19 - Consentimento operacional para notificações [IMPLEMENTADO]
-Nenhuma notificação é enviada automaticamente. Após uma alteração relevante,
-o responsável escolhe explicitamente se deseja avisar o cliente. O envio exige
-telefone cadastrado; a interface informa a ausência e a API rejeita tentativas
-sem número. Administrador e funcionário são os únicos perfis autorizados.
+Por padrão, nenhuma notificação é enviada automaticamente. Após uma alteração
+relevante, o responsável escolhe explicitamente se deseja avisar o cliente. O
+administrador pode habilitar envio automático, selecionar os eventos permitidos
+e configurar a antecedência do lembrete. O envio exige telefone cadastrado; a
+interface informa a ausência e a API rejeita tentativas sem número. Administrador
+e funcionário são os únicos perfis autorizados a disparos manuais.
 
 RF20 - Ciclo de conexão WhatsApp [IMPLEMENTADO]
 A interface respeita o ciclo criar instância, conectar, desconectar e

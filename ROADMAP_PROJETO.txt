@@ -1,6 +1,6 @@
 SISTEMA WEB DE AGENDAMENTO PARA BARBEARIAS
 Roadmap de desenvolvimento
-Atualizado em: 01/08/2026
+Atualizado em: 02/08/2026
 
 LEGENDA
 [CONCLUÍDO] entregue e validado
@@ -98,20 +98,27 @@ Próximos itens:
 - Revisão de labels, erros, foco, teclado, modais, ARIA e status sem depender só de cor.
 - VLibras, Lighthouse, teclado e leitor de tela.
 
-8. WHATSAPP E NOTIFICAÇÕES                                     [PENDENTE - ÚLTIMA ETAPA]
+8. WHATSAPP E NOTIFICAÇÕES                                     [EM ANDAMENTO]
 - Número configurado pelo administrador aplicado ao botão da página inicial.
 - Contatos públicos do rodapé (WhatsApp, e-mail e Instagram) sincronizados com
   Configurações do painel administrativo.
-- Pendente: revisar os demais links e criar a camada de notificações.
-- Camada desacoplada de notificações e integração Quepasa por variáveis de ambiente.
-- Confirmação, cancelamento e remarcação; falha de envio não bloqueia a operação.
-- Mocks e validação em ambiente controlado.
+- Camada desacoplada de notificações pela Evolution API local, com variáveis de
+  ambiente exclusivas do backend.
+- Confirmação, remarcação, cancelamento, atualização de status e lembrete com
+  falha de envio isolada da operação principal.
+- Modelos editáveis por evento no painel e registro de diagnóstico no banco.
+- Modo manual é o padrão: o responsável confirma cada disparo e pode optar por
+  não enviar. Ausência de telefone bloqueia somente a tentativa de envio.
+- Modo automático opcional: administrador seleciona, por evento, criação,
+  remarcação, cancelamento, status e lembrete; todos começam desativados.
+- Antecedência do lembrete configurável entre 5 minutos e 7 dias; processamento
+  periódico e prevenção de reenvio após entrega registrada.
 
 Status: [EM ANDAMENTO]
 - Camada desacoplada entregue e ligada a criação, remarcação e cancelamento.
 - Resultados são registrados para diagnóstico e falhas não impedem a operação.
-- Pendente: cadastrar credenciais Quepasa, ajustar o contrato HTTP à instância
-  utilizada e validar disparos reais em ambiente controlado.
+- Próximo: validar disparos reais por evento no ambiente controlado, definir
+  política de conteúdo/frequência/consentimento e planejar um provedor de produção.
 
 9. LIMPEZA E DOCUMENTAÇÃO                                      [PENDENTE / CONTÍNUA]
 - Primeiro lote de código Supabase/fluxos antigos sem consumidores removido
@@ -133,9 +140,9 @@ Status: [EM ANDAMENTO]
 
 ONDE ESTAMOS AGORA
 
-O sistema já entrega os fluxos centrais de uma barbearia. O próximo passo é
-ampliar os testes automatizados. Depois virão a agenda em calendário,
-acessibilidade e WhatsApp.
+O sistema já entrega os fluxos centrais, agenda visual, acessibilidade básica e
+notificações Evolution. O foco imediato é consolidar testes de regressão das
+regras automáticas de WhatsApp e validar os disparos reais controlados.
 
 ATUALIZAÇÃO — EVOLUTION API (02/08/2026)
 
@@ -148,9 +155,10 @@ ATUALIZAÇÃO — EVOLUTION API (02/08/2026)
 - [CONCLUÍDO] Aba administrativa para status, criação, conexão QR e reconexão.
 - [CONCLUÍDO] A camada de notificações usa o envio de texto da Evolution e
   registra êxito ou falha sem afetar o agendamento.
-- [PENDENTE] Definir política de conteúdo, frequência, consentimento e lembretes.
+- [EM ANDAMENTO] Definir política de conteúdo, frequência e consentimento.
 - [CONCLUÍDO] Ambiente de teste usa versão WhatsApp/Baileys explicitamente
   configurada para permitir a conexão por QR Code.
 - [CONCLUÍDO] Envio manual confirmado por responsável; ausência de telefone é
-  tratada pela interface e pela API. A política detalhada de conteúdo e
-  frequência permanece pendente.
+  tratada pela interface e pela API.
+- [CONCLUÍDO] Modo automático opcional e inicialmente desativado, com seleção
+  granular dos eventos e antecedência configurável do lembrete.

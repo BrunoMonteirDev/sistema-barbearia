@@ -1,6 +1,6 @@
 SISTEMA WEB DE AGENDAMENTO PARA BARBEARIAS
 Registro de implementação realizada
-Atualizado em: 01/08/2026
+Atualizado em: 02/08/2026
 
 1. ARQUITETURA IMPLEMENTADA
 
@@ -186,16 +186,20 @@ Histórico
   identificador técnico nem a sessão mantida pela Evolution API.
 - Ambiente local de testes fixa a versão WhatsApp/Baileys 2.3000.1044311535 em
   uma imagem compatível da Evolution API, para permitir a vinculação do número.
-- Notificações deixaram de ser automáticas. Ações de status, conclusão e
-  cancelamento sugerem o envio ao responsável, que confirma ou recusa; o backend
-  exige telefone do cliente antes de transmitir qualquer mensagem.
+- Notificações WhatsApp são manuais por padrão: ações relevantes sugerem o envio
+  ao responsável, que confirma ou recusa; o backend exige telefone do cliente.
+- O administrador pode, de modo opcional, ativar envios automáticos e escolher
+  separadamente criação, remarcação, cancelamento, cada status e lembrete.
+- Modelos de mensagem são editáveis no painel, inclusive um modelo exclusivo de
+  lembrete. A antecedência do lembrete é configurável entre 5 minutos e 7 dias.
+- O agendador verifica lembretes a cada minuto, registra os resultados e nunca
+  impede a operação principal se a Evolution estiver indisponível.
 
 4. PENDÊNCIAS PRINCIPAIS
 
-A expansão da cobertura de testes, a agenda administrativa visual em calendário,
-os recursos completos de acessibilidade, a integração VLibras, a integração
-Evolution/WhatsApp, a remoção de código legado e a atualização dos documentos
-técnicos antigos continuam pendentes.
+A expansão da cobertura de testes, validações manuais de responsividade e
+acessibilidade, a revisão jurídica e a consolidação da integração WhatsApp para
+produção continuam pendentes.
 
 Também está planejado o login com Google. Após a primeira autenticação por
 Google, uma pessoa sem cadastro completo deverá ser encaminhada à conclusão de
