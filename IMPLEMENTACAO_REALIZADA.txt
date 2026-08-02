@@ -87,6 +87,8 @@ Histórico
   maior, redução de animações e reforço global de foco visível.
 - Modal reutilizável acessível com foco inicial, foco preso por Tab, fechamento
   por Esc e retorno do foco ao elemento que abriu o diálogo.
+- Integração do VLibras nas páginas públicas e de conta, com carregamento único
+  do widget e sem exibição no painel administrativo.
 - Última validação concluída com build do cliente/servidor e 10 testes passando.
 
 4. PENDÊNCIAS PRINCIPAIS
