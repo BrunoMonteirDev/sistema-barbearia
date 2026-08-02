@@ -186,6 +186,8 @@ ATUALIZAÇÃO — QUALIDADE DO LOGIN GOOGLE (02/08/2026)
 - [CONCLUÍDO] Teste de integração para o endpoint de conclusão de cadastro
   pendente, assegurando a normalização do telefone e a liberação persistida da
   conta após login Google.
+- [CONCLUÍDO] A API de agendamentos recusa uma solicitação de conta pendente;
+  há teste de regressão contra o contorno da interface por chamada direta.
 
 ATUALIZAÇÃO — EVOLUTION API (02/08/2026)
 

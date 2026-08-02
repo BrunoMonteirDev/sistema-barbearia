@@ -253,6 +253,8 @@ usuários nem concluir agendamentos, inclusive se sair e retornar ao sistema.
 - Teste de integração cobre a conclusão de cadastro pendente de uma conta
   Google, incluindo normalização do telefone e persistência da liberação da
   conta no banco PostgreSQL isolado de testes.
+- A API também bloqueia diretamente a criação de agendamento por uma conta com
+  cadastro pendente, não dependendo somente da proteção da interface.
 
 5. LIMPEZA DE CÓDIGO
 

@@ -196,3 +196,7 @@ RF23 - Conclusão de cadastro por Google [IMPLEMENTADO]
 Uma conta autenticada por Google que ainda esteja pendente deve informar nome e
 telefone válidos antes de acessar recursos restritos. A conclusão normaliza o
 telefone e registra permanentemente o cadastro como concluído.
+
+RN14 - Bloqueio de agendamento por cadastro pendente [IMPLEMENTADO]
+O backend deve recusar a criação de agendamento para qualquer cliente cujo
+cadastro ainda não esteja concluído, inclusive em chamadas diretas à API.

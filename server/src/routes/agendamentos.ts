@@ -117,6 +117,11 @@ router.post("/", async (req, res) => {
         .status(400)
         .json({ error: "Cliente, profissional ou serviço indisponível." });
 
+    if (usuario.cadastroConcluido === false)
+      return res.status(403).json({
+        error: "Conclua seu cadastro antes de realizar um agendamento.",
+      });
+
     const horarioDisponivel = await validarDisponibilidade(
       profissionalId,
       servicoId,
