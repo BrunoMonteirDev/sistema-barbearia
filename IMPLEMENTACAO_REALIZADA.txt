@@ -273,6 +273,9 @@ usuários nem concluir agendamentos, inclusive se sair e retornar ao sistema.
   podem consultar os eventos, enquanto outro cliente não recebe acesso.
 - Disponibilidade de profissionais agora é validada integralmente antes da
   gravação; dias ou blocos inválidos não apagam a jornada existente.
+- A edição administrativa completa de agendamentos foi protegida por teste de
+  integração: apenas administradores podem executá-la, a nova agenda precisa
+  estar disponível e cada mudança gera o registro de auditoria correspondente.
 
 5. LIMPEZA DE CÓDIGO
 

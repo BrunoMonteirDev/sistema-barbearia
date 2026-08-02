@@ -236,3 +236,8 @@ RN22 - Integridade da disponibilidade profissional [IMPLEMENTADO]
 Cada dia deve estar entre domingo e sábado e cada horário deve ser um bloco
 válido de 30 minutos. Uma configuração inválida é rejeitada antes de alterar a
 jornada já cadastrada.
+
+RN23 - Edição administrativa auditável [IMPLEMENTADO]
+Somente administradores podem editar profissional, serviço, data, horário,
+status ou observação de um agendamento. A operação deve reaplicar a validação
+de disponibilidade e gravar os valores anteriores e novos no histórico.

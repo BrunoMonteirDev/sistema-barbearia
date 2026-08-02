@@ -310,6 +310,26 @@ describe('API - conflito real de agendamento', () => {
     expect(await prisma.historicoAgendamento.findFirst({ where: { agendamentoId: agendamento.id, autorId: administrador.id, tipo: 'ATUALIZACAO_STATUS' } })).toBeTruthy()
   })
 
+  it('permite somente ao administrador editar o agendamento, valida disponibilidade e registra auditoria', async () => {
+    const cliente = await prisma.usuario.create({ data: { nome: 'Cliente edicao', email: 'cliente.edicao@teste.local', senhaHash: 'hash' } })
+    const administrador = await prisma.usuario.create({ data: { nome: 'Admin edicao', email: 'admin.edicao@teste.local', senhaHash: 'hash', nivel: 'Administrador' } })
+    const profissional = await prisma.profissional.create({ data: { nome: 'Profissional edicao' } })
+    const servico = await prisma.servico.create({ data: { nome: 'Servico edicao', duracao: 30, preco: 30 } })
+    await prisma.disponibilidadeProfissional.createMany({ data: [
+      { profissionalId: profissional.id, diaSemana: 1, hora: '10:00' },
+      { profissionalId: profissional.id, diaSemana: 1, hora: '10:30' },
+    ] })
+    const agendamento = await prisma.agendamento.create({ data: { usuarioId: cliente.id, profissionalId: profissional.id, servicoId: servico.id, data: dataTeste, hora: '10:00', status: 'PENDENTE' } })
+    const tokenCliente = `Bearer ${signToken({ id: cliente.id, nivel: 'Cliente' })}`
+    const tokenAdmin = `Bearer ${signToken({ id: administrador.id, nivel: 'Administrador' })}`
+
+    await request(app).put(`/api/agendamentos/${agendamento.id}`).set('authorization', tokenCliente).send({ hora: '10:30' }).expect(403)
+    await request(app).put(`/api/agendamentos/${agendamento.id}`).set('authorization', tokenAdmin).send({ hora: '10:30', status: 'CONFIRMADO', observacao: 'Cliente avisado' }).expect(200)
+
+    expect(await prisma.agendamento.findUnique({ where: { id: agendamento.id } })).toMatchObject({ hora: '10:30', status: 'CONFIRMADO', observacao: 'Cliente avisado' })
+    expect(await prisma.historicoAgendamento.findFirst({ where: { agendamentoId: agendamento.id, autorId: administrador.id, tipo: 'ATUALIZACAO_ADMINISTRATIVA' } })).toMatchObject({ dadosNovos: expect.objectContaining({ hora: '10:30', status: 'CONFIRMADO' }) })
+  })
+
   it('impede cliente de atualizar status diretamente', async () => {
     const cliente = await prisma.usuario.create({ data: { nome: 'Cliente sem permissao', email: 'cliente.sem.permissao@teste.local', senhaHash: 'hash' } })
     const profissional = await prisma.profissional.create({ data: { nome: 'Profissional de teste' } })

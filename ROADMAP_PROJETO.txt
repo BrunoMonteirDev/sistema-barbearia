@@ -88,8 +88,8 @@ Medição mais recente (02/08/2026):
 6. LOGIN COM GOOGLE E CADASTRO PENDENTE                        [EM ANDAMENTO]
 - Persistência entregue: provedor de autenticação, identificador Google, foto
   e estado de cadastro concluído no usuário.
-- API entregue para validar ID token Google e criar conta pendente; falta o
-  bloqueio das áreas protegidas e da confirmação de agendamento.
+- API entregue para validar ID token Google, criar conta pendente e bloquear
+  áreas protegidas e confirmação de agendamento até a conclusão.
 - Botão oficial e tela de conclusão entregues; Client ID configurado apenas no
   ambiente local, nunca no repositório.
 - Adicionar autenticação pelo botão "Continuar com Google".
@@ -108,6 +108,8 @@ Medição mais recente (02/08/2026):
   conta desativada é reativada como cadastro pendente.
 - [CONCLUÍDO] Redirecionamento Google aguarda o estado da sessão, evitando a
   necessidade de autenticar duas vezes para concluir cadastro.
+- Pendente apenas: configurar as variáveis de produção e realizar a validação
+  manual de ponta a ponta no domínio publicado.
 
 7. ACESSIBILIDADE                                               [EM ANDAMENTO]
 - Preferências persistidas entregues: alto contraste, texto maior e redução
