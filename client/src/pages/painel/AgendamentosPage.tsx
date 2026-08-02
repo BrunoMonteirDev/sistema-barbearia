@@ -74,7 +74,7 @@ export default function AgendamentosPage() {
     item: Agendamento;
   } | null>(null);
   const [notificationPrompt, setNotificationPrompt] = useState<{ item: Agendamento; tipo: 'CRIACAO' | 'REMARCACAO' | 'CANCELAMENTO' | 'ATUALIZACAO' } | null>(null);
-  // Mantidos para o formulÃ¡rio de ediÃ§Ã£o legado, que nÃ£o Ã© exibido no fluxo novo.
+  // Mantidos para o formulario legado, que nao e exibido no fluxo novo.
   const [criandoCliente, setCriandoCliente] = useState(false);
   const [novoCliente, setNovoCliente] = useState({ nome: "", telefone: "" });
   const [buscaCliente, setBuscaCliente] = useState("");
