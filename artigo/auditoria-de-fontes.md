@@ -13,8 +13,10 @@ Consulta realizada em 02/08/2026. Fontes oficiais foram selecionadas para susten
 | Pequenas empresas possuem especificidades na gestão da informação | Moraes e Escrivão Filho | artigo científico | https://doi.org/10.1590/S0100-19652006000300012 | Sim | fundamenta a contextualização do problema |
 | TI deve considerar a realidade das pequenas empresas | Moraes, Terence e Escrivão Filho | artigo científico | https://doi.org/10.4301/S1807-17752004000100003 | Sim | fundamenta o refinamento de escopo |
 | Recomendações brasileiras orientam acessibilidade digital | Governo Digital | fonte institucional | https://www.gov.br/governodigital/pt-br/acessibilidade-e-usuario/acessibilidade-digital/modelo-de-acessibilidade | Sim | complementar à WCAG |
-| Testes com Vitest são executados por comando | Vitest | documentação oficial | https://vitest.dev/guide/ | Pendente de nova consulta | a ferramenta está confirmada no repositório; referência deve ser revisada antes da submissão |
-| Metodologia aplicada/exploratória/qualitativa | [REFERÊNCIA PENDENTE DE VERIFICAÇÃO] | bibliografia metodológica | — | Não | requer validação com orientador e fonte acadêmica específica |
+| Autorização deve ser verificada para cada solicitação | OWASP | guia técnico institucional | https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html | Sim | fundamenta autenticação e autorização |
+| Qualidade de software envolve requisitos e avaliação | ISO/IEC 25010 | norma técnica | https://www.iso.org/standard/35733.html | Sim | usada para contextualizar os testes |
+| Desenvolvimento tecnológico aplicado pode combinar decisões de método e evidências | Creswell e Creswell | bibliografia metodológica | https://us.sagepub.com/en-us/nam/research-design/book255675 | Sim | fundamenta a descrição metodológica sem caracterizar pesquisa de campo |
+| Testes com Vitest são executados por comando | Vitest | documentação oficial | https://vitest.dev/guide/ | Pendente de nova consulta | ferramenta confirmada no repositório; não utilizada como referência central no artigo |
 
 ## Referências prontas para revisão editorial
 
@@ -33,3 +35,9 @@ WORLD WIDE WEB CONSORTIUM. **Web Content Accessibility Guidelines (WCAG) 2.2**. 
 MORAES, Giseli Diniz de Almeida; ESCRIVÃO FILHO, Edmundo. **A gestão da informação diante das especificidades das pequenas empresas**. Ciência da Informação, v. 35, n. 3, p. 124-132, 2006. DOI: <https://doi.org/10.1590/S0100-19652006000300012>.
 
 MORAES, Giseli Diniz de Almeida; TERENCE, Ana Cláudia Fernandes; ESCRIVÃO FILHO, Edmundo. **A tecnologia da informação como suporte à gestão estratégica da informação na pequena empresa**. Journal of Information Systems and Technology Management, v. 1, n. 1, p. 27-43, 2004. DOI: <https://doi.org/10.4301/S1807-17752004000100003>.
+
+CRESWELL, John W.; CRESWELL, J. David. **Research design: qualitative, quantitative, and mixed methods approaches**. 6. ed. Thousand Oaks: SAGE, 2023.
+
+OWASP. **Authorization Cheat Sheet**. Disponível em: <https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html>. Acesso em: 2 ago. 2026.
+
+ISO. **ISO/IEC 25010:2011: Systems and software engineering — Systems and software Quality Requirements and Evaluation**. Disponível em: <https://www.iso.org/standard/35733.html>. Acesso em: 2 ago. 2026.
