@@ -122,13 +122,17 @@ Histórico
 - Base de login Google criada no banco: usuário registra provedor, identificador
   único Google, foto e estado persistente de cadastro concluído. A migração foi
   aplicada no banco de desenvolvimento sem afetar os usuários locais.
+- Endpoint seguro de login Google criado: valida o ID token contra o
+  GOOGLE_CLIENT_ID, cria a conta Google como cadastro pendente e rejeita e-mail
+  não verificado ou colisão com conta local. Arquivos .env.example documentam
+  as credenciais necessárias, sem expor segredos.
 - Tela de login ganhou retorno explícito ao menu inicial. A consulta de sessão
   só é feita quando existe token armazenado, eliminando o 401 esperado de
   usuários desconectados no console do navegador.
 - Alto contraste ajustado para normalizar superfícies utilitárias, textos,
   ícones, links e bordas: nenhum status, link ou ícone permanece em cor escura
   sobre fundo preto, e as interações de hover continuam perceptíveis.
-- Última validação concluída com build do cliente/servidor e 65 testes passando.
+- Última validação concluída com build do cliente/servidor e 66 testes passando.
 
 4. PENDÊNCIAS PRINCIPAIS
 

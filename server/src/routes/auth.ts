@@ -1,9 +1,18 @@
 import { Router } from 'express'
 import bcrypt from 'bcryptjs'
+import { OAuth2Client } from 'google-auth-library'
 import { usuarioService } from '../services/usuario.service'
 import { signToken } from '../middlewares/auth'
 
 const router = Router()
+
+const mapAuthUser = (usuario: { id: string; nome: string; email: string; nivel: string; cadastroConcluido?: boolean }) => ({
+  id: usuario.id,
+  nome: usuario.nome,
+  email: usuario.email,
+  nivel: usuario.nivel,
+  cadastroConcluido: usuario.cadastroConcluido ?? true
+})
 
 router.post('/login', async (req, res) => {
   try {
@@ -25,7 +34,7 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Credenciais inválidas.' })
     }
 
-    return res.json({ token: signToken(usuario), user: { id: usuario.id, nome: usuario.nome, email: usuario.email, nivel: usuario.nivel } })
+    return res.json({ token: signToken(usuario), user: mapAuthUser(usuario) })
   } catch (error) {
     console.error(error)
     return res.status(500).json({ error: 'Erro interno ao autenticar.' })
@@ -54,10 +63,42 @@ router.post('/register', async (req, res) => {
       nivel: 'Cliente'
     })
 
-    return res.status(201).json({ token: signToken(usuario), user: { id: usuario.id, nome: usuario.nome, email: usuario.email, nivel: usuario.nivel } })
+    return res.status(201).json({ token: signToken(usuario), user: mapAuthUser(usuario) })
   } catch (error) {
     console.error(error)
     return res.status(500).json({ error: 'Erro interno ao cadastrar usuário.' })
+  }
+})
+
+router.post('/google', async (req, res) => {
+  const clientId = process.env.GOOGLE_CLIENT_ID
+  if (!clientId) return res.status(503).json({ error: 'Login com Google ainda não foi configurado.' })
+  if (typeof req.body.idToken !== 'string' || !req.body.idToken) return res.status(400).json({ error: 'Token Google é obrigatório.' })
+
+  try {
+    const ticket = await new OAuth2Client(clientId).verifyIdToken({ idToken: req.body.idToken, audience: clientId })
+    const perfil = ticket.getPayload()
+    if (!perfil?.sub || !perfil.email || !perfil.email_verified) return res.status(401).json({ error: 'A conta Google precisa ter e-mail verificado.' })
+
+    let usuario = await usuarioService.buscarPorGoogleSubject(perfil.sub)
+    if (!usuario) {
+      const existente = await usuarioService.buscarPorEmail(perfil.email.toLowerCase())
+      if (existente) return res.status(409).json({ error: 'Este e-mail já possui conta. Entre com sua senha para vincular o Google futuramente.' })
+      usuario = await usuarioService.criar({
+        nome: perfil.name?.trim() || perfil.email.split('@')[0],
+        email: perfil.email.toLowerCase(),
+        nivel: 'Cliente',
+        provedorAuth: 'GOOGLE',
+        googleSubject: perfil.sub,
+        fotoUrl: perfil.picture ?? null,
+        cadastroConcluido: false
+      })
+    }
+
+    return res.status(201).json({ token: signToken(usuario), user: mapAuthUser(usuario) })
+  } catch (error) {
+    console.error(error)
+    return res.status(401).json({ error: 'Não foi possível validar o login com Google.' })
   }
 })
 

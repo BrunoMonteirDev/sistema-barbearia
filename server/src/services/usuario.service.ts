@@ -13,6 +13,10 @@ export const usuarioService = {
     return prisma.usuario.findUnique({ where: { email } })
   },
 
+  async buscarPorGoogleSubject(googleSubject: string) {
+    return prisma.usuario.findUnique({ where: { googleSubject } })
+  },
+
   async buscarPorId(id: string) {
     return prisma.usuario.findUnique({ where: { id } })
   },
@@ -25,6 +29,10 @@ export const usuarioService = {
     nivel?: string
     ativo?: boolean
     dataNascimento?: Date | null
+    provedorAuth?: string
+    googleSubject?: string
+    cadastroConcluido?: boolean
+    fotoUrl?: string | null
   }) {
     const senhaHash = dados.senha ? await bcrypt.hash(dados.senha, 10) : null
 
@@ -34,6 +42,10 @@ export const usuarioService = {
         email: dados.email,
         telefone: dados.telefone ?? null,
         senhaHash,
+        provedorAuth: dados.provedorAuth ?? 'LOCAL',
+        googleSubject: dados.googleSubject,
+        cadastroConcluido: dados.cadastroConcluido ?? true,
+        fotoUrl: dados.fotoUrl ?? null,
         nivel: dados.nivel ?? 'Cliente',
         ativo: dados.ativo ?? true,
         dataNascimento: dados.dataNascimento ?? null

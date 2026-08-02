@@ -83,6 +83,10 @@ conclusão de cadastro. O estado pendente deve permanecer salvo no banco; até a
 conclusão, a pessoa não poderá abrir a área de usuários nem confirmar um
 agendamento, mesmo após sair e retornar ao sistema.
 
+O ID token deverá ser validado exclusivamente no servidor contra o Client ID
+configurado por variável de ambiente. Contas Google recém-criadas permanecem
+com cadastro pendente até a conclusão dos dados obrigatórios.
+
 4. REQUISITOS NÃO FUNCIONAIS
 
 RNF01 - Arquitetura e portabilidade [IMPLEMENTADO]
