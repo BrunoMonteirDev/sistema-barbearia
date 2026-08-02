@@ -293,7 +293,9 @@ export default function AgendarPage() {
                 <p className="mt-1 text-sm text-slate-600">
                   Selecione uma data para visualizar os horários disponíveis.
                 </p>
-                <div className="mt-6 rounded-xl border border-slate-200 p-4 sm:p-5">
+                <div className="mt-4 grid gap-4 sm:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] sm:items-start">
+                  <div>
+                <div className="rounded-xl border border-slate-200 p-3 sm:p-4">
                   <div className="flex items-center justify-between gap-3">
                     <button type="button" aria-label="Mês anterior" disabled={mesAnteriorBloqueado} onClick={() => setMesExibido(atual => new Date(atual.getFullYear(), atual.getMonth() - 1, 1))} className="rounded-md p-2 text-slate-700 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"><ChevronLeft className="h-5 w-5" /></button>
                     <div className="flex items-center gap-2">
@@ -318,7 +320,7 @@ export default function AgendarPage() {
                   </div>
                 </div>
                 {servicoSelecionado && (
-                  <p className="mt-3 rounded-md bg-slate-50 p-3 text-sm text-slate-700">
+                  <p className="mt-3 rounded-md bg-slate-50 p-2.5 text-sm text-slate-700">
                     Duração do serviço:{" "}
                     <strong>
                       {arredondarDuracaoParaBloco(servicoSelecionado.duracao)}{" "}
@@ -327,7 +329,9 @@ export default function AgendarPage() {
                     .
                   </p>
                 )}
-                <div className="mt-6">
+                  </div>
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 sm:p-4">
+                  <p className="mb-3 text-sm font-bold text-slate-900">Horários disponíveis</p>
                   {loadingHorarios ? (
                     <p className="text-sm text-slate-600">
                       Carregando horários...
@@ -341,19 +345,20 @@ export default function AgendarPage() {
                       Não há horários disponíveis nesta data.
                     </p>
                   ) : (
-                    <div className="space-y-5">{[['Manhã', horarios.filter(hora => hora < '12:00')], ['Tarde', horarios.filter(hora => hora >= '12:00' && hora < '18:00')], ['Noite', horarios.filter(hora => hora >= '18:00')]].map(([periodo, lista]) => (Array.isArray(lista) && lista.length > 0 && <div key={String(periodo)}><p className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-700"><Clock3 className="h-4 w-4 text-secondary-600" />{periodo}</p><div className="grid grid-cols-3 gap-2 sm:grid-cols-5">{lista.map((hora) => (
+                    <div className="space-y-3">{[['Manhã', horarios.filter(hora => hora < '12:00')], ['Tarde', horarios.filter(hora => hora >= '12:00' && hora < '18:00')], ['Noite', horarios.filter(hora => hora >= '18:00')]].map(([periodo, lista]) => (Array.isArray(lista) && lista.length > 0 && <div key={String(periodo)}><p className="mb-1.5 flex items-center gap-2 text-sm font-semibold text-slate-700"><Clock3 className="h-4 w-4 text-secondary-600" />{periodo}</p><div className="grid grid-cols-3 gap-1.5">{lista.map((hora) => (
                         <button
                           key={hora}
                           type="button"
                           onClick={() =>
                             setForm((current) => ({ ...current, hora }))
                           }
-                          className={`rounded-md border px-3 py-2.5 text-sm font-semibold transition-colors ${form.hora === hora ? "border-primary-700 bg-primary-700 text-white" : "border-slate-300 bg-white text-slate-800 hover:border-secondary-500 hover:bg-secondary-50"}`}
+                          className={`rounded-md border px-2 py-2 text-sm font-semibold transition-colors ${form.hora === hora ? "border-primary-700 bg-primary-700 text-white" : "border-slate-300 bg-white text-slate-800 hover:border-secondary-500 hover:bg-secondary-50"}`}
                         >
                           {hora}
                         </button>
                       ))}</div></div>))}</div>
                   )}
+                </div>
                 </div>
               </section>
             )}

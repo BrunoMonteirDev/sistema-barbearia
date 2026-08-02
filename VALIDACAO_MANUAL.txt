@@ -13,6 +13,8 @@ Supertest. Preencha data, responsavel e resultado ao executar cada item.
 [ ] Calendário: conferir grade, navegação por setas e dropdowns de mês/ano;
     meses passados do ano atual e datas anteriores devem estar indisponíveis.
 [ ] Conferir que horários aparecem somente depois da seleção de uma data.
+[ ] Em desktop/tablet, conferir que calendário e horários ficam lado a lado;
+    em celular, a leitura deve continuar confortável em uma única coluna.
 
 2. AGENDA ADMINISTRATIVA
 [ ] Desktop: verificar visao diaria, semanal, filtros e navegacao entre datas.

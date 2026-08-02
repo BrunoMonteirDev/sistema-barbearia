@@ -40,6 +40,8 @@ Agendamento
 - A seleção de data usa calendário mensal com grade, navegação por setas e
   seletores de mês/ano; dias e meses anteriores ao atual ficam indisponíveis.
 - Os horários só são carregados e exibidos depois que uma data é selecionada.
+- Em telas médias ou maiores, o calendário e os horários disponíveis ficam lado
+  a lado, com espaçamento compacto para reduzir a rolagem vertical.
 
 Agenda e regras
 - Dashboard e painel de gestão de agendamentos.
