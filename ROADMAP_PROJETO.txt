@@ -98,6 +98,8 @@ Próximos itens:
 
 8. WHATSAPP E NOTIFICAÇÕES                                     [PENDENTE - ÚLTIMA ETAPA]
 - Número configurado pelo administrador aplicado ao botão da página inicial.
+- Contatos públicos do rodapé (WhatsApp, e-mail e Instagram) sincronizados com
+  Configurações do painel administrativo.
 - Pendente: revisar os demais links e criar a camada de notificações.
 - Camada desacoplada de notificações e integração Quepasa por variáveis de ambiente.
 - Confirmação, cancelamento e remarcação; falha de envio não bloqueia a operação.

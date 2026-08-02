@@ -158,6 +158,9 @@ Histórico
 - VLibras corrigido para navegação SPA: a instância não é mais desmontada ao
   alternar entre rotas; no painel administrativo ela apenas fica oculta e volta
   a aparecer imediatamente nas páginas públicas e de conta.
+- Configurações administrativas de contato ampliadas: WhatsApp, e-mail e link
+  do Instagram são persistidos pelo painel e refletidos no rodapé público,
+  incluindo ícones clicáveis de Instagram e WhatsApp.
 
 4. PENDÊNCIAS PRINCIPAIS
 

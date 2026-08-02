@@ -40,17 +40,17 @@ const diferenciais = [
 
 export default function HomePage() {
   const { user, signOut } = useAuth();
-  const [telefoneWhatsApp, setTelefoneWhatsApp] = useState<string | null>(null);
+  const [contatos, setContatos] = useState<{ telefoneWhatsApp: string | null; email: string | null; instagram: string | null }>({ telefoneWhatsApp: null, email: null, instagram: null });
   const destinoUsuario =
     user?.nivel === "Administrador" ? "/painel" : "/minha-conta";
 
   useEffect(() => {
     void api.configuracoes.publico()
-      .then((configuracoes) => setTelefoneWhatsApp(configuracoes.telefoneWhatsApp))
-      .catch(() => setTelefoneWhatsApp(null));
+      .then(setContatos)
+      .catch(() => setContatos({ telefoneWhatsApp: null, email: null, instagram: null }));
   }, []);
 
-  const numeroWhatsApp = telefoneWhatsApp?.replace(/\D/g, "");
+  const numeroWhatsApp = contatos.telefoneWhatsApp?.replace(/\D/g, "");
   const linkWhatsApp = numeroWhatsApp
     ? `https://wa.me/${numeroWhatsApp.startsWith("55") ? numeroWhatsApp : `55${numeroWhatsApp}`}`
     : null;
@@ -68,12 +68,6 @@ export default function HomePage() {
               className="text-primary-300 hover:text-primary-200"
             >
               Início
-            </a>
-            <a
-              href="#diferenciais"
-              className="hidden hover:text-slate-200 sm:block"
-            >
-              Serviços
             </a>
             <Link href="/agendamento" className="hover:text-slate-200">
               Agendar
@@ -194,9 +188,9 @@ export default function HomePage() {
       <footer className="bg-secondary-600 px-5 py-10 text-slate-200">
         <div className="mx-auto grid max-w-6xl gap-9 sm:grid-cols-2 lg:grid-cols-4">
           <section><Link href="/" className="flex items-center gap-2 text-lg font-bold text-white"><Scissors className="h-5 w-5" />Barbearia</Link><p className="mt-3 max-w-xs text-sm leading-5 text-slate-300">A melhor experiência em cuidados masculinos. Cortes modernos, barba impecável e ambiente acolhedor.</p></section>
-          <section><h2 className="font-bold text-white">Links rápidos</h2><nav aria-label="Links rápidos" className="mt-3 flex flex-col items-start gap-2 text-sm"><a href="#inicio" className="hover:text-white hover:underline">Início</a><a href="#diferenciais" className="hover:text-white hover:underline">Serviços</a><Link href="/agendamento" className="hover:text-white hover:underline">Agendar</Link><Link href="/privacidade" className="hover:text-white hover:underline">Privacidade</Link><Link href="/termos" className="hover:text-white hover:underline">Termos de uso</Link><Link href="/cookies" className="hover:text-white hover:underline">Cookies</Link></nav></section>
-          <section><h2 className="font-bold text-white">Contato</h2><div className="mt-3 space-y-3 text-sm"><p className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary-400" />{telefoneWhatsApp ?? 'WhatsApp não configurado'}</p><p className="flex items-center gap-2"><Mail className="h-4 w-4 text-primary-400" />contato@barbearia.com</p><p className="text-xs leading-5 text-slate-400">Configure o WhatsApp no painel administrativo para disponibilizar o contato direto.</p></div></section>
-          <section><h2 className="font-bold text-white">Redes sociais</h2><a href="#inicio" aria-label="Instagram da Barbearia" className="mt-3 inline-grid h-9 w-9 place-items-center rounded-full bg-primary-600 text-white transition hover:bg-primary-500"><Instagram className="h-5 w-5" /></a></section>
+          <section><h2 className="font-bold text-white">Links rápidos</h2><nav aria-label="Links rápidos" className="mt-3 flex flex-col items-start gap-2 text-sm"><a href="#inicio" className="hover:text-white hover:underline">Início</a><Link href="/agendamento" className="hover:text-white hover:underline">Agendar</Link><Link href="/privacidade" className="hover:text-white hover:underline">Privacidade</Link><Link href="/termos" className="hover:text-white hover:underline">Termos de uso</Link><Link href="/cookies" className="hover:text-white hover:underline">Cookies</Link></nav></section>
+          <section><h2 className="font-bold text-white">Contato</h2><div className="mt-3 space-y-3 text-sm">{linkWhatsApp ? <a href={linkWhatsApp} target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white"><Phone className="h-4 w-4 text-primary-400" />{contatos.telefoneWhatsApp}</a> : <p className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary-400" />WhatsApp não configurado</p>}<a href={`mailto:${contatos.email ?? 'contato@barbearia.com'}`} className="flex items-center gap-2 hover:text-white"><Mail className="h-4 w-4 text-primary-400" />{contatos.email ?? 'contato@barbearia.com'}</a></div></section>
+          <section><h2 className="font-bold text-white">Redes sociais</h2><div className="mt-3 flex gap-3">{contatos.instagram && <a href={contatos.instagram} target="_blank" rel="noreferrer" aria-label="Instagram da Barbearia" className="inline-grid h-9 w-9 place-items-center rounded-full bg-primary-600 text-white transition hover:bg-primary-500"><Instagram className="h-5 w-5" /></a>}{linkWhatsApp && <a href={linkWhatsApp} target="_blank" rel="noreferrer" aria-label="Abrir WhatsApp da barbearia" className="inline-grid h-9 w-9 place-items-center rounded-full bg-emerald-600 text-white transition hover:bg-emerald-500"><MessageCircle className="h-5 w-5" /></a>}</div>{!contatos.instagram && !linkWhatsApp && <p className="mt-3 text-sm text-slate-400">Nenhuma rede social configurada.</p>}</section>
         </div>
         <div className="mx-auto mt-8 max-w-6xl border-t border-secondary-400 pt-5 text-center text-sm text-slate-300">© 2026 Barbearia. Todos os direitos reservados.</div>
       </footer>
