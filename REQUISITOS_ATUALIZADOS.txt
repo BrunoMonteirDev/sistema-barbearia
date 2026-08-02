@@ -214,3 +214,8 @@ RN17 - Validação de contato institucional [IMPLEMENTADO]
 O administrador informa WhatsApp com DDD, e-mail de contato e, opcionalmente,
 uma URL HTTP(S) completa de Instagram. Campos fora desse conjunto não são
 persistidos pela API de configurações.
+
+RN18 - Validação do perfil próprio [IMPLEMENTADO]
+O usuário deve informar nome válido e, se desejar telefone, número brasileiro
+com DDD. A API normaliza o telefone e não remove campos de perfil que não foram
+enviados na atualização.

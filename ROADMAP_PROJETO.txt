@@ -194,6 +194,8 @@ ATUALIZAÇÃO — QUALIDADE DO LOGIN GOOGLE (02/08/2026)
   perfil, protegendo o fluxo de exclusão e reativação por Google.
 - [CONCLUÍDO] Atualização de contatos restrita a campos permitidos e validada
   no backend, com regressão de dados inválidos na integração.
+- [CONCLUÍDO] Atualização de perfil validada no backend, com normalização de
+  telefone e preservação de campos não alterados.
 
 ATUALIZAÇÃO — EVOLUTION API (02/08/2026)
 

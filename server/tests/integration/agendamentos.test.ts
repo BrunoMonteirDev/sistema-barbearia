@@ -94,6 +94,13 @@ describe('API - conflito real de agendamento', () => {
     expect(usuario?.senhaHash).not.toBe('SenhaForte!9')
     expect(await bcrypt.compare('SenhaForte!9', usuario!.senhaHash!)).toBe(true)
 
+    const perfil = await request(app)
+      .put('/api/usuarios/me')
+      .set('authorization', `Bearer ${cadastro.body.token}`)
+      .send({ nome: 'Conta atualizada', telefone: '(44) 99999-9999' })
+      .expect(200)
+    expect(perfil.body).toMatchObject({ nome: 'Conta atualizada', telefone: '44999999999' })
+
     await request(app).post('/api/auth/login').send({ email: 'conta.ativa@teste.local', password: 'SenhaForte!9' }).expect(200)
     await prisma.usuario.update({ where: { id: usuario!.id }, data: { ativo: false } })
     await request(app).post('/api/auth/login').send({ email: 'conta.ativa@teste.local', password: 'SenhaForte!9' }).expect(401)

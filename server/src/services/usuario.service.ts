@@ -63,12 +63,15 @@ export const usuarioService = {
   },
 
   async atualizarPerfil(id: string, dados: { nome?: string; telefone?: string; dataNascimento?: string | null }) {
+    const dataNascimento = Object.prototype.hasOwnProperty.call(dados, 'dataNascimento')
+      ? (dados.dataNascimento ? new Date(dados.dataNascimento) : null)
+      : undefined
     return prisma.usuario.update({
       where: { id },
       data: {
         nome: dados.nome,
         telefone: dados.telefone,
-        dataNascimento: dados.dataNascimento ? new Date(dados.dataNascimento) : null
+        dataNascimento
       }
     })
   },

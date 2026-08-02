@@ -24,6 +24,13 @@ describe("rotas de usuários", () => {
     expect(response.body.nome).toBe("Cliente");
   });
 
+  it("valida e normaliza o telefone ao atualizar o próprio perfil", async () => {
+    await request(app).put("/usuarios/me").send({ nome: "A", telefone: "123" }).expect(400);
+    mocks.atualizarPerfil.mockResolvedValue({ id: "usuario-logado", nome: "Cliente atualizado", email: "cliente@teste.com", telefone: "44999999999" });
+    await request(app).put("/usuarios/me").send({ nome: " Cliente atualizado ", telefone: "(44) 99999-9999" }).expect(200);
+    expect(mocks.atualizarPerfil).toHaveBeenCalledWith("usuario-logado", expect.objectContaining({ nome: "Cliente atualizado", telefone: "44999999999" }));
+  });
+
   it("bloqueia listagem administrativa para cliente", async () => {
     await request(app).get("/usuarios").expect(403);
     expect(mocks.listar).not.toHaveBeenCalled();

@@ -42,7 +42,18 @@ router.get('/me', async (req, res) => {
 })
 
 router.put('/me', async (req, res) => {
-  const usuario = await usuarioService.atualizarPerfil(req.auth!.sub, req.body)
+  const nome = typeof req.body.nome === 'string' ? req.body.nome.trim() : ''
+  const telefoneInformado = req.body.telefone
+  const telefone = typeof telefoneInformado === 'string' ? telefoneInformado.replace(/\D/g, '') : telefoneInformado
+  if (nome.length < 2) return res.status(400).json({ error: 'Informe um nome válido.' })
+  if (telefone !== null && telefone !== undefined && (typeof telefone !== 'string' || telefone.length < 10 || telefone.length > 11)) {
+    return res.status(400).json({ error: 'Informe um telefone brasileiro válido com DDD.' })
+  }
+  const usuario = await usuarioService.atualizarPerfil(req.auth!.sub, {
+    nome,
+    telefone: telefone || null,
+    ...(Object.prototype.hasOwnProperty.call(req.body, 'dataNascimento') ? { dataNascimento: req.body.dataNascimento } : {})
+  })
   return res.json(mapUsuario(usuario))
 })
 

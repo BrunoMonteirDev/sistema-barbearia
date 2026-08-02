@@ -263,6 +263,8 @@ usuários nem concluir agendamentos, inclusive se sair e retornar ao sistema.
   sessão local.
 - Configurações de contato passaram a aceitar somente os campos permitidos,
   validando WhatsApp brasileiro, e-mail e URL completa opcional do Instagram.
+- A atualização do próprio perfil agora valida nome e telefone no backend,
+  normaliza o telefone e preserva a data de nascimento quando ela não é editada.
 
 5. LIMPEZA DE CÓDIGO
 
