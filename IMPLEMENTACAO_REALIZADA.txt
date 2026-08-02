@@ -155,6 +155,9 @@ Histórico
   Minha conta e de Meus agendamentos, e também não conseguem confirmar uma
   reserva. A conclusão atualiza a sessão em memória imediatamente, sem exigir
   novo login. Testes verificam o redirecionamento e a liberação após conclusão.
+- VLibras corrigido para navegação SPA: a instância não é mais desmontada ao
+  alternar entre rotas; no painel administrativo ela apenas fica oculta e volta
+  a aparecer imediatamente nas páginas públicas e de conta.
 
 4. PENDÊNCIAS PRINCIPAIS
 

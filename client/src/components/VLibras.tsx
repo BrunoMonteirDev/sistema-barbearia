@@ -15,7 +15,6 @@ export function VLibras() {
   const topoRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (localizacao.startsWith("/painel")) return;
     raizRef.current?.setAttribute("vw", "");
     botaoRef.current?.setAttribute("vw-access-button", "");
     conteudoRef.current?.setAttribute("vw-plugin-wrapper", "");
@@ -40,8 +39,11 @@ export function VLibras() {
     document.body.appendChild(script);
     iniciar();
     return () => { script.onload = null; };
-  }, [localizacao]);
+  }, []);
 
-  if (localizacao.startsWith("/painel")) return null;
-  return <div ref={raizRef} className="enabled"><div ref={botaoRef} className="active" /><div ref={conteudoRef}><div ref={topoRef} className="vw-plugin-top-wrapper" /></div></div>;
+  // O plugin altera seus próprios nós internos. Desmontá-los ao entrar no
+  // painel fazia o indicador de inicialização impedir uma nova montagem ao
+  // voltar para uma rota pública/da conta. Mantemos a instância viva e apenas
+  // a ocultamos no painel administrativo.
+  return <div ref={raizRef} className="enabled" hidden={localizacao.startsWith("/painel")}><div ref={botaoRef} className="active" /><div ref={conteudoRef}><div ref={topoRef} className="vw-plugin-top-wrapper" /></div></div>;
 }

@@ -82,6 +82,8 @@ Próximos itens:
   desktop e mobile.
 - Widget inicializado corretamente mesmo quando o script externo é carregado
   depois do evento de carregamento da página (cenário de SPA).
+- [CONCLUÍDO] Widget preservado nas trocas de rota; o acesso não desaparece
+  após visitar outra aba e retornar à área pública ou à conta.
 - Diálogos de cliente de remarcação e histórico migrados para o modal acessível.
 - Modal de agendamento administrativo também migrado para o modal acessível.
 - Indicador de foco por teclado ampliado para alto destaque visual.
