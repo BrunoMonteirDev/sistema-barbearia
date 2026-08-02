@@ -85,7 +85,8 @@ Próximos itens:
 - VLibras, Lighthouse, teclado e leitor de tela.
 
 8. WHATSAPP E NOTIFICAÇÕES                                     [PENDENTE - ÚLTIMA ETAPA]
-- Usar o número configurado pelo administrador em todos os links.
+- Número configurado pelo administrador aplicado ao botão da página inicial.
+- Pendente: revisar os demais links e criar a camada de notificações.
 - Camada desacoplada de notificações e integração Quepasa por variáveis de ambiente.
 - Confirmação, cancelamento e remarcação; falha de envio não bloqueia a operação.
 - Mocks e validação em ambiente controlado.

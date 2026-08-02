@@ -9,6 +9,8 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
+import { api } from "@/lib/api";
+import { useEffect, useState } from "react";
 
 const diferenciais = [
   {
@@ -35,8 +37,20 @@ const diferenciais = [
 
 export default function HomePage() {
   const { user, signOut } = useAuth();
+  const [telefoneWhatsApp, setTelefoneWhatsApp] = useState<string | null>(null);
   const destinoUsuario =
     user?.nivel === "Administrador" ? "/painel" : "/minha-conta";
+
+  useEffect(() => {
+    void api.configuracoes.publico()
+      .then((configuracoes) => setTelefoneWhatsApp(configuracoes.telefoneWhatsApp))
+      .catch(() => setTelefoneWhatsApp(null));
+  }, []);
+
+  const numeroWhatsApp = telefoneWhatsApp?.replace(/\D/g, "");
+  const linkWhatsApp = numeroWhatsApp
+    ? `https://wa.me/${numeroWhatsApp.startsWith("55") ? numeroWhatsApp : `55${numeroWhatsApp}`}`
+    : null;
   return (
     <main className="min-h-screen bg-slate-100 text-slate-950">
       <header className="bg-secondary-600 text-white">
@@ -116,15 +130,18 @@ export default function HomePage() {
                 <CalendarDays className="h-4 w-4" />
                 Agendar agora
               </Link>
-              <a
-                href="https://wa.me/5500000000000"
+              {linkWhatsApp ? <a
+                href={linkWhatsApp}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 rounded-full bg-blue-700 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-blue-800"
               >
                 <MessageCircle className="h-4 w-4" />
                 WhatsApp
-              </a>
+              </a> : <span className="inline-flex items-center gap-2 rounded-full bg-slate-500 px-5 py-3 text-sm font-bold text-white" title="WhatsApp ainda não configurado">
+                <MessageCircle className="h-4 w-4" />
+                WhatsApp indisponível
+              </span>}
             </div>
           </div>
         </div>

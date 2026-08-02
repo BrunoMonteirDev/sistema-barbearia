@@ -116,13 +116,16 @@ Histórico
 - Segundo lote concluído: removidas páginas sem rota de conta, produtos,
   pagamentos, agenda e configurações antigas. Não restam referências ao antigo
   Supabase/Postgres no cliente.
+- Botão de WhatsApp da página inicial passou a consultar a configuração pública
+  do painel; sem número configurado, informa indisponibilidade em vez de usar
+  um telefone fixo. Coberto para os dois cenários.
 - Tela de login ganhou retorno explícito ao menu inicial. A consulta de sessão
   só é feita quando existe token armazenado, eliminando o 401 esperado de
   usuários desconectados no console do navegador.
 - Alto contraste ajustado para normalizar superfícies utilitárias, textos,
   ícones, links e bordas: nenhum status, link ou ícone permanece em cor escura
   sobre fundo preto, e as interações de hover continuam perceptíveis.
-- Última validação concluída com build do cliente/servidor e 63 testes passando.
+- Última validação concluída com build do cliente/servidor e 65 testes passando.
 
 4. PENDÊNCIAS PRINCIPAIS
 
