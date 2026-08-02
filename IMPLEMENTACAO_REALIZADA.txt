@@ -61,6 +61,10 @@ Histórico
 - App Express separado do listen para permitir testes HTTP.
 - Scripts na raiz: npm test, npm run test:watch, npm run test:coverage e npm run test:integration.
 - Testes iniciais para senha, telefone, regra de antecedência e fluxo de remarcação.
+- Testes para disponibilidade, conflitos, autenticação, permissões,
+  cancelamento e remarcação.
+- Estrutura de integração preparada com DATABASE_URL_TEST, protegida contra uso
+  acidental do banco de desenvolvimento.
 - Última validação concluída com build do cliente/servidor e 10 testes passando.
 
 4. PENDÊNCIAS PRINCIPAIS
