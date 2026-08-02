@@ -37,6 +37,8 @@ Agendamento
   cadastro, o sistema retorna à mesma revisão com os dados preservados.
 - A criação é bloqueada fora da etapa de revisão, inclusive em envios acidentais
   do formulário por teclado.
+- A confirmação final exige a marcação explícita de que os dados da revisão
+  foram lidos; sem essa aceitação, o botão de confirmar permanece desabilitado.
 - A seleção de data usa calendário mensal com grade, navegação por setas e
   seletores de mês/ano; dias e meses anteriores ao atual ficam indisponíveis.
 - Os horários só são carregados e exibidos depois que uma data é selecionada.

@@ -48,6 +48,7 @@ export default function AgendarPage() {
   const [profissionais, setProfissionais] = useState<Profissional[]>([]);
   const [horarios, setHorarios] = useState<string[]>([]);
   const [loadingHorarios, setLoadingHorarios] = useState(false);
+  const [revisaoAceita, setRevisaoAceita] = useState(false);
   const [mesExibido, setMesExibido] = useState(() => {
     const dataInicial = dadosDaRevisao?.data ? new Date(`${dadosDaRevisao.data}T12:00:00`) : new Date();
     return new Date(dataInicial.getFullYear(), dataInicial.getMonth(), 1);
@@ -118,7 +119,7 @@ export default function AgendarPage() {
   };
   const submit = async (event: FormEvent) => {
     event.preventDefault();
-    if (etapa !== 4) {
+    if (etapa !== 4 || !revisaoAceita) {
       toast.error("Revise os dados do agendamento antes de confirmar.");
       return;
     }
@@ -378,6 +379,10 @@ export default function AgendarPage() {
                   <ResumoItem label="Duração" valor={servicoSelecionado ? `${arredondarDuracaoParaBloco(servicoSelecionado.duracao)} minutos` : "-"} />
                   <ResumoItem label="Valor" valor={servicoSelecionado ? Number(servicoSelecionado.preco).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) : "-"} />
                 </dl>
+                <label className="mt-5 flex cursor-pointer items-start gap-3 rounded-lg border border-primary-200 bg-primary-50 p-4 text-sm font-medium text-slate-800">
+                  <input type="checkbox" checked={revisaoAceita} onChange={event => setRevisaoAceita(event.target.checked)} className="mt-0.5 h-4 w-4 accent-primary-700" />
+                  <span>Li e confirmei os dados deste agendamento.</span>
+                </label>
               </section>
             )}
           </div>
@@ -393,7 +398,7 @@ export default function AgendarPage() {
                 <ArrowRight className="h-4 w-4" />
               </button>
             ) : (
-              <button type="submit" className="btn-primary gap-2" disabled={!form.hora}>
+              <button type="submit" className="btn-primary gap-2" disabled={!form.hora || !revisaoAceita}>
                 Confirmar agendamento
                 <Check className="h-4 w-4" />
               </button>

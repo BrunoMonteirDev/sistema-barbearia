@@ -10,6 +10,8 @@ Supertest. Preencha data, responsavel e resultado ao executar cada item.
     antes de qualquer criação de agendamento.
 [ ] Cliente sem sessão: confirmar na revisão abre o login e, após entrar,
     retorna à revisão com todos os dados preservados.
+[ ] Na revisão, o botão de confirmar deve permanecer desabilitado até marcar
+    "Li e confirmei os dados deste agendamento".
 [ ] Calendário: conferir grade, navegação por setas e dropdowns de mês/ano;
     meses passados do ano atual e datas anteriores devem estar indisponíveis.
 [ ] Conferir que horários aparecem somente depois da seleção de uma data.

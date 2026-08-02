@@ -46,6 +46,8 @@ describe("fluxo de agendamento", () => {
     expect(screen.getByText("Corte clássico")).toBeInTheDocument();
     expect(screen.getByText("10:00")).toBeInTheDocument();
     expect(screen.getByText("R$ 40,00")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Confirmar agendamento" })).toBeDisabled();
+    fireEvent.click(screen.getByRole("checkbox", { name: "Li e confirmei os dados deste agendamento." }));
     expect(screen.getByRole("button", { name: "Confirmar agendamento" })).toBeEnabled();
 
     await waitFor(() => expect(mocks.disponibilidade).toHaveBeenCalledWith("prof-1", "serv-1", "2026-08-20"));
@@ -70,6 +72,7 @@ describe("fluxo de agendamento", () => {
     fireEvent.click(screen.getByRole("button", { name: "Revisar agendamento" }));
 
     expect(await screen.findByRole("heading", { name: "Revise seu agendamento" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("checkbox", { name: "Li e confirmei os dados deste agendamento." }));
     fireEvent.click(screen.getByRole("button", { name: "Confirmar agendamento" }));
     expect(mocks.go).toHaveBeenCalledWith(expect.stringContaining("/login?retorno="));
     expect(mocks.go).toHaveBeenCalledWith(expect.stringContaining("revisao%3D1"));
