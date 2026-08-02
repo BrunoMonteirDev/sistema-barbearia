@@ -200,6 +200,8 @@ ATUALIZAÇÃO — QUALIDADE DO LOGIN GOOGLE (02/08/2026)
   desativação persistida e rejeição da sessão anterior.
 - [CONCLUÍDO] Avisos temporários anunciados a leitores de tela por região ARIA
   de status, sem depender exclusivamente de cor ou animação.
+- [CONCLUÍDO] Permissões de visualização do histórico de agendamento cobertas
+  por integração para cliente proprietário, outro cliente e administrador.
 
 ATUALIZAÇÃO — EVOLUTION API (02/08/2026)
 

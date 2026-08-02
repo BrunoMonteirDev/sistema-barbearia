@@ -269,6 +269,8 @@ usuários nem concluir agendamentos, inclusive se sair e retornar ao sistema.
   exige a frase de confirmação, desativa a conta e invalida a sessão existente.
 - Notificações temporárias agora possuem região ARIA de status, permitindo que
   leitores de tela anunciem avisos e erros sem interromper a interação atual.
+- Histórico de agendamento validado por integração: o dono e o administrador
+  podem consultar os eventos, enquanto outro cliente não recebe acesso.
 
 5. LIMPEZA DE CÓDIGO
 

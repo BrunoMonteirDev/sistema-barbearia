@@ -214,6 +214,26 @@ describe('API - conflito real de agendamento', () => {
     await request(app).get('/api/usuarios/me').set('authorization', authorization).expect(401)
   })
 
+  it('restringe o histórico ao dono do agendamento e permite auditoria administrativa', async () => {
+    const dono = await prisma.usuario.create({ data: { nome: 'Dono histórico', email: 'dono.historico@teste.local', senhaHash: 'hash' } })
+    const outroCliente = await prisma.usuario.create({ data: { nome: 'Outro histórico', email: 'outro.historico@teste.local', senhaHash: 'hash' } })
+    const administrador = await prisma.usuario.create({ data: { nome: 'Admin histórico', email: 'admin.historico@teste.local', senhaHash: 'hash', nivel: 'Administrador' } })
+    const profissional = await prisma.profissional.create({ data: { nome: 'Profissional histórico' } })
+    const servico = await prisma.servico.create({ data: { nome: 'Serviço histórico', duracao: 30, preco: 30 } })
+    const agendamento = await prisma.agendamento.create({ data: { usuarioId: dono.id, profissionalId: profissional.id, servicoId: servico.id, data: dataTeste, hora: '10:00', status: 'CONFIRMADO' } })
+    await prisma.historicoAgendamento.create({ data: { agendamentoId: agendamento.id, autorId: administrador.id, tipo: 'ATUALIZACAO_STATUS', dadosAnteriores: { status: 'PENDENTE' }, dadosNovos: { status: 'CONFIRMADO' } } })
+    const tokenDono = `Bearer ${signToken({ id: dono.id, nivel: 'Cliente' })}`
+    const tokenOutro = `Bearer ${signToken({ id: outroCliente.id, nivel: 'Cliente' })}`
+    const tokenAdmin = `Bearer ${signToken({ id: administrador.id, nivel: 'Administrador' })}`
+
+    await request(app).get(`/api/agendamentos/${agendamento.id}/historico`).set('authorization', tokenOutro).expect(403)
+    const historicoDono = await request(app).get(`/api/agendamentos/${agendamento.id}/historico`).set('authorization', tokenDono).expect(200)
+    expect(historicoDono.body).toHaveLength(1)
+    expect(historicoDono.body[0]).toMatchObject({ tipo: 'ATUALIZACAO_STATUS', autorId: administrador.id })
+    const historicoAdmin = await request(app).get(`/api/agendamentos/${agendamento.id}/historico`).set('authorization', tokenAdmin).expect(200)
+    expect(historicoAdmin.body).toHaveLength(1)
+  })
+
   it('marca atendimento passado como atrasado conforme a tolerancia configurada', async () => {
     const cliente = await prisma.usuario.create({ data: { nome: 'Cliente atraso', email: 'cliente.atraso@teste.local', senhaHash: 'hash' } })
     const profissional = await prisma.profissional.create({ data: { nome: 'Profissional de teste' } })

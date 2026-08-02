@@ -227,3 +227,7 @@ o token existente deixa de acessar o perfil e a sessão deve ser encerrada.
 RN20 - Avisos acessíveis [IMPLEMENTADO]
 Mensagens temporárias de sucesso e erro devem ser anunciadas por leitores de
 tela em uma região de status, além de possuírem texto e botão para fechamento.
+
+RN21 - Privacidade do histórico [IMPLEMENTADO]
+O histórico de um agendamento é acessível apenas ao cliente proprietário e ao
+administrador. Outros clientes devem receber resposta de acesso negado.
