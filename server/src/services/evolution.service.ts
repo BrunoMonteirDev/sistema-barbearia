@@ -1,9 +1,12 @@
+import { prisma } from '../lib/prisma'
+
 type EstadoEvolution = {
   configurada: boolean
   disponivel: boolean
   instanciaCriada: boolean
   conectada: boolean
   instancia: string | null
+  nomeExibicao: string | null
   estado: string | null
   mensagem?: string
 }
@@ -37,16 +40,18 @@ export const evolutionService = {
 
   async status(): Promise<EstadoEvolution> {
     const { url, apiKey, instancia } = configuracao()
-    if (!url || !apiKey) return { configurada: false, disponivel: false, instanciaCriada: false, conectada: false, instancia: null, estado: null, mensagem: 'Integração local não configurada.' }
+    const config = await prisma.configuracao.findFirst({ select: { evolutionNomeExibicao: true } })
+    const nomeExibicao = config?.evolutionNomeExibicao ?? instancia
+    if (!url || !apiKey) return { configurada: false, disponivel: false, instanciaCriada: false, conectada: false, instancia: null, nomeExibicao: null, estado: null, mensagem: 'Integração local não configurada.' }
     try {
       const instancias = await requisitar('/instance/fetchInstances')
       const criada = Array.isArray(instancias) && instancias.some((item: any) => item?.instance?.instanceName === instancia || item?.name === instancia)
-      if (!criada) return { configurada: true, disponivel: true, instanciaCriada: false, conectada: false, instancia, estado: null }
+      if (!criada) return { configurada: true, disponivel: true, instanciaCriada: false, conectada: false, instancia, nomeExibicao, estado: null }
       const dados = await requisitar(`/instance/connectionState/${encodeURIComponent(instancia)}`)
       const { estado, conectada } = estadoConectado(dados)
-      return { configurada: true, disponivel: true, instanciaCriada: true, conectada, instancia, estado }
+      return { configurada: true, disponivel: true, instanciaCriada: true, conectada, instancia, nomeExibicao, estado }
     } catch (error) {
-      return { configurada: true, disponivel: false, instanciaCriada: false, conectada: false, instancia, estado: null, mensagem: error instanceof Error ? error.message : 'Evolution indisponível.' }
+      return { configurada: true, disponivel: false, instanciaCriada: false, conectada: false, instancia, nomeExibicao, estado: null, mensagem: error instanceof Error ? error.message : 'Evolution indisponível.' }
     }
   },
 
@@ -74,6 +79,13 @@ export const evolutionService = {
   async excluirInstancia() {
     const { instancia } = configuracao()
     return requisitar(`/instance/delete/${encodeURIComponent(instancia)}`, { method: 'DELETE' })
+  },
+
+  async atualizarNomeExibicao(nome: unknown) {
+    if (typeof nome !== 'string' || nome.trim().length < 2 || nome.trim().length > 60) throw new Error('O nome de exibição deve ter entre 2 e 60 caracteres.')
+    const config = await prisma.configuracao.findFirst()
+    const dados = { evolutionNomeExibicao: nome.trim() }
+    return config ? prisma.configuracao.update({ where: { id: config.id }, data: dados }) : prisma.configuracao.create({ data: dados })
   },
 
   async enviarTexto(numero: string, texto: string) {

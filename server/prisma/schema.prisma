@@ -128,6 +128,7 @@ model Configuracao {
   imgBanner         String?   @map("img_banner")
   quantidadeCartoes Int?      @map("quantidade_cartoes")
   textoFidelidade   String?   @map("texto_fidelidade")
+  evolutionNomeExibicao String? @map("evolution_nome_exibicao")
   antecedenciaCancelamentoHoras Int @default(24) @map("antecedencia_cancelamento_horas")
   antecedenciaRemarcacaoHoras   Int @default(24) @map("antecedencia_remarcacao_horas")
   toleranciaAtrasoMinutos       Int @default(0) @map("tolerancia_atraso_minutos")

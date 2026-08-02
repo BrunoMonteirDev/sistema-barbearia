@@ -30,4 +30,8 @@ router.delete('/instancia', async (_req, res) => {
   try { return res.json(await evolutionService.excluirInstancia()) } catch (error) { return responderErro(res, error) }
 })
 
+router.put('/nome-exibicao', async (req, res) => {
+  try { return res.json(await evolutionService.atualizarNomeExibicao(req.body.nome)) } catch (error) { return res.status(400).json({ error: error instanceof Error ? error.message : 'Nome inválido.' }) }
+})
+
 export default router

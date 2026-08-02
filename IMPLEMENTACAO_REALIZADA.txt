@@ -182,6 +182,8 @@ Histórico
   da tela após 30 segundos.
 - Instâncias desconectadas podem ser excluídas pelo painel, removendo a sessão
   de teste antes da criação de uma nova instância com outro nome.
+- Nome de exibição da instância pode ser atualizado no sistema sem modificar o
+  identificador técnico nem a sessão mantida pela Evolution API.
 - Notificações deixaram de ser automáticas. Ações de status, conclusão e
   cancelamento sugerem o envio ao responsável, que confirma ou recusa; o backend
   exige telefone do cliente antes de transmitir qualquer mensagem.

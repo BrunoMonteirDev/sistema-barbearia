@@ -175,3 +175,8 @@ RF21 - Exclusão de instância [IMPLEMENTADO]
 Uma instância desconectada pode ser excluída pelo administrador. Para trocar o
 nome com segurança, a sessão atual deve ser desconectada e excluída antes de
 criar uma nova instância.
+
+RF22 - Nome interno da instância [IMPLEMENTADO]
+O administrador pode definir um nome de exibição para a instância no sistema.
+Ele é persistido nas configurações e não modifica o ID, nome técnico ou sessão
+existente na Evolution API.
