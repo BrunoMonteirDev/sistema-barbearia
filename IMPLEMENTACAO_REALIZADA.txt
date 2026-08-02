@@ -113,6 +113,9 @@ Histórico
 - Primeiro lote de limpeza de legado concluído: removidos os componentes não
   roteados de agendamento e a tela administrativa duplicada que dependiam do
   antigo cliente Postgres/Supabase.
+- Segundo lote concluído: removidas páginas sem rota de conta, produtos,
+  pagamentos, agenda e configurações antigas. Não restam referências ao antigo
+  Supabase/Postgres no cliente.
 - Tela de login ganhou retorno explícito ao menu inicial. A consulta de sessão
   só é feita quando existe token armazenado, eliminando o 401 esperado de
   usuários desconectados no console do navegador.

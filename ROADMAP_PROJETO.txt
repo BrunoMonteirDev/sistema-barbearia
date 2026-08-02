@@ -93,6 +93,8 @@ Próximos itens:
 9. LIMPEZA E DOCUMENTAÇÃO                                      [PENDENTE / CONTÍNUA]
 - Primeiro lote de código Supabase/fluxos antigos sem consumidores removido
   (agendamento legado e agenda administrativa duplicada).
+- Segundo lote removido após confirmação de ausência de consumidores; o cliente
+  não possui mais referências a Supabase/Postgres.
 - Atualizar documentação para React/Vite + Express + Prisma + JWT.
 - Registrar decisões novas: usuário unificado, Funcionário, e-mail opcional
   pelo admin, ATRASADO, regras e histórico.
