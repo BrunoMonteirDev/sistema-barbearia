@@ -1,7 +1,10 @@
 import {
   CalendarDays,
   Clock3,
+  Instagram,
+  Mail,
   MessageCircle,
+  Phone,
   Scissors,
   Star,
   Trophy,
@@ -188,9 +191,14 @@ export default function HomePage() {
           </div>
         )}
       </section>
-      <footer className="border-t border-slate-200 bg-white px-5 py-6 text-center text-sm text-slate-600">
-        <p>© 2026 Barbearia. Agendamentos simples e seguros.</p>
-        <div className="mt-3 flex justify-center gap-5"><Link href="/privacidade" className="hover:text-primary-700 hover:underline">Privacidade</Link><Link href="/termos" className="hover:text-primary-700 hover:underline">Termos de uso</Link><Link href="/cookies" className="hover:text-primary-700 hover:underline">Cookies</Link></div>
+      <footer className="bg-secondary-600 px-5 py-10 text-slate-200">
+        <div className="mx-auto grid max-w-6xl gap-9 sm:grid-cols-2 lg:grid-cols-4">
+          <section><Link href="/" className="flex items-center gap-2 text-lg font-bold text-white"><Scissors className="h-5 w-5" />Barbearia</Link><p className="mt-3 max-w-xs text-sm leading-5 text-slate-300">A melhor experiência em cuidados masculinos. Cortes modernos, barba impecável e ambiente acolhedor.</p></section>
+          <section><h2 className="font-bold text-white">Links rápidos</h2><nav aria-label="Links rápidos" className="mt-3 flex flex-col items-start gap-2 text-sm"><a href="#inicio" className="hover:text-white hover:underline">Início</a><a href="#diferenciais" className="hover:text-white hover:underline">Serviços</a><Link href="/agendamento" className="hover:text-white hover:underline">Agendar</Link><Link href="/privacidade" className="hover:text-white hover:underline">Privacidade</Link><Link href="/termos" className="hover:text-white hover:underline">Termos de uso</Link><Link href="/cookies" className="hover:text-white hover:underline">Cookies</Link></nav></section>
+          <section><h2 className="font-bold text-white">Contato</h2><div className="mt-3 space-y-3 text-sm"><p className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary-400" />{telefoneWhatsApp ?? 'WhatsApp não configurado'}</p><p className="flex items-center gap-2"><Mail className="h-4 w-4 text-primary-400" />contato@barbearia.com</p><p className="text-xs leading-5 text-slate-400">Configure o WhatsApp no painel administrativo para disponibilizar o contato direto.</p></div></section>
+          <section><h2 className="font-bold text-white">Redes sociais</h2><a href="#inicio" aria-label="Instagram da Barbearia" className="mt-3 inline-grid h-9 w-9 place-items-center rounded-full bg-primary-600 text-white transition hover:bg-primary-500"><Instagram className="h-5 w-5" /></a></section>
+        </div>
+        <div className="mx-auto mt-8 max-w-6xl border-t border-secondary-400 pt-5 text-center text-sm text-slate-300">© 2026 Barbearia. Todos os direitos reservados.</div>
       </footer>
     </main>
   );
