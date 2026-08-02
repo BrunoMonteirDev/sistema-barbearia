@@ -28,9 +28,9 @@ export default function LoginPage() {
   const entrarComGoogle = async (idToken: string) => {
     setAutenticandoGoogle(true)
     try {
-      await signInGoogle(idToken)
+      const usuario = await signInGoogle(idToken)
       toast.success('Acesso realizado com Google.')
-      go('/concluir-cadastro')
+      go(usuario.cadastroConcluido === false ? '/concluir-cadastro' : '/minha-conta')
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Não foi possível entrar com Google.')
     } finally {

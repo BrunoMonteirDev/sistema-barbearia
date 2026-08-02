@@ -85,18 +85,29 @@ router.post('/google', async (req, res) => {
     if (!perfil?.sub || !perfil.email || !perfil.email_verified) return res.status(401).json({ error: 'A conta Google precisa ter e-mail verificado.' })
 
     let usuario = await usuarioService.buscarPorGoogleSubject(perfil.sub)
-    if (!usuario) {
+    if (usuario?.ativo === false) {
+      usuario = await usuarioService.atualizar(usuario.id, { ativo: true, provedorAuth: 'GOOGLE', fotoUrl: perfil.picture ?? null, cadastroConcluido: false })
+    } else if (!usuario) {
       const existente = await usuarioService.buscarPorEmail(perfil.email.toLowerCase())
-      if (existente) return res.status(409).json({ error: 'Este e-mail já possui conta. Entre com sua senha para vincular o Google futuramente.' })
-      usuario = await usuarioService.criar({
-        nome: perfil.name?.trim() || perfil.email.split('@')[0],
-        email: perfil.email.toLowerCase(),
-        nivel: 'Cliente',
-        provedorAuth: 'GOOGLE',
-        googleSubject: perfil.sub,
-        fotoUrl: perfil.picture ?? null,
-        cadastroConcluido: false
-      })
+      if (existente) {
+        usuario = await usuarioService.atualizar(existente.id, {
+          ativo: true,
+          provedorAuth: 'GOOGLE',
+          googleSubject: perfil.sub,
+          fotoUrl: perfil.picture ?? null,
+          cadastroConcluido: existente.ativo === false ? false : (existente.cadastroConcluido ?? true)
+        })
+      } else {
+        usuario = await usuarioService.criar({
+          nome: perfil.name?.trim() || perfil.email.split('@')[0],
+          email: perfil.email.toLowerCase(),
+          nivel: 'Cliente',
+          provedorAuth: 'GOOGLE',
+          googleSubject: perfil.sub,
+          fotoUrl: perfil.picture ?? null,
+          cadastroConcluido: false
+        })
+      }
     }
 
     return res.status(201).json({ token: signToken(usuario), user: mapAuthUser(usuario) })

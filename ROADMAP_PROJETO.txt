@@ -104,6 +104,8 @@ Medição mais recente (02/08/2026):
   agendamento para contas Google com cadastro pendente.
 - [CONCLUÍDO] Conclusão atualiza a sessão atual e libera a navegação sem novo
   login.
+- [CONCLUÍDO] Login Google vincula conta local com o mesmo e-mail verificado;
+  conta desativada é reativada como cadastro pendente.
 
 7. ACESSIBILIDADE                                               [EM ANDAMENTO]
 - Preferências persistidas entregues: alto contraste, texto maior e redução

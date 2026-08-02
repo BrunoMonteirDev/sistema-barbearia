@@ -4,11 +4,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => {
   process.env.JWT_SECRET = "segredo-de-teste";
-  return { buscarPorEmail: vi.fn(), buscarPorGoogleSubject: vi.fn(), criar: vi.fn(), compare: vi.fn(), verifyGoogle: vi.fn() };
+  return { buscarPorEmail: vi.fn(), buscarPorGoogleSubject: vi.fn(), criar: vi.fn(), atualizar: vi.fn(), compare: vi.fn(), verifyGoogle: vi.fn() };
 });
 
 vi.mock("../services/usuario.service", () => ({
-  usuarioService: { buscarPorEmail: mocks.buscarPorEmail, buscarPorGoogleSubject: mocks.buscarPorGoogleSubject, criar: mocks.criar },
+  usuarioService: { buscarPorEmail: mocks.buscarPorEmail, buscarPorGoogleSubject: mocks.buscarPorGoogleSubject, criar: mocks.criar, atualizar: mocks.atualizar },
 }));
 vi.mock("bcryptjs", () => ({ default: { compare: mocks.compare } }));
 vi.mock("google-auth-library", () => ({ OAuth2Client: class { verifyIdToken = mocks.verifyGoogle } }));
@@ -76,6 +76,34 @@ describe("rotas de autenticação", () => {
 
     expect(response.status).toBe(201);
     expect(mocks.criar).toHaveBeenCalledWith(expect.objectContaining({ provedorAuth: "GOOGLE", googleSubject: "google-1", cadastroConcluido: false }));
+    expect(response.body.user.cadastroConcluido).toBe(false);
+  });
+
+  it("vincula o Google a uma conta local existente", async () => {
+    process.env.GOOGLE_CLIENT_ID = "cliente-google-teste";
+    mocks.verifyGoogle.mockResolvedValue({ getPayload: () => ({ sub: "google-local", email: "local@teste.com", email_verified: true, picture: "https://foto.test/avatar" }) });
+    mocks.buscarPorGoogleSubject.mockResolvedValue(null);
+    mocks.buscarPorEmail.mockResolvedValue({ id: "u-local", nome: "Local", email: "local@teste.com", nivel: "Cliente", ativo: true, cadastroConcluido: true });
+    mocks.atualizar.mockResolvedValue({ id: "u-local", nome: "Local", email: "local@teste.com", nivel: "Cliente", ativo: true, cadastroConcluido: true });
+
+    const response = await request(app).post("/auth/google").send({ idToken: "token-google" });
+
+    expect(response.status).toBe(201);
+    expect(mocks.atualizar).toHaveBeenCalledWith("u-local", expect.objectContaining({ googleSubject: "google-local", ativo: true }));
+    expect(response.body.user.cadastroConcluido).toBe(true);
+  });
+
+  it("reativa conta excluida pelo email e exige conclusao do cadastro", async () => {
+    process.env.GOOGLE_CLIENT_ID = "cliente-google-teste";
+    mocks.verifyGoogle.mockResolvedValue({ getPayload: () => ({ sub: "google-reativado", email: "excluido@teste.com", email_verified: true }) });
+    mocks.buscarPorGoogleSubject.mockResolvedValue(null);
+    mocks.buscarPorEmail.mockResolvedValue({ id: "u-excluido", nome: "Excluido", email: "excluido@teste.com", nivel: "Cliente", ativo: false, cadastroConcluido: true });
+    mocks.atualizar.mockResolvedValue({ id: "u-excluido", nome: "Excluido", email: "excluido@teste.com", nivel: "Cliente", ativo: true, cadastroConcluido: false });
+
+    const response = await request(app).post("/auth/google").send({ idToken: "token-google" });
+
+    expect(response.status).toBe(201);
+    expect(mocks.atualizar).toHaveBeenCalledWith("u-excluido", expect.objectContaining({ ativo: true, cadastroConcluido: false, googleSubject: "google-reativado" }));
     expect(response.body.user.cadastroConcluido).toBe(false);
   });
 });

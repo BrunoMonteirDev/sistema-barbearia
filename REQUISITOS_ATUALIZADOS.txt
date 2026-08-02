@@ -98,6 +98,10 @@ com cadastro pendente até a conclusão dos dados obrigatórios.
 O bloqueio da área de usuários e da confirmação de agendamento para cadastros
 pendentes está implementado e coberto por testes de regressão.
 
+Uma conta local com o mesmo e-mail verificado pode ser vinculada ao Google no
+primeiro acesso. Se a conta estiver desativada por exclusão, o acesso Google a
+reativa e exige uma nova conclusão de cadastro antes de usar recursos protegidos.
+
 RF18 - Privacidade, termos e cookies [IMPLEMENTADO PARCIAL]
 O sistema deverá disponibilizar publicamente Política de privacidade, Termos de
 uso e Política de cookies/armazenamento local. Deverá informar o uso de itens
