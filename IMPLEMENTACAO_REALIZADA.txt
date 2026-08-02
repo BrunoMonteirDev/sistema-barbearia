@@ -110,6 +110,9 @@ Histórico
 - Navegação por setas adicionada para controles acionáveis com foco. Inputs,
   textareas e selects preservam suas setas nativas; diálogos limitam a navegação
   aos seus próprios controles.
+- Primeiro lote de limpeza de legado concluído: removidos os componentes não
+  roteados de agendamento e a tela administrativa duplicada que dependiam do
+  antigo cliente Postgres/Supabase.
 - Tela de login ganhou retorno explícito ao menu inicial. A consulta de sessão
   só é feita quando existe token armazenado, eliminando o 401 esperado de
   usuários desconectados no console do navegador.
