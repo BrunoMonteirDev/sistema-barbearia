@@ -223,3 +223,7 @@ enviados na atualização.
 RN19 - Exclusão confirmada da própria conta [IMPLEMENTADO]
 A desativação da conta exige a frase "EXCLUIR MINHA CONTA". Após confirmada,
 o token existente deixa de acessar o perfil e a sessão deve ser encerrada.
+
+RN20 - Avisos acessíveis [IMPLEMENTADO]
+Mensagens temporárias de sucesso e erro devem ser anunciadas por leitores de
+tela em uma região de status, além de possuírem texto e botão para fechamento.

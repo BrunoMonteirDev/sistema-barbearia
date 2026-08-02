@@ -198,6 +198,8 @@ ATUALIZAÇÃO — QUALIDADE DO LOGIN GOOGLE (02/08/2026)
   telefone e preservação de campos não alterados.
 - [CONCLUÍDO] Fluxo de exclusão validado por integração, incluindo confirmação,
   desativação persistida e rejeição da sessão anterior.
+- [CONCLUÍDO] Avisos temporários anunciados a leitores de tela por região ARIA
+  de status, sem depender exclusivamente de cor ou animação.
 
 ATUALIZAÇÃO — EVOLUTION API (02/08/2026)
 

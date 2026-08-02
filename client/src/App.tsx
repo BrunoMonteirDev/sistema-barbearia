@@ -20,7 +20,10 @@ import { SkipToContent } from '@/components/SkipToContent'
 export default function App() {
   return <ErrorBoundary><AuthProvider>
     <SkipToContent />
-    <Toaster position="top-center" toastOptions={{ duration: 1000 }}>
+    <Toaster
+      position="top-center"
+      toastOptions={{ duration: 1000, ariaProps: { role: 'status', 'aria-live': 'polite' } }}
+    >
       {(currentToast) => <ToastBar toast={currentToast}>
         {({ icon, message }) => <>
           {icon}

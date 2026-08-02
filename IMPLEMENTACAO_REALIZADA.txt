@@ -267,6 +267,8 @@ usuários nem concluir agendamentos, inclusive se sair e retornar ao sistema.
   normaliza o telefone e preserva a data de nascimento quando ela não é editada.
 - O fluxo de exclusão da própria conta possui teste de integração completo:
   exige a frase de confirmação, desativa a conta e invalida a sessão existente.
+- Notificações temporárias agora possuem região ARIA de status, permitindo que
+  leitores de tela anunciem avisos e erros sem interromper a interação atual.
 
 5. LIMPEZA DE CÓDIGO
 
