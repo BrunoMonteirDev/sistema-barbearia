@@ -8,11 +8,11 @@
 
 Pequenas barbearias precisam conciliar a execução dos serviços com a organização da própria agenda. Quando os horários são consultados e registrados por mensagens, anotações ou comunicação direta, o profissional pode interromper o atendimento para responder clientes e ainda enfrentar dificuldade para verificar se determinado período comporta o serviço solicitado. Este trabalho apresenta o desenvolvimento de um sistema web para uma única barbearia, com foco na organização de profissionais, serviços, jornadas e agendamentos. O objetivo foi construir uma solução responsiva que permitisse ao cliente consultar opções de atendimento e concluir uma reserva apenas em horários compatíveis, ao mesmo tempo em que oferecesse instrumentos administrativos para configurar a agenda. O projeto foi conduzido de forma incremental e teve o escopo refinado durante seu desenvolvimento: recursos inicialmente previstos, como pagamentos, produtos e relatórios avançados, foram retirados para priorizar o núcleo de agendamento. A solução divide a jornada dos profissionais em intervalos de trinta minutos e considera a duração de cada serviço, períodos ocupados e alterações de status para apresentar horários válidos. Foram implementados cadastro, autenticação, controle de acesso, gerenciamento de profissionais e serviços, configuração de jornadas, agendamento em etapas, cancelamento, remarcação, histórico e painel administrativo. Testes automatizados verificaram regras de disponibilidade, conflitos, permissões e alterações da agenda. Conclui-se que o sistema atende ao objetivo de organizar reservas e reduzir inconsistências no fluxo de horários, embora permaneçam limitações relativas à cobertura de testes, à validação de integrações externas e à avaliação formal com usuários.
 
-**Palavras-chave:** Agendamento. Barbearias. Sistemas de informação. Gestão de horários. Desenvolvimento web.
+**Palavras-chave:** agendamento. barbearias. sistemas de informação. gestão de horários. desenvolvimento web.
 
 ### Abstract
 
-Small barbershops must reconcile service delivery with schedule management. When appointments are handled through messages, notes, or direct communication, professionals may interrupt customer service to answer requests and still face difficulties in determining whether a time period accommodates the requested service. This paper presents the development of a web system for a single barbershop, focused on professionals, services, work schedules, and appointments. The project was developed incrementally and its scope was refined to prioritize the scheduling core. The system divides work schedules into thirty-minute intervals and considers service duration, occupied periods, and appointment status to present valid time slots. It includes authentication, access control, management features, appointment review, cancellation, rescheduling, history, and an administrative panel. Automated tests verified availability, conflict, permission, and schedule-change rules. The system meets the proposed objective while retaining explicit limitations concerning coverage, external integrations, and formal user evaluation.
+Small barbershops must reconcile service delivery with schedule management. When appointments are handled through messages, notes, or direct communication, professionals may interrupt customer service to answer requests and still face difficulties in determining whether a time period accommodates the requested service. This paper presents the development of a web system for a single barbershop, focused on professionals, services, work schedules, and appointments. The objective was to build a responsive solution that enables customers to consult service options and complete reservations only in compatible time slots while providing administrative instruments to configure the schedule. The project was developed incrementally and its scope was refined: payments, products, and advanced reports were removed to prioritize the scheduling core. The system divides work schedules into thirty-minute intervals and considers service duration, occupied periods, and appointment status to present valid time slots. It includes registration, authentication, access control, management of professionals and services, work-schedule configuration, step-by-step appointment booking, cancellation, rescheduling, history, and an administrative panel. Automated tests verified availability, conflict, permission, and schedule-change rules. The system meets the proposed objective of organizing reservations and reducing inconsistencies, while retaining explicit limitations concerning coverage, external integrations, and formal user evaluation.
 
 **Keywords:** Scheduling. Barbershops. Information systems. Time management. Web development.
 
@@ -40,15 +40,23 @@ Moraes, Terence e Escrivão Filho (2004) discutem que a tecnologia da informaç�
 
 Uma agenda de serviços precisa relacionar recursos, duração e períodos disponíveis. No sistema proposto, o recurso principal é o profissional. A disponibilidade não é tratada como uma lista fixa de horários: ela depende da jornada previamente definida, do serviço selecionado e dos atendimentos já existentes. Dessa forma, o cliente não recebe apenas uma confirmação posterior; visualiza opções que já passaram por uma verificação inicial de compatibilidade.
 
+Esse entendimento aproxima o agendamento de uma atividade de gestão da informação: cada reserva modifica a situação da agenda e precisa ser considerada nas decisões posteriores. A solução não procura encontrar a combinação matematicamente ótima de todos os atendimentos. Seu propósito é mais delimitado: não oferecer ao cliente um período que não comporte integralmente o serviço escolhido ou que ultrapasse a jornada disponível.
+
 #### 2.1.3 Desenvolvimento web, dados e acessibilidade
 
 A solução foi organizada como aplicação web com interface, operações de servidor, regras de negócio e banco relacional. Essa separação facilita a manutenção porque a tela não decide sozinha se uma reserva é válida. A interface foi construída com componentes React; TypeScript auxiliou a consistência de dados; a API organizou as operações; e o banco relacional preservou relações entre usuários, profissionais, serviços e reservas. O Prisma foi utilizado para manter o modelo de dados e seu histórico de alterações versionados (PRISMA, 2026a; PRISMA, 2026b).
 
 Usabilidade e acessibilidade também foram consideradas na interface por meio de navegação por teclado, atalho para conteúdo principal, mensagens de retorno e recursos de apoio. A WCAG 2.2 orienta acessibilidade para diferentes necessidades e ressalta que a avaliação deve combinar recursos automatizados e análise humana (W3C, 2024). Por isso, o trabalho descreve medidas implementadas, mas não declara conformidade completa.
 
+Em sistemas com dados pessoais e ações administrativas, autenticação e autorização possuem finalidades distintas: a primeira identifica o usuário; a segunda limita o que ele pode fazer. A OWASP recomenda que permissões sejam verificadas em cada solicitação e que o acesso a objetos seja conferido mesmo quando o usuário já esteja autenticado (OWASP, 2026). Essa orientação foi considerada ao restringir o painel e os agendamentos aos perfis e proprietários correspondentes.
+
 ### 2.2 Materiais e métodos
 
 O trabalho consistiu em desenvolvimento tecnológico aplicado, conduzido de forma incremental. Após a definição inicial do problema, foram levantados requisitos de cadastro, jornada, reserva, cancelamento, remarcação e administração. A modelagem reuniu as entidades necessárias para representar usuários, profissionais, serviços, disponibilidade, agendamentos, histórico e configurações. Em seguida, foram construídas telas, operações administrativas e regras de validação.
+
+O levantamento partiu do material do Projeto Integrador, dos requisitos atualizados e da análise do fluxo que deveria permanecer no produto final. Cada requisito foi confrontado com o escopo: funcionalidades que não contribuíam diretamente para organizar horários foram adiadas. A priorização ocorreu em ciclos: primeiro foram estruturados dados e cadastros; depois jornadas e disponibilidade; em seguida, reserva, permissões, alterações e testes. A documentação e o histórico de versões registraram as decisões e permitiram revisar regressões.
+
+Como procedimento de avaliação, foram definidos cenários que representam regras do sistema: reservar horário livre, recusar período incompatível, respeitar duração, liberar período cancelado, impedir acesso indevido e registrar alterações. A qualidade de software envolve, entre outros aspectos, requisitos, testes e critérios de avaliação (ISO, 2011). Neste trabalho, os testes automatizados foram usados para verificar esses cenários; validação com usuários não foi realizada e permanece como limitação.
 
 As tecnologias foram escolhidas como meios para a solução: React e Vite construíram a interface; Express organizou as operações de servidor; TypeScript reduziu incompatibilidades entre dados; PostgreSQL armazenou informações relacionadas; Prisma intermediou aplicação e banco; JWT identificou sessões autenticadas; e Vitest executou testes automatizados. A escolha não teve como finalidade demonstrar uma arquitetura complexa, mas manter responsabilidades compreensíveis para um sistema de escopo limitado.
 
@@ -74,6 +82,8 @@ Cada profissional possui uma jornada semanal configurada em intervalos de trinta
 
 Essa estratégia também evita horários quebrados. Não basta que o início esteja livre: é preciso que todo o tempo do serviço esteja disponível. Agendamentos cancelados deixam de bloquear a agenda, permitindo que o período seja utilizado novamente. A remarcação reaproveita o mesmo cálculo e preserva o histórico das alterações.
 
+Essa estratégia reduz a oferta de horários que não comportam integralmente o serviço escolhido e impede que uma reserva ultrapasse períodos indisponíveis. Ela não elimina todos os pequenos intervalos entre atendimentos nem realiza otimização global da agenda. A aplicação verifica a sobreposição entre períodos; o banco de dados aplica uma proteção adicional contra reservas ativas com o mesmo profissional, data e horário inicial.
+
 #### 2.3.4 Área administrativa e banco de dados
 
 A área administrativa reúne o cadastro de serviços, profissionais e usuários, a configuração da jornada, a agenda e os estados dos atendimentos. A agenda permite acompanhar reservas pendentes, confirmadas, concluídas, canceladas ou atrasadas. O banco registra a relação entre cliente, profissional e serviço; também mantém disponibilidade semanal, histórico de alterações e registros de notificações.
@@ -85,6 +95,10 @@ Notificações por WhatsApp e login Google foram estruturados, mas dependem de c
 ### 2.4 Resultados e discussão
 
 O resultado principal é um fluxo em que o cliente consegue iniciar uma reserva, consultar opções compatíveis, revisar suas escolhas e confirmar o atendimento. O sistema também permite ao administrador preparar a agenda antes da reserva, definindo quais profissionais estão ativos, quais serviços são oferecidos e em quais períodos cada profissional atende. Essa organização responde ao problema delimitado porque transforma a consulta de horário em uma verificação baseada em jornada, duração e ocupação.
+
+Na área do cliente, a consulta dos próprios agendamentos permite acompanhar o estado da reserva e solicitar cancelamento ou remarcação quando a antecedência configurada permite. A remarcação não cria um fluxo isolado: ela aplica novamente a consulta de disponibilidade e registra a alteração. Na administração, a configuração de jornada antecede a oferta dos horários, permitindo que o responsável adapte a agenda à rotina de cada profissional.
+
+O resultado da opção sem preferência é a ampliação do fluxo de escolha sem abandonar a regra de disponibilidade. Quando o cliente não escolhe um profissional específico, o sistema procura um profissional ativo que consiga atender no período solicitado. Assim, a conveniência dessa opção não permite reservar fora da jornada ou sobrepor atendimentos.
 
 Os testes automatizados verificaram criação de reservas, rejeição de horários indisponíveis, duração dos serviços, seleção sem preferência, permissões, cancelamento, remarcação e histórico. Na última execução, 129 testes unitários foram aprovados. Esses testes servem como evidência das regras implementadas, mas não substituem a observação de uso em situação real.
 
@@ -119,3 +133,9 @@ PRISMA. **Prisma ORM**. Disponível em: <https://www.prisma.io/docs/orm>. Acesso
 PRISMA. **Migration histories**. Disponível em: <https://www.prisma.io/docs/orm/prisma-migrate/understanding-prisma-migrate/migration-histories>. Acesso em: 2 ago. 2026b.
 
 WORLD WIDE WEB CONSORTIUM. **Web Content Accessibility Guidelines (WCAG) 2.2**. 2024. Disponível em: <https://www.w3.org/TR/WCAG22/>. Acesso em: 2 ago. 2026.
+
+OWASP. **Authorization Cheat Sheet**. 2026. Disponível em: <https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html>. Acesso em: 2 ago. 2026.
+
+ISO. **ISO/IEC 25010:2011: Systems and software engineering — Systems and software Quality Requirements and Evaluation**. 2011. Disponível em: <https://www.iso.org/standard/35733.html>. Acesso em: 2 ago. 2026.
+
+CRESWELL, John W.; CRESWELL, J. David. **Research design: qualitative, quantitative, and mixed methods approaches**. 6. ed. Thousand Oaks: SAGE, 2023.
