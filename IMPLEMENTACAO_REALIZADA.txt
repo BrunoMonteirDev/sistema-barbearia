@@ -225,6 +225,8 @@ Histórico
   não configurado, indisponível, instância não criada, desconectado ou conectado,
   com acesso direto ao gerenciamento da integração.
 - Dashboard identifica o status ATRASADO com rótulo textual e estilo próprio.
+- Barreira global de erro evita tela em branco em falhas inesperadas e oferece
+  retorno ao início ou nova tentativa.
 
 4. PENDÊNCIAS PRINCIPAIS
 

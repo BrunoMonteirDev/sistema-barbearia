@@ -14,9 +14,10 @@ import { VLibras } from '@/components/VLibras'
 import { KeyboardArrowNavigation } from '@/components/KeyboardArrowNavigation'
 import { CookieNotice } from '@/components/CookieNotice'
 import LegalPage from '@/pages/LegalPage'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 
 export default function App() {
-  return <AuthProvider>
+  return <ErrorBoundary><AuthProvider>
     <Toaster position="top-center" toastOptions={{ duration: 1000 }}>
       {(currentToast) => <ToastBar toast={currentToast}>
         {({ icon, message }) => <>
@@ -51,5 +52,5 @@ export default function App() {
       <Route path="/minha-conta" component={() => <UserRoute component={MinhaContaPage} />} />
       <Route>Não encontrado.</Route>
     </Switch>
-  </AuthProvider>
+  </AuthProvider></ErrorBoundary>
 }

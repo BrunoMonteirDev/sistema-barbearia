@@ -123,6 +123,7 @@ Medição mais recente (02/08/2026):
 - Diálogos de cliente de remarcação e histórico migrados para o modal acessível.
 - Modal de agendamento administrativo também migrado para o modal acessível.
 - Indicador de foco por teclado ampliado para alto destaque visual.
+- Barreira global de erro exibe recuperação compreensível em vez de tela branca.
 - Foco recebe animação curta de zoom, desativável pela preferência de reduzir animações.
 - Setas do teclado percorrem controles acionáveis sem interferir na edição de campos.
 - Login oferece retorno ao início e não executa consulta de perfil sem sessão.
