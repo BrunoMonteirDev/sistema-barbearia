@@ -33,6 +33,8 @@ Já entregue:
 - Testes de profissionais e disponibilidade semanal.
 - Testes de CRUD de serviços.
 - Testes da camada de API do cliente.
+- Testes de interface da dashboard administrativa, incluindo os estados da
+  conexão WhatsApp sem dependência da integração externa.
 - Teste do fluxo de agendamento e da etapa de revisão.
 - Testes de interface de Meus agendamentos.
 - Testes de regressão do modo automático de WhatsApp: padrão desativado e envio
