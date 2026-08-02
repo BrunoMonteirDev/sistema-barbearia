@@ -262,3 +262,5 @@ usuários nem concluir agendamentos, inclusive se sair e retornar ao sistema.
 - Removidas as páginas sem rota nem consumidores: a antiga página pública de
   serviços e o painel financeiro legado. O CRUD administrativo de serviços
   permanece ativo.
+- Removido o componente legado de barra lateral de usuário, sem consumidores e
+  com links para áreas que não existem mais no fluxo atual.
