@@ -75,6 +75,8 @@ Histórico
   desativação lógica.
 - Cobertura da camada de API do cliente: autenticação por token, consulta de
   configuração pública, disponibilidade para remarcação e mensagens de erro.
+- Teste de interface do agendamento online em quatro etapas, validando a
+  obrigatoriedade da revisão antes da confirmação.
 - Última validação concluída com build do cliente/servidor e 10 testes passando.
 
 4. PENDÊNCIAS PRINCIPAIS

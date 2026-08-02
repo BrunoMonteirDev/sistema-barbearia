@@ -33,6 +33,7 @@ Já entregue:
 - Testes de profissionais e disponibilidade semanal.
 - Testes de CRUD de serviços.
 - Testes da camada de API do cliente.
+- Teste do fluxo de agendamento e da etapa de revisão.
 
 Próximos itens:
 - Cobrir autenticação, permissões, usuários, profissionais, serviços,
