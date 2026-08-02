@@ -280,6 +280,8 @@ usuários nem concluir agendamentos, inclusive se sair e retornar ao sistema.
   com `prisma migrate deploy`; ambientes novos não dependem mais de `db push`.
 - A dashboard administrativa passou a ter testes de interface para indicadores,
   equipe e os estados conectado/indisponível da integração WhatsApp.
+- As rotas protegidas do cliente agora têm regressão para sessão ausente,
+  carregamento, perfil incompatível, cadastro Google pendente e acesso admin.
 
 5. LIMPEZA DE CÓDIGO
 
