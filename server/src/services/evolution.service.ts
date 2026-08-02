@@ -1,6 +1,7 @@
 type EstadoEvolution = {
   configurada: boolean
   disponivel: boolean
+  instanciaCriada: boolean
   conectada: boolean
   instancia: string | null
   estado: string | null
@@ -36,13 +37,16 @@ export const evolutionService = {
 
   async status(): Promise<EstadoEvolution> {
     const { url, apiKey, instancia } = configuracao()
-    if (!url || !apiKey) return { configurada: false, disponivel: false, conectada: false, instancia: null, estado: null, mensagem: 'Integração local não configurada.' }
+    if (!url || !apiKey) return { configurada: false, disponivel: false, instanciaCriada: false, conectada: false, instancia: null, estado: null, mensagem: 'Integração local não configurada.' }
     try {
+      const instancias = await requisitar('/instance/fetchInstances')
+      const criada = Array.isArray(instancias) && instancias.some((item: any) => item?.instance?.instanceName === instancia || item?.name === instancia)
+      if (!criada) return { configurada: true, disponivel: true, instanciaCriada: false, conectada: false, instancia, estado: null }
       const dados = await requisitar(`/instance/connectionState/${encodeURIComponent(instancia)}`)
       const { estado, conectada } = estadoConectado(dados)
-      return { configurada: true, disponivel: true, conectada, instancia, estado }
+      return { configurada: true, disponivel: true, instanciaCriada: true, conectada, instancia, estado }
     } catch (error) {
-      return { configurada: true, disponivel: false, conectada: false, instancia, estado: null, mensagem: error instanceof Error ? error.message : 'Evolution indisponível.' }
+      return { configurada: true, disponivel: false, instanciaCriada: false, conectada: false, instancia, estado: null, mensagem: error instanceof Error ? error.message : 'Evolution indisponível.' }
     }
   },
 
@@ -60,6 +64,16 @@ export const evolutionService = {
     const { instancia } = configuracao()
     await requisitar(`/instance/restart/${encodeURIComponent(instancia)}`, { method: 'POST' })
     return this.conectar()
+  },
+
+  async desconectar() {
+    const { instancia } = configuracao()
+    return requisitar(`/instance/logout/${encodeURIComponent(instancia)}`, { method: 'DELETE' })
+  },
+
+  async excluirInstancia() {
+    const { instancia } = configuracao()
+    return requisitar(`/instance/delete/${encodeURIComponent(instancia)}`, { method: 'DELETE' })
   },
 
   async enviarTexto(numero: string, texto: string) {

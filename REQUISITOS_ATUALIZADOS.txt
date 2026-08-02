@@ -165,3 +165,13 @@ Nenhuma notificação é enviada automaticamente. Após uma alteração relevant
 o responsável escolhe explicitamente se deseja avisar o cliente. O envio exige
 telefone cadastrado; a interface informa a ausência e a API rejeita tentativas
 sem número. Administrador e funcionário são os únicos perfis autorizados.
+
+RF20 - Ciclo de conexão WhatsApp [IMPLEMENTADO]
+A interface respeita o ciclo criar instância, conectar, desconectar e
+reconectar. O QR Code de vínculo expira em 30 segundos também na tela do
+sistema, evitando que um código antigo permaneça disponível.
+
+RF21 - Exclusão de instância [IMPLEMENTADO]
+Uma instância desconectada pode ser excluída pelo administrador. Para trocar o
+nome com segurança, a sessão atual deve ser desconectada e excluída antes de
+criar uma nova instância.

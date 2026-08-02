@@ -22,4 +22,12 @@ router.post('/reconectar', async (_req, res) => {
   try { return res.json(await evolutionService.reconectar()) } catch (error) { return responderErro(res, error) }
 })
 
+router.post('/desconectar', async (_req, res) => {
+  try { return res.json(await evolutionService.desconectar()) } catch (error) { return responderErro(res, error) }
+})
+
+router.delete('/instancia', async (_req, res) => {
+  try { return res.json(await evolutionService.excluirInstancia()) } catch (error) { return responderErro(res, error) }
+})
+
 export default router

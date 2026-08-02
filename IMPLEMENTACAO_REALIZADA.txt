@@ -176,6 +176,12 @@ Histórico
 - Painel administrativo recebeu a aba WhatsApp: consulta de status, criação de
   instância, QR Code para conexão e reconexão. Falhas externas são isoladas e
   não interrompem nenhum fluxo de agendamento.
+- Fluxo da instância refinado: conectar só aparece após a criação; reconectar só
+  aparece quando uma instância já existente está desconectada; desconectar está
+  disponível enquanto conectada. QR Codes expiram visualmente e são removidos
+  da tela após 30 segundos.
+- Instâncias desconectadas podem ser excluídas pelo painel, removendo a sessão
+  de teste antes da criação de uma nova instância com outro nome.
 - Notificações deixaram de ser automáticas. Ações de status, conclusão e
   cancelamento sugerem o envio ao responsável, que confirma ou recusa; o backend
   exige telefone do cliente antes de transmitir qualquer mensagem.
