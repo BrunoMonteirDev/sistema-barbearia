@@ -149,6 +149,8 @@ ATUALIZAÇÃO — EVOLUTION API (02/08/2026)
 - [CONCLUÍDO] A camada de notificações usa o envio de texto da Evolution e
   registra êxito ou falha sem afetar o agendamento.
 - [PENDENTE] Definir política de conteúdo, frequência, consentimento e lembretes.
+- [CONCLUÍDO] Ambiente de teste usa versão WhatsApp/Baileys explicitamente
+  configurada para permitir a conexão por QR Code.
 - [CONCLUÍDO] Envio manual confirmado por responsável; ausência de telefone é
   tratada pela interface e pela API. A política detalhada de conteúdo e
   frequência permanece pendente.

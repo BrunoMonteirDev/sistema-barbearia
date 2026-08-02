@@ -184,6 +184,8 @@ Histórico
   de teste antes da criação de uma nova instância com outro nome.
 - Nome de exibição da instância pode ser atualizado no sistema sem modificar o
   identificador técnico nem a sessão mantida pela Evolution API.
+- Ambiente local de testes fixa a versão WhatsApp/Baileys 2.3000.1044311535 em
+  uma imagem compatível da Evolution API, para permitir a vinculação do número.
 - Notificações deixaram de ser automáticas. Ações de status, conclusão e
   cancelamento sugerem o envio ao responsável, que confirma ou recusa; o backend
   exige telefone do cliente antes de transmitir qualquer mensagem.

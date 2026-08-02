@@ -1,6 +1,6 @@
 services:
   evolution-api:
-    image: evoapicloud/evolution-api:latest
+    image: evoapicloud/evolution-api:v2.3.0
     container_name: barbearia_evolution_api
     restart: unless-stopped
     env_file:
