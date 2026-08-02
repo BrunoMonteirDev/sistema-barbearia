@@ -99,6 +99,37 @@ describe('API - conflito real de agendamento', () => {
     await request(app).post('/api/auth/login').send({ email: 'conta.ativa@teste.local', password: 'SenhaForte!9' }).expect(401)
   })
 
+  it('conclui o cadastro pendente e libera os dados da conta Google', async () => {
+    const usuarioPendente = await prisma.usuario.create({
+      data: {
+        nome: 'Pessoa Google',
+        email: 'google.pendente@teste.local',
+        senhaHash: null,
+        provedorAuth: 'GOOGLE',
+        googleSubject: 'google-subject-de-teste',
+        cadastroConcluido: false
+      }
+    })
+    const authorization = `Bearer ${signToken({ id: usuarioPendente.id, nivel: 'Cliente' })}`
+
+    const resposta = await request(app)
+      .put('/api/usuarios/me/concluir-cadastro')
+      .set('authorization', authorization)
+      .send({ nome: 'Pessoa Google Completa', telefone: '(44) 99999-9999' })
+      .expect(200)
+
+    expect(resposta.body).toMatchObject({
+      id: usuarioPendente.id,
+      nome: 'Pessoa Google Completa',
+      telefone: '44999999999',
+      cadastroConcluido: true
+    })
+    expect(await prisma.usuario.findUnique({ where: { id: usuarioPendente.id } })).toMatchObject({
+      cadastroConcluido: true,
+      telefone: '44999999999'
+    })
+  })
+
   it('marca atendimento passado como atrasado conforme a tolerancia configurada', async () => {
     const cliente = await prisma.usuario.create({ data: { nome: 'Cliente atraso', email: 'cliente.atraso@teste.local', senhaHash: 'hash' } })
     const profissional = await prisma.profissional.create({ data: { nome: 'Profissional de teste' } })

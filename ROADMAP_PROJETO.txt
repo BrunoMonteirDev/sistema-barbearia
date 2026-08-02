@@ -181,6 +181,12 @@ O sistema já entrega os fluxos centrais, agenda visual, acessibilidade básica 
 notificações Evolution. O foco imediato é consolidar testes de regressão das
 regras automáticas de WhatsApp e validar os disparos reais controlados.
 
+ATUALIZAÇÃO — QUALIDADE DO LOGIN GOOGLE (02/08/2026)
+
+- [CONCLUÍDO] Teste de integração para o endpoint de conclusão de cadastro
+  pendente, assegurando a normalização do telefone e a liberação persistida da
+  conta após login Google.
+
 ATUALIZAÇÃO — EVOLUTION API (02/08/2026)
 
 - Quepasa foi substituído para testes porque seu repositório oficial foi

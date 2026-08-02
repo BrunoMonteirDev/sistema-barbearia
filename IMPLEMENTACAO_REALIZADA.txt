@@ -250,6 +250,9 @@ usuários nem concluir agendamentos, inclusive se sair e retornar ao sistema.
   evitando retorno indevido à tela de login e uma segunda tentativa.
 - Teste de interface cobre a espera da sessão Google antes do redirecionamento
   para conclusão de cadastro.
+- Teste de integração cobre a conclusão de cadastro pendente de uma conta
+  Google, incluindo normalização do telefone e persistência da liberação da
+  conta no banco PostgreSQL isolado de testes.
 
 5. LIMPEZA DE CÓDIGO
 

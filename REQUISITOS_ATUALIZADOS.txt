@@ -191,3 +191,8 @@ RF22 - Nome interno da instância [IMPLEMENTADO]
 O administrador pode definir um nome de exibição para a instância no sistema.
 Ele é persistido nas configurações e não modifica o ID, nome técnico ou sessão
 existente na Evolution API.
+
+RF23 - Conclusão de cadastro por Google [IMPLEMENTADO]
+Uma conta autenticada por Google que ainda esteja pendente deve informar nome e
+telefone válidos antes de acessar recursos restritos. A conclusão normaliza o
+telefone e registra permanentemente o cadastro como concluído.
