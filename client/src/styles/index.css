@@ -73,7 +73,8 @@ textarea:focus-visible {
 
 @keyframes foco-teclado {
   0% { transform: scale(1); }
-  22% { transform: scale(1.045); }
+  30% { transform: scale(1.12); }
+  62% { transform: scale(1.045); }
   100% { transform: scale(1); }
 }
 

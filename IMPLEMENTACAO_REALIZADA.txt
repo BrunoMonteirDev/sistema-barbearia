@@ -106,7 +106,7 @@ Histórico
 - Foco por teclado reforçado globalmente: controles ativos exibem contorno âmbar
   e halo escuro, perceptíveis em fundos claros, escuros e alto contraste.
 - Indicador de foco ampliado para 4px/halo de 8px e animação de zoom de 1 segundo
-  ao trocar de controle com o teclado, respeitando a preferência de reduzir animações.
+  (pico de 12%) ao trocar de controle com o teclado, respeitando a preferência de reduzir animações.
 - Tela de login ganhou retorno explícito ao menu inicial. A consulta de sessão
   só é feita quando existe token armazenado, eliminando o 401 esperado de
   usuários desconectados no console do navegador.
