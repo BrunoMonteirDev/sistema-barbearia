@@ -90,6 +90,6 @@ export const evolutionService = {
 
   async enviarTexto(numero: string, texto: string) {
     const { instancia } = configuracao()
-    return requisitar(`/message/sendText/${encodeURIComponent(instancia)}`, { method: 'POST', body: JSON.stringify({ number: numero, textMessage: { text: texto } }) })
+    return requisitar(`/message/sendText/${encodeURIComponent(instancia)}`, { method: 'POST', body: JSON.stringify({ number: numero, text: texto }) })
   },
 }

@@ -243,7 +243,10 @@ router.post('/:id/notificar', requireStaff, async (req, res) => {
   if (!['CRIACAO', 'REMARCACAO', 'CANCELAMENTO', 'ATUALIZACAO'].includes(tipo)) return res.status(400).json({ error: 'Tipo de notificação inválido.' })
   try {
     await notificacaoService.podeEnviar(String(req.params.id))
-    await notificacaoService.enviar(String(req.params.id), tipo)
+    const resultado = await notificacaoService.enviar(String(req.params.id), tipo)
+    if (!resultado || resultado.status !== 'ENVIADA') {
+      return res.status(502).json({ error: resultado?.erro || 'A mensagem nÃ£o foi entregue Ã  Evolution.' })
+    }
     return res.status(201).json({ ok: true })
   } catch (error) {
     return res.status(400).json({ error: error instanceof Error ? error.message : 'Não foi possível enviar a notificação.' })

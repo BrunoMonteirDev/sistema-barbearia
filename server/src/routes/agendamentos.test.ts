@@ -6,6 +6,7 @@ const mocks = vi.hoisted(() => ({
   findUnique: vi.fn(), update: vi.fn(), historyCreate: vi.fn(),
   profissionalFindFirst: vi.fn(), servicoFindFirst: vi.fn(),
   respeitaAntecedencia: vi.fn(), regrasAgendamento: vi.fn(), validarDisponibilidade: vi.fn(),
+  podeEnviar: vi.fn(), enviarNotificacao: vi.fn(),
 }));
 
 vi.mock("../lib/prisma", () => ({ prisma: {
@@ -23,7 +24,7 @@ vi.mock("../services/horarios.service", () => ({
 vi.mock("../services/regras-agendamento.service", () => ({
   atualizarAtrasados: vi.fn(), regrasAgendamento: mocks.regrasAgendamento, respeitaAntecedencia: mocks.respeitaAntecedencia,
 }));
-vi.mock('../services/notificacao.service', () => ({ notificacaoService: { enviar: vi.fn().mockResolvedValue(undefined) } }));
+vi.mock('../services/notificacao.service', () => ({ notificacaoService: { podeEnviar: mocks.podeEnviar, enviar: mocks.enviarNotificacao } }));
 
 import agendamentosRoutes from "./agendamentos";
 
@@ -71,5 +72,14 @@ describe("rotas de agendamento", () => {
     await request(app).patch("/agendamentos/ag-1/remarcar").send({ data: "2026-08-21", hora: "10:30" }).expect(200);
     expect(mocks.update).toHaveBeenCalledWith(expect.objectContaining({ data: expect.objectContaining({ data: "2026-08-21", hora: "10:30" }) }));
     expect(mocks.historyCreate).toHaveBeenCalledWith(expect.objectContaining({ data: expect.objectContaining({ tipo: "REMARCACAO" }) }));
+  });
+  it("retorna erro quando a Evolution rejeita uma notificacao manual", async () => {
+    mocks.enviarNotificacao.mockResolvedValue({ status: "FALHOU", erro: "instance requires property text" });
+    await request(app).post("/agendamentos/ag-1/notificar").set("x-role", "admin").send({ tipo: "ATUALIZACAO" }).expect(502);
+  });
+
+  it("confirma o envio somente quando a Evolution aceitar a mensagem", async () => {
+    mocks.enviarNotificacao.mockResolvedValue({ status: "ENVIADA" });
+    await request(app).post("/agendamentos/ag-1/notificar").set("x-role", "admin").send({ tipo: "ATUALIZACAO" }).expect(201);
   });
 });
