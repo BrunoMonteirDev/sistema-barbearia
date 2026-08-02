@@ -107,8 +107,9 @@ fluxos críticos de autenticação e agendamento.
 
 5. MODELO DE DADOS ATUAL
 
-Usuario, Profissional, Servico, DisponibilidadeProfissional, Agendamento,
-HistoricoAgendamento e Configuracao.
+Usuario (incluindo provedor de autenticação, identificador Google, foto e estado
+de cadastro concluído), Profissional, Servico, DisponibilidadeProfissional,
+Agendamento, HistoricoAgendamento e Configuracao.
 
 6. REGRAS PRINCIPAIS
 

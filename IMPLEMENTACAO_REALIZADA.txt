@@ -119,6 +119,9 @@ Histórico
 - Botão de WhatsApp da página inicial passou a consultar a configuração pública
   do painel; sem número configurado, informa indisponibilidade em vez de usar
   um telefone fixo. Coberto para os dois cenários.
+- Base de login Google criada no banco: usuário registra provedor, identificador
+  único Google, foto e estado persistente de cadastro concluído. A migração foi
+  aplicada no banco de desenvolvimento sem afetar os usuários locais.
 - Tela de login ganhou retorno explícito ao menu inicial. A consulta de sessão
   só é feita quando existe token armazenado, eliminando o 401 esperado de
   usuários desconectados no console do navegador.

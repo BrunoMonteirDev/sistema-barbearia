@@ -53,7 +53,9 @@ Próximos itens:
 - Filtros, navegação e ações rápidas.
 - Pendente: validação visual manual em desktop e mobile.
 
-6. LOGIN COM GOOGLE E CADASTRO PENDENTE                        [PENDENTE]
+6. LOGIN COM GOOGLE E CADASTRO PENDENTE                        [EM ANDAMENTO]
+- Persistência entregue: provedor de autenticação, identificador Google, foto
+  e estado de cadastro concluído no usuário.
 - Adicionar autenticação pelo botão "Continuar com Google".
 - Criar/identificar o usuário pelo provedor Google.
 - Após o primeiro login Google, redirecionar usuários sem dados obrigatórios

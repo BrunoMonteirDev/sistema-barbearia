@@ -13,6 +13,10 @@ model Usuario {
   telefone        String?
   dataNascimento  DateTime?     @map("data_nascimento")
   senhaHash       String?       @map("senha_hash")
+  provedorAuth    String        @default("LOCAL") @map("provedor_auth")
+  googleSubject   String?       @unique @map("google_subject")
+  cadastroConcluido Boolean     @default(true) @map("cadastro_concluido")
+  fotoUrl         String?       @map("foto_url")
   nivel           String        @default("Cliente")
   ativo           Boolean       @default(true)
   atendimento     Boolean       @default(false)
