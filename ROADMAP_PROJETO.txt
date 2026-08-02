@@ -75,6 +75,7 @@ Próximos itens:
 - Diálogos de cliente de remarcação e histórico migrados para o modal acessível.
 - Modal de agendamento administrativo também migrado para o modal acessível.
 - Indicador de foco por teclado ampliado para alto destaque visual.
+- Foco recebe animação curta de zoom, desativável pela preferência de reduzir animações.
 - Login oferece retorno ao início e não executa consulta de perfil sem sessão.
 - Alto contraste revisado: superfícies, textos, ícones, links, bordas e estados
   de hover usam combinações legíveis sobre o fundo escuro.
