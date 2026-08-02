@@ -37,6 +37,8 @@ Já entregue:
   conexão WhatsApp sem dependência da integração externa.
 - Testes de regressão das rotas protegidas para cliente, administrador e
   cadastro Google pendente.
+- Testes do contexto de autenticação: restauração, invalidação de token,
+  login local/Google, cadastro e encerramento de sessão.
 - Teste do fluxo de agendamento e da etapa de revisão.
 - Testes de interface de Meus agendamentos.
 - Testes de regressão do modo automático de WhatsApp: padrão desativado e envio

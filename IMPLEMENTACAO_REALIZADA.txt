@@ -282,6 +282,8 @@ usuários nem concluir agendamentos, inclusive se sair e retornar ao sistema.
   equipe e os estados conectado/indisponível da integração WhatsApp.
 - As rotas protegidas do cliente agora têm regressão para sessão ausente,
   carregamento, perfil incompatível, cadastro Google pendente e acesso admin.
+- O contexto de autenticação do cliente passou a ser testado para restauração
+  de sessão, token inválido, login local, login Google, cadastro e logout.
 
 5. LIMPEZA DE CÓDIGO
 
