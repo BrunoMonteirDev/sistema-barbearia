@@ -168,7 +168,7 @@ describe('API - conflito real de agendamento', () => {
     await request(app)
       .put('/api/configuracoes')
       .set('authorization', tokenAdmin)
-      .send({ telefoneWhatsApp: '44999999999', email: 'contato@teste.local', instagram: 'barbearia.teste' })
+      .send({ telefoneWhatsApp: '(44) 99999-9999', email: 'contato@teste.local', instagram: 'https://instagram.com/barbearia.teste' })
       .expect(201)
     await request(app)
       .put('/api/configuracoes/regras')
@@ -177,9 +177,14 @@ describe('API - conflito real de agendamento', () => {
       .expect(200)
 
     const publico = await request(app).get('/api/configuracoes-publicas').expect(200)
-    expect(publico.body).toEqual({ telefoneWhatsApp: '44999999999', email: 'contato@teste.local', instagram: 'barbearia.teste' })
+    expect(publico.body).toEqual({ telefoneWhatsApp: '44999999999', email: 'contato@teste.local', instagram: 'https://instagram.com/barbearia.teste' })
     const regras = await request(app).get('/api/configuracoes/regras').set('authorization', tokenAdmin).expect(200)
     expect(regras.body).toEqual({ antecedenciaCancelamentoHoras: 24, antecedenciaRemarcacaoHoras: 12, toleranciaAtrasoMinutos: 15 })
+    await request(app)
+      .put('/api/configuracoes')
+      .set('authorization', tokenAdmin)
+      .send({ telefoneWhatsApp: '123', email: 'invalido', instagram: 'instagram.com/sem-protocolo' })
+      .expect(400)
   })
 
   it('marca atendimento passado como atrasado conforme a tolerancia configurada', async () => {

@@ -261,6 +261,8 @@ usuários nem concluir agendamentos, inclusive se sair e retornar ao sistema.
 - Sessões existentes não mantêm acesso ao perfil após a conta ser desativada;
   a consulta de perfil retorna erro de autenticação e o cliente encerra a
   sessão local.
+- Configurações de contato passaram a aceitar somente os campos permitidos,
+  validando WhatsApp brasileiro, e-mail e URL completa opcional do Instagram.
 
 5. LIMPEZA DE CÓDIGO
 
