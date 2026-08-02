@@ -8,6 +8,7 @@ import AgendarPage from '@/pages/agendar/AgendarPage'
 import PainelPage from '@/pages/PainelPage'
 import MinhaContaPage from '@/pages/user/MinhaContaPage'
 import UserAppointmentsPage from '@/pages/user/UserAppointmentsPage'
+import { AcessibilidadeControls } from '@/components/AcessibilidadeControls'
 
 export default function App() {
   return <AuthProvider>
@@ -27,6 +28,7 @@ export default function App() {
         </>}
       </ToastBar>}
     </Toaster>
+    <AcessibilidadeControls />
     <Switch>
       <Route path="/" component={HomePage} />
       <Route path="/login" component={LoginPage} />

@@ -52,9 +52,61 @@ textarea {
 }
 
 button:focus-visible,
-a:focus-visible {
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
   outline: 2px solid #0e3746;
-  outline-offset: 2px;
+  outline-offset: 3px;
+}
+
+html.acessibilidade-fonte-grande {
+  font-size: 118%;
+}
+
+html.acessibilidade-reduzir-animacoes *,
+html.acessibilidade-reduzir-animacoes *::before,
+html.acessibilidade-reduzir-animacoes *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  scroll-behavior: auto !important;
+  transition-duration: 0.01ms !important;
+}
+
+html.acessibilidade-alto-contraste body {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+html.acessibilidade-alto-contraste main,
+html.acessibilidade-alto-contraste section,
+html.acessibilidade-alto-contraste article,
+html.acessibilidade-alto-contraste header,
+html.acessibilidade-alto-contraste footer,
+html.acessibilidade-alto-contraste aside,
+html.acessibilidade-alto-contraste .bg-white,
+html.acessibilidade-alto-contraste .bg-slate-50,
+html.acessibilidade-alto-contraste .bg-slate-100 {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+html.acessibilidade-alto-contraste p,
+html.acessibilidade-alto-contraste h1,
+html.acessibilidade-alto-contraste h2,
+html.acessibilidade-alto-contraste h3,
+html.acessibilidade-alto-contraste label,
+html.acessibilidade-alto-contraste span,
+html.acessibilidade-alto-contraste td,
+html.acessibilidade-alto-contraste th {
+  color: #fff !important;
+}
+
+html.acessibilidade-alto-contraste button,
+html.acessibilidade-alto-contraste input,
+html.acessibilidade-alto-contraste select,
+html.acessibilidade-alto-contraste textarea {
+  border-color: #fff !important;
 }
 
 ::-webkit-scrollbar {

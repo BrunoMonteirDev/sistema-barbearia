@@ -63,7 +63,9 @@ Próximos itens:
 - Aplicar o bloqueio também após logout e um novo login.
 - Cobrir autenticação, redirecionamento e bloqueios com testes automatizados.
 
-7. ACESSIBILIDADE                                               [PENDENTE]
+7. ACESSIBILIDADE                                               [EM ANDAMENTO]
+- Preferências persistidas entregues: alto contraste, texto maior e redução
+  de animações, além de foco visível global.
 - Preferências persistidas: alto contraste, tamanho de fonte e redução de animações.
 - Revisão de labels, erros, foco, teclado, modais, ARIA e status sem depender só de cor.
 - VLibras, Lighthouse, teclado e leitor de tela.

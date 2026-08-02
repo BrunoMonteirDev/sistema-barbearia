@@ -83,6 +83,8 @@ Histórico
   filtros existentes, navegação por dia, blocos de atendimento e ações rápidas.
 - Agenda administrativa semanal compacta, com os atendimentos organizados por
   dia, horário, profissional, status e ações rápidas.
+- Central de acessibilidade persistida no navegador: alto contraste, texto
+  maior, redução de animações e reforço global de foco visível.
 - Última validação concluída com build do cliente/servidor e 10 testes passando.
 
 4. PENDÊNCIAS PRINCIPAIS
