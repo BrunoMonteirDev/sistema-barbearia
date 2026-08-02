@@ -51,11 +51,12 @@ interface ConfirmDialogProps {
   title: string
   message: string
   confirmLabel: string
+  cancelLabel?: string
   onConfirm: () => void
   onClose: () => void
   danger?: boolean
 }
 
-export function ConfirmDialog({ title, message, confirmLabel, onConfirm, onClose, danger = false }: ConfirmDialogProps) {
-  return <Modal title={title} onClose={onClose} footer={<><button type="button" onClick={onClose} className="rounded px-4 py-2 text-gray-700 hover:bg-gray-100">Voltar</button><button type="button" onClick={onConfirm} className={danger ? 'rounded bg-red-600 px-4 py-2 font-medium text-white hover:bg-red-700' : 'btn-primary'}>{confirmLabel}</button></>}><p className="text-gray-600">{message}</p></Modal>
+export function ConfirmDialog({ title, message, confirmLabel, cancelLabel = 'Voltar', onConfirm, onClose, danger = false }: ConfirmDialogProps) {
+  return <Modal title={title} onClose={onClose} footer={<><button type="button" onClick={onClose} className="rounded px-4 py-2 text-gray-700 hover:bg-gray-100">{cancelLabel}</button><button type="button" onClick={onConfirm} className={danger ? 'rounded bg-red-600 px-4 py-2 font-medium text-white hover:bg-red-700' : 'btn-primary'}>{confirmLabel}</button></>}><p className="text-gray-600">{message}</p></Modal>
 }

@@ -52,6 +52,14 @@ const statusStyle: Record<string, string> = {
   CANCELADO: "bg-red-100 text-red-800",
   ATRASADO: "bg-red-100 text-red-800",
 };
+function telefoneDestinoWhatsApp(telefone: string | null | undefined) {
+  const digitos = telefone?.replace(/\D/g, '') ?? '';
+  if (!digitos) return null;
+  const nacional = digitos.startsWith('55') ? digitos.slice(2) : digitos;
+  if (nacional.length === 11) return '+55 (' + nacional.slice(0, 2) + ') ' + nacional.slice(2, 7) + '-' + nacional.slice(7);
+  if (nacional.length === 10) return '+55 (' + nacional.slice(0, 2) + ') ' + nacional.slice(2, 6) + '-' + nacional.slice(6);
+  return '+55 ' + nacional;
+}
 
 export default function AgendamentosPage() {
   const [items, setItems] = useState<Agendamento[]>([]);
@@ -674,9 +682,10 @@ export default function AgendamentosPage() {
       )}
       {notificationPrompt && (
         <ConfirmDialog
-          title="Enviar notificação por WhatsApp?"
-          message={notificationPrompt.item.usuario?.telefone ? `Deseja avisar ${notificationPrompt.item.usuario?.nome ?? 'o cliente'} sobre esta atualização?` : 'O cliente não possui telefone cadastrado. Não é possível enviar uma notificação por WhatsApp.'}
+          title="Enviar notificacao por WhatsApp?"
+          message={notificationPrompt.item.usuario?.telefone ? `Deseja avisar ${notificationPrompt.item.usuario?.nome ?? 'o cliente'} sobre esta atualizacao? Telefone de destino: ${telefoneDestinoWhatsApp(notificationPrompt.item.usuario.telefone)}.` : 'O cliente nao possui telefone cadastrado. Nao e possivel enviar uma notificacao por WhatsApp.'}
           confirmLabel="Enviar mensagem"
+          cancelLabel={'N\u00e3o enviar mensagem'}
           onConfirm={() => {
             if (!notificationPrompt.item.usuario?.telefone) { toast.error('O cliente não possui telefone cadastrado para receber WhatsApp.'); setNotificationPrompt(null); return; }
             void api.agendamentos.notificar(notificationPrompt.item.id, notificationPrompt.tipo).then(() => { toast.success('Notificação enviada.'); setNotificationPrompt(null); }).catch((error) => toast.error(error instanceof Error ? error.message : 'Não foi possível enviar a notificação.'));
