@@ -11,6 +11,8 @@ type EstadoEvolution = {
   mensagem?: string
 }
 export type ModelosMensagemWhatsApp = { criacao: string; remarcacao: string; cancelamento: string; atualizacao: string; pendente: string; confirmado: string; concluido: string; atrasado: string }
+export type RegrasEnvioAutomatico = { criacao: boolean; remarcacao: boolean; cancelamento: boolean; pendente: boolean; confirmado: boolean; concluido: boolean; atrasado: boolean; lembrete: boolean; antecedenciaLembreteMinutos: number }
+const regrasPadrao: RegrasEnvioAutomatico = { criacao: false, remarcacao: false, cancelamento: false, pendente: false, confirmado: false, concluido: false, atrasado: false, lembrete: false, antecedenciaLembreteMinutos: 60 }
 const modelosPadrao: ModelosMensagemWhatsApp = {
   criacao: 'Ola, {{cliente}}! Seu agendamento de {{servico}} com {{profissional}} foi confirmado para {{data}} as {{hora}}.',
   remarcacao: 'Ola, {{cliente}}! Seu agendamento de {{servico}} foi remarcado para {{data}} as {{hora}} com {{profissional}}.',
@@ -116,11 +118,21 @@ export const evolutionService = {
     return this.obterModelosMensagens()
   },
 
-  async envioAutomaticoAtivo() { return Boolean((await prisma.configuracao.findFirst({ select: { envioAutomaticoWhatsapp: true } }))?.envioAutomaticoWhatsapp) },
+  async regrasEnvioAutomatico(): Promise<{ ativo: boolean; regras: RegrasEnvioAutomatico }> { const config = await prisma.configuracao.findFirst({ select: { envioAutomaticoWhatsapp: true, regrasEnvioAutomatico: true } }); return { ativo: Boolean(config?.envioAutomaticoWhatsapp), regras: { ...regrasPadrao, ...((config?.regrasEnvioAutomatico ?? {}) as Partial<RegrasEnvioAutomatico>) } } },
+  async envioAutomaticoAtivo(tipo?: keyof RegrasEnvioAutomatico) { const config = await this.regrasEnvioAutomatico(); return config.ativo && (!tipo || config.regras[tipo] === true) },
   async atualizarEnvioAutomatico(ativo: unknown) {
     if (typeof ativo !== 'boolean') throw new Error('Valor de envio automatico invalido.')
     const config = await prisma.configuracao.findFirst()
     return config ? prisma.configuracao.update({ where: { id: config.id }, data: { envioAutomaticoWhatsapp: ativo } }) : prisma.configuracao.create({ data: { envioAutomaticoWhatsapp: ativo } })
+  },
+  async atualizarRegrasEnvioAutomatico(regras: unknown) {
+    if (!regras || typeof regras !== 'object') throw new Error('Regras de envio invalidas.')
+    const dados = { ...regrasPadrao, ...(regras as Partial<RegrasEnvioAutomatico>) }
+    const chaves = ['criacao', 'remarcacao', 'cancelamento', 'pendente', 'confirmado', 'concluido', 'atrasado', 'lembrete'] as const
+    if (chaves.some(chave => typeof dados[chave] !== 'boolean') || !Number.isInteger(dados.antecedenciaLembreteMinutos) || dados.antecedenciaLembreteMinutos < 5 || dados.antecedenciaLembreteMinutos > 10080) throw new Error('Informe uma antecedencia entre 5 minutos e 7 dias.')
+    const config = await prisma.configuracao.findFirst()
+    await (config ? prisma.configuracao.update({ where: { id: config.id }, data: { regrasEnvioAutomatico: dados } }) : prisma.configuracao.create({ data: { regrasEnvioAutomatico: dados } }))
+    return this.regrasEnvioAutomatico()
   },
 
   async enviarTexto(numero: string, texto: string) {

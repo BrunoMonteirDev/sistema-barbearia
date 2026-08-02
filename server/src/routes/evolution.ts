@@ -42,5 +42,9 @@ router.get('/envio-automatico', async (_req, res) => res.json({ ativo: await evo
 router.put('/envio-automatico', async (req, res) => {
   try { const config = await evolutionService.atualizarEnvioAutomatico(req.body.ativo); return res.json({ ativo: config.envioAutomaticoWhatsapp }) } catch (error) { return res.status(400).json({ error: error instanceof Error ? error.message : 'Valor invalido.' }) }
 })
+router.get('/regras-envio-automatico', async (_req, res) => res.json(await evolutionService.regrasEnvioAutomatico()))
+router.put('/regras-envio-automatico', async (req, res) => {
+  try { return res.json(await evolutionService.atualizarRegrasEnvioAutomatico(req.body)) } catch (error) { return res.status(400).json({ error: error instanceof Error ? error.message : 'Regras invalidas.' }) }
+})
 
 export default router
