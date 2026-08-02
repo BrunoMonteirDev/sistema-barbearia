@@ -136,3 +136,12 @@ ONDE ESTAMOS AGORA
 O sistema já entrega os fluxos centrais de uma barbearia. O próximo passo é
 ampliar os testes automatizados. Depois virão a agenda em calendário,
 acessibilidade e WhatsApp.
+
+ATUALIZAÇÃO — EVOLUTION API (02/08/2026)
+
+- Quepasa foi substituído para testes porque seu repositório oficial foi
+  removido. A etapa de notificações passará a usar Evolution API local.
+- Infraestrutura concluída: API, PostgreSQL e Redis em Docker, dados persistidos
+  em volumes e chaves fora do versionamento.
+- Próximo subpasso: confirmar a conexão da instância por QR Code e adaptar a
+  camada de notificações ao contrato HTTP da Evolution.

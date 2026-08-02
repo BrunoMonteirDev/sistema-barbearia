@@ -27,3 +27,6 @@ vite.config.d.ts
 .DS_Store
 Thumbs.db
 .vscode
+
+# infraestrutura local de integrações externas
+integrations/

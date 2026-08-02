@@ -146,4 +146,11 @@ Agendamento, HistoricoAgendamento e Configuracao.
 
 7. FORA DO ESCOPO ATUAL
 
-Pagamentos online e lembretes automáticos antes da validação da integração Quepasa.
+Pagamentos online e lembretes automáticos antes da validação da integração WhatsApp.
+
+ADENDO — CANAL DE TESTES WHATSAPP (02/08/2026)
+
+Para testes locais, o canal de notificações usará Evolution API em containers
+Docker, autenticada por chave de API e conectada a um número de teste por QR
+Code. A solução não é destinada à produção e falhas de transmissão não podem
+interromper criação, cancelamento ou remarcação de agendamentos.

@@ -170,11 +170,15 @@ Histórico
   QUEPASA_API_URL e QUEPASA_API_TOKEN; sem credenciais, a notificação fica
   registrada como pendente de configuração.
 
+- Infraestrutura local de testes da Evolution API criada com Docker Desktop,
+  PostgreSQL e Redis isolados. Credenciais ficam apenas em .env.evolution,
+  ignorado pelo Git, e a instância barbearia-teste foi criada por QR Code.
+
 4. PENDÊNCIAS PRINCIPAIS
 
 A expansão da cobertura de testes, a agenda administrativa visual em calendário,
 os recursos completos de acessibilidade, a integração VLibras, a integração
-Quepasa/WhatsApp, a remoção de código legado e a atualização dos documentos
+Evolution/WhatsApp, a remoção de código legado e a atualização dos documentos
 técnicos antigos continuam pendentes.
 
 Também está planejado o login com Google. Após a primeira autenticação por
