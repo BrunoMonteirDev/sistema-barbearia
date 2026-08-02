@@ -81,7 +81,7 @@ export default function AgendamentosPage() {
     type: "cancelar" | "excluir";
     item: Agendamento;
   } | null>(null);
-  const [notificationPrompt, setNotificationPrompt] = useState<{ item: Agendamento; tipo: 'CRIACAO' | 'REMARCACAO' | 'CANCELAMENTO' | 'ATUALIZACAO' } | null>(null);
+  const [notificationPrompt, setNotificationPrompt] = useState<{ item: Agendamento; tipo: 'CRIACAO' | 'REMARCACAO' | 'CANCELAMENTO' | 'ATUALIZACAO' | 'PENDENTE' | 'CONFIRMADO' | 'CONCLUIDO' | 'ATRASADO' } | null>(null);
   // Mantidos para o formulario legado, que nao e exibido no fluxo novo.
   const [criandoCliente, setCriandoCliente] = useState(false);
   const [novoCliente, setNovoCliente] = useState({ nome: "", telefone: "" });
@@ -242,7 +242,7 @@ export default function AgendamentosPage() {
     try {
       await api.agendamentos.status(item.id, "CONFIRMADO");
       toast.success("Agendamento confirmado.");
-      setNotificationPrompt({ item: { ...item, status: 'CONFIRMADO' }, tipo: 'ATUALIZACAO' });
+      setNotificationPrompt({ item: { ...item, status: 'CONFIRMADO' }, tipo: 'CONFIRMADO' });
       load();
     } catch (error) {
       toast.error(
@@ -257,7 +257,7 @@ export default function AgendamentosPage() {
     try {
       await api.agendamentos.status(item.id, "CONCLUIDO");
       toast.success("Agendamento concluído.");
-      setNotificationPrompt({ item: { ...item, status: 'CONCLUIDO' }, tipo: 'ATUALIZACAO' });
+      setNotificationPrompt({ item: { ...item, status: 'CONCLUIDO' }, tipo: 'CONCLUIDO' });
       load();
     } catch (error) {
       toast.error(

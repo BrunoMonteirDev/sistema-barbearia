@@ -133,6 +133,7 @@ model Configuracao {
   mensagemWhatsappRemarcacao String? @map("mensagem_whatsapp_remarcacao") @db.Text
   mensagemWhatsappCancelamento String? @map("mensagem_whatsapp_cancelamento") @db.Text
   mensagemWhatsappAtualizacao String? @map("mensagem_whatsapp_atualizacao") @db.Text
+  mensagensWhatsappStatus Json? @map("mensagens_whatsapp_status")
   antecedenciaCancelamentoHoras Int @default(24) @map("antecedencia_cancelamento_horas")
   antecedenciaRemarcacaoHoras   Int @default(24) @map("antecedencia_remarcacao_horas")
   toleranciaAtrasoMinutos       Int @default(0) @map("tolerancia_atraso_minutos")

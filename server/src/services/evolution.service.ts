@@ -10,12 +10,16 @@ type EstadoEvolution = {
   estado: string | null
   mensagem?: string
 }
-export type ModelosMensagemWhatsApp = { criacao: string; remarcacao: string; cancelamento: string; atualizacao: string }
+export type ModelosMensagemWhatsApp = { criacao: string; remarcacao: string; cancelamento: string; atualizacao: string; pendente: string; confirmado: string; concluido: string; atrasado: string }
 const modelosPadrao: ModelosMensagemWhatsApp = {
   criacao: 'Ola, {{cliente}}! Seu agendamento de {{servico}} com {{profissional}} foi confirmado para {{data}} as {{hora}}.',
   remarcacao: 'Ola, {{cliente}}! Seu agendamento de {{servico}} foi remarcado para {{data}} as {{hora}} com {{profissional}}.',
   cancelamento: 'Ola, {{cliente}}! Seu agendamento de {{servico}} em {{data}} as {{hora}} foi cancelado.',
   atualizacao: 'Ola, {{cliente}}! Seu agendamento de {{servico}} com {{profissional}} foi atualizado: {{data}} as {{hora}}.',
+  pendente: 'Ola, {{cliente}}! Seu agendamento de {{servico}} esta pendente de confirmacao para {{data}} as {{hora}}.',
+  confirmado: 'Ola, {{cliente}}! Seu agendamento de {{servico}} com {{profissional}} foi confirmado para {{data}} as {{hora}}.',
+  concluido: 'Ola, {{cliente}}! Obrigado pela visita. Seu atendimento de {{servico}} foi concluido.',
+  atrasado: 'Ola, {{cliente}}! Seu horario de {{servico}} em {{data}} as {{hora}} esta marcado como atrasado. Fale conosco se precisar de ajuda.',
 }
 
 const configuracao = () => {
@@ -96,16 +100,17 @@ export const evolutionService = {
   },
 
   async obterModelosMensagens(): Promise<ModelosMensagemWhatsApp> {
-    const config = await prisma.configuracao.findFirst({ select: { mensagemWhatsappCriacao: true, mensagemWhatsappRemarcacao: true, mensagemWhatsappCancelamento: true, mensagemWhatsappAtualizacao: true } })
-    return { criacao: config?.mensagemWhatsappCriacao || modelosPadrao.criacao, remarcacao: config?.mensagemWhatsappRemarcacao || modelosPadrao.remarcacao, cancelamento: config?.mensagemWhatsappCancelamento || modelosPadrao.cancelamento, atualizacao: config?.mensagemWhatsappAtualizacao || modelosPadrao.atualizacao }
+    const config = await prisma.configuracao.findFirst({ select: { mensagemWhatsappCriacao: true, mensagemWhatsappRemarcacao: true, mensagemWhatsappCancelamento: true, mensagemWhatsappAtualizacao: true, mensagensWhatsappStatus: true } })
+    const status = (config?.mensagensWhatsappStatus ?? {}) as Partial<ModelosMensagemWhatsApp>
+    return { criacao: config?.mensagemWhatsappCriacao || modelosPadrao.criacao, remarcacao: config?.mensagemWhatsappRemarcacao || modelosPadrao.remarcacao, cancelamento: config?.mensagemWhatsappCancelamento || modelosPadrao.cancelamento, atualizacao: config?.mensagemWhatsappAtualizacao || modelosPadrao.atualizacao, pendente: status.pendente || modelosPadrao.pendente, confirmado: status.confirmado || modelosPadrao.confirmado, concluido: status.concluido || modelosPadrao.concluido, atrasado: status.atrasado || modelosPadrao.atrasado }
   },
 
   async atualizarModelosMensagens(modelos: unknown) {
     if (!modelos || typeof modelos !== 'object') throw new Error('Modelos de mensagem invalidos.')
     const dados = modelos as Partial<ModelosMensagemWhatsApp>
-    const chaves = ['criacao', 'remarcacao', 'cancelamento', 'atualizacao'] as const
+    const chaves = ['criacao', 'remarcacao', 'cancelamento', 'atualizacao', 'pendente', 'confirmado', 'concluido', 'atrasado'] as const
     if (chaves.some((chave) => typeof dados[chave] !== 'string' || !dados[chave]?.trim() || dados[chave]!.trim().length > 1000)) throw new Error('Cada mensagem deve ter entre 1 e 1000 caracteres.')
-    const valores = { mensagemWhatsappCriacao: dados.criacao!.trim(), mensagemWhatsappRemarcacao: dados.remarcacao!.trim(), mensagemWhatsappCancelamento: dados.cancelamento!.trim(), mensagemWhatsappAtualizacao: dados.atualizacao!.trim() }
+    const valores = { mensagemWhatsappCriacao: dados.criacao!.trim(), mensagemWhatsappRemarcacao: dados.remarcacao!.trim(), mensagemWhatsappCancelamento: dados.cancelamento!.trim(), mensagemWhatsappAtualizacao: dados.atualizacao!.trim(), mensagensWhatsappStatus: { pendente: dados.pendente!.trim(), confirmado: dados.confirmado!.trim(), concluido: dados.concluido!.trim(), atrasado: dados.atrasado!.trim() } }
     const config = await prisma.configuracao.findFirst()
     await (config ? prisma.configuracao.update({ where: { id: config.id }, data: valores }) : prisma.configuracao.create({ data: valores }))
     return this.obterModelosMensagens()

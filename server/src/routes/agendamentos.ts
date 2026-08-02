@@ -240,7 +240,7 @@ router.patch("/:id/status", requireAdmin, async (req, res) => {
 
 router.post('/:id/notificar', requireStaff, async (req, res) => {
   const tipo = req.body.tipo
-  if (!['CRIACAO', 'REMARCACAO', 'CANCELAMENTO', 'ATUALIZACAO'].includes(tipo)) return res.status(400).json({ error: 'Tipo de notificação inválido.' })
+  if (!['CRIACAO', 'REMARCACAO', 'CANCELAMENTO', 'ATUALIZACAO', 'PENDENTE', 'CONFIRMADO', 'CONCLUIDO', 'ATRASADO'].includes(tipo)) return res.status(400).json({ error: 'Tipo de notificação inválido.' })
   try {
     await notificacaoService.podeEnviar(String(req.params.id))
     const resultado = await notificacaoService.enviar(String(req.params.id), tipo)
