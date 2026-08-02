@@ -240,6 +240,8 @@ usuários nem concluir agendamentos, inclusive se sair e retornar ao sistema.
 - Login Google vincula automaticamente uma conta local com o mesmo e-mail
   verificado. Caso a conta tenha sido excluída por desativação, ela é reativada
   com cadastro pendente e segue para a tela de conclusão.
+- A navegação após autenticação Google aguarda a sessão ser refletida no cliente,
+  evitando retorno indevido à tela de login e uma segunda tentativa.
 
 5. LIMPEZA DE CÓDIGO
 

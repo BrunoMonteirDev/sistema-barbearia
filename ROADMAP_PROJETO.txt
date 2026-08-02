@@ -106,6 +106,8 @@ Medição mais recente (02/08/2026):
   login.
 - [CONCLUÍDO] Login Google vincula conta local com o mesmo e-mail verificado;
   conta desativada é reativada como cadastro pendente.
+- [CONCLUÍDO] Redirecionamento Google aguarda o estado da sessão, evitando a
+  necessidade de autenticar duas vezes para concluir cadastro.
 
 7. ACESSIBILIDADE                                               [EM ANDAMENTO]
 - Preferências persistidas entregues: alto contraste, texto maior e redução

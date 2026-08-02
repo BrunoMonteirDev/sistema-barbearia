@@ -1,17 +1,28 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { useLocation } from 'wouter'
 import toast from 'react-hot-toast'
 import { useAuth } from '@/contexts/AuthContext'
 import { GoogleLoginButton } from '@/components/GoogleLoginButton'
 
+export function destinoAposLoginGoogle(cadastroConcluido: boolean | undefined) {
+  return cadastroConcluido === false ? '/concluir-cadastro' : '/minha-conta'
+}
+
 export default function LoginPage() {
-  const { signIn, signInGoogle, signUp } = useAuth()
+  const { signIn, signInGoogle, signUp, user } = useAuth()
   const [, go] = useLocation()
   const [register, setRegister] = useState(false)
   const [nome, setNome] = useState('')
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
   const [autenticandoGoogle, setAutenticandoGoogle] = useState(false)
+  const [destinoGoogle, setDestinoGoogle] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!destinoGoogle || !user) return
+    go(destinoGoogle)
+    setDestinoGoogle(null)
+  }, [destinoGoogle, go, user])
 
   const submit = async (event: FormEvent) => {
     event.preventDefault()
@@ -30,7 +41,7 @@ export default function LoginPage() {
     try {
       const usuario = await signInGoogle(idToken)
       toast.success('Acesso realizado com Google.')
-      go(usuario.cadastroConcluido === false ? '/concluir-cadastro' : '/minha-conta')
+      setDestinoGoogle(destinoAposLoginGoogle(usuario.cadastroConcluido))
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Não foi possível entrar com Google.')
     } finally {
