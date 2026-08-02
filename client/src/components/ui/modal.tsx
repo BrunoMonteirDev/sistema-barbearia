@@ -5,9 +5,10 @@ interface ModalProps {
   children: ReactNode
   onClose: () => void
   footer?: ReactNode
+  size?: 'default' | 'wide'
 }
 
-export function Modal({ title, children, onClose, footer }: ModalProps) {
+export function Modal({ title, children, onClose, footer, size = 'default' }: ModalProps) {
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   const dialogRef = useRef<HTMLDivElement>(null)
   const onCloseRef = useRef(onClose)
@@ -34,7 +35,7 @@ export function Modal({ title, children, onClose, footer }: ModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onMouseDown={onClose}>
-      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="modal-title" className="flex max-h-[90vh] w-full max-w-xl flex-col rounded-xl bg-white p-6 shadow-xl" onMouseDown={event => event.stopPropagation()}>
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="modal-title" className={`flex max-h-[90vh] w-full ${size === 'wide' ? 'max-w-3xl' : 'max-w-xl'} flex-col rounded-xl bg-white p-6 shadow-xl`} onMouseDown={event => event.stopPropagation()}>
         <div className="mb-5 flex items-center justify-between gap-4">
           <h2 id="modal-title" className="text-xl font-bold text-secondary-500">{title}</h2>
           <button ref={closeButtonRef} type="button" onClick={onClose} aria-label="Fechar janela" className="rounded p-2 text-gray-500 hover:bg-gray-100">×</button>

@@ -20,6 +20,7 @@ import {
 } from "@/lib/api";
 import { ConfirmDialog, Modal } from "@/components/ui/modal";
 import { formatarTelefoneBrasileiro } from "@/utils/telefone";
+import { NovoAgendamentoWizard } from "./NovoAgendamentoWizard";
 
 type FormData = {
   usuarioId: string;
@@ -73,6 +74,7 @@ export default function AgendamentosPage() {
     item: Agendamento;
   } | null>(null);
   const [notificationPrompt, setNotificationPrompt] = useState<{ item: Agendamento; tipo: 'CRIACAO' | 'REMARCACAO' | 'CANCELAMENTO' | 'ATUALIZACAO' } | null>(null);
+  // Mantidos para o formulÃ¡rio de ediÃ§Ã£o legado, que nÃ£o Ã© exibido no fluxo novo.
   const [criandoCliente, setCriandoCliente] = useState(false);
   const [novoCliente, setNovoCliente] = useState({ nome: "", telefone: "" });
   const [buscaCliente, setBuscaCliente] = useState("");
@@ -153,9 +155,6 @@ export default function AgendamentosPage() {
   const openNew = () => {
     setForm(emptyForm);
     setSelected(null);
-    setCriandoCliente(false);
-    setNovoCliente({ nome: "", telefone: "" });
-    setBuscaCliente("");
     setModal("novo");
   };
   const openEdit = (item: Agendamento) => {
@@ -182,21 +181,10 @@ export default function AgendamentosPage() {
       !form.profissionalId ||
       !form.servicoId ||
       !form.data ||
-      !form.hora ||
-      (modal === "novo" && !form.usuarioId && !criandoCliente)
+      !form.hora
     )
       return toast.error("Preencha todos os campos obrigatórios.");
     try {
-      if (modal === "novo") {
-        let usuarioId = form.usuarioId;
-        if (criandoCliente) {
-          if (!novoCliente.nome.trim()) return toast.error("Informe o nome do novo cliente.");
-          const cliente = await api.usuarios.create({ nome: novoCliente.nome.trim(), telefone: novoCliente.telefone || undefined, nivel: "Cliente", ativo: true });
-          usuarioId = cliente.id;
-          setClientes((current) => [...current, cliente]);
-        }
-        await api.agendamentos.create({ ...form, usuarioId });
-      }
       if (modal === "editar" && selected) {
         const dadosAtualizados = {
           profissionalId: form.profissionalId,
@@ -208,7 +196,7 @@ export default function AgendamentosPage() {
         await api.agendamentos.update(selected.id, dadosAtualizados);
       }
       toast.success(
-        modal === "novo" ? "Agendamento criado." : "Agendamento atualizado.",
+        "Agendamento atualizado.",
       );
       closeModal();
       load();
@@ -481,9 +469,21 @@ export default function AgendamentosPage() {
           </tbody>
         </table>
       </div>}
-      {modal && (
+      {modal === "novo" && (
+        <NovoAgendamentoWizard
+          clientes={clientes}
+          profissionais={profissionais}
+          servicos={servicos}
+          onClose={closeModal}
+          onCreated={() => {
+            closeModal();
+            load();
+          }}
+        />
+      )}
+      {modal && modal !== "novo" && (
         <Modal
-          title={modal === "novo" ? "Novo agendamento" : modal === "editar" ? "Editar agendamento" : "Detalhes do agendamento"}
+          title={modal === "editar" ? "Editar agendamento" : "Detalhes do agendamento"}
           onClose={closeModal}
           footer={<><button type="button" onClick={closeModal} className="rounded px-4 py-2 text-gray-700 hover:bg-gray-100">Fechar</button>{modal !== "visualizar" && <button type="button" onClick={save} className="btn-primary">Salvar</button>}</>}
         >
@@ -515,7 +515,7 @@ export default function AgendamentosPage() {
               </div>
             ) : (
               <div className="grid gap-4 sm:grid-cols-2">
-                {modal === "novo" && (
+                {String(modal) === "novo" && (
                   <div className="space-y-3 sm:col-span-2">
                     <div className="flex items-center justify-between">
                       <p className="text-sm font-semibold text-slate-900">
