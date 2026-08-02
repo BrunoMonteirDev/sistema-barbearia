@@ -79,6 +79,9 @@ Histórico
   cancelamento e remarcação.
 - Estrutura de integração preparada com DATABASE_URL_TEST, protegida contra uso
   acidental do banco de desenvolvimento.
+- A execução da suíte de integração prepara automaticamente o schema por
+  migrations no banco exclusivo de testes, sem exigir etapa manual e sem usar a
+  URL de desenvolvimento.
 - PostgreSQL de integração reproduzível em Docker na porta 5433, com banco e
   volume exclusivos. A primeira execução real valida health check e configuração
   pública sem acessar a base de desenvolvimento.

@@ -67,6 +67,8 @@ Próximos itens:
 - PostgreSQL exclusivo para testes de integração: DATABASE_URL_TEST diferente
   da URL de desenvolvimento, container Docker isolado na porta 5433 e migration
   inicial versionada. Um banco vazio foi validado com `prisma migrate deploy`.
+- O comando de integração aplica migrations automaticamente somente no banco
+  DATABASE_URL_TEST, após validar que ele é exclusivo e possui "test" no nome.
 - Alcançar 100% dos fluxos críticos de autenticação/agendamento.
 - Alcançar 80% de linhas, funções, branches e statements da base ativa.
 
