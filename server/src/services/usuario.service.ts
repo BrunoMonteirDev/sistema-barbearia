@@ -73,6 +73,13 @@ export const usuarioService = {
     })
   },
 
+  async concluirCadastro(id: string, dados: { nome: string; telefone: string }) {
+    return prisma.usuario.update({
+      where: { id },
+      data: { nome: dados.nome, telefone: dados.telefone, cadastroConcluido: true }
+    })
+  },
+
   async remover(id: string) {
     return prisma.usuario.update({
       where: { id },

@@ -126,6 +126,9 @@ Histórico
   GOOGLE_CLIENT_ID, cria a conta Google como cadastro pendente e rejeita e-mail
   não verificado ou colisão com conta local. Arquivos .env.example documentam
   as credenciais necessárias, sem expor segredos.
+- Botão oficial Google integrado ao login com Client ID local. Após o primeiro
+  acesso, a tela de conclusão exige nome e telefone e persiste o cadastro como
+  concluído pela API autenticada.
 - Tela de login ganhou retorno explícito ao menu inicial. A consulta de sessão
   só é feita quando existe token armazenado, eliminando o 401 esperado de
   usuários desconectados no console do navegador.

@@ -57,7 +57,9 @@ Próximos itens:
 - Persistência entregue: provedor de autenticação, identificador Google, foto
   e estado de cadastro concluído no usuário.
 - API entregue para validar ID token Google e criar conta pendente; falta o
-  botão/tela no cliente e informar o GOOGLE_CLIENT_ID real para ativação.
+  bloqueio das áreas protegidas e da confirmação de agendamento.
+- Botão oficial e tela de conclusão entregues; Client ID configurado apenas no
+  ambiente local, nunca no repositório.
 - Adicionar autenticação pelo botão "Continuar com Google".
 - Criar/identificar o usuário pelo provedor Google.
 - Após o primeiro login Google, redirecionar usuários sem dados obrigatórios

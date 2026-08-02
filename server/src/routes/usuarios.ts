@@ -46,6 +46,14 @@ router.put('/me', async (req, res) => {
   return res.json(mapUsuario(usuario))
 })
 
+router.put('/me/concluir-cadastro', async (req, res) => {
+  const nome = typeof req.body.nome === 'string' ? req.body.nome.trim() : ''
+  const telefone = typeof req.body.telefone === 'string' ? req.body.telefone.replace(/\D/g, '') : ''
+  if (nome.length < 2 || telefone.length < 10) return res.status(400).json({ error: 'Informe nome e telefone válidos para concluir o cadastro.' })
+  const usuario = await usuarioService.concluirCadastro(req.auth!.sub, { nome, telefone })
+  return res.json(mapUsuario(usuario))
+})
+
 router.use(requireAdmin)
 
 router.get('/', async (_req, res) => {

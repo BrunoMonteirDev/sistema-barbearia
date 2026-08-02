@@ -8,6 +8,7 @@ import AgendarPage from '@/pages/agendar/AgendarPage'
 import PainelPage from '@/pages/PainelPage'
 import MinhaContaPage from '@/pages/user/MinhaContaPage'
 import UserAppointmentsPage from '@/pages/user/UserAppointmentsPage'
+import CompleteRegistrationPage from '@/pages/user/CompleteRegistrationPage'
 import { AcessibilidadeControls } from '@/components/AcessibilidadeControls'
 import { VLibras } from '@/components/VLibras'
 import { KeyboardArrowNavigation } from '@/components/KeyboardArrowNavigation'
@@ -40,6 +41,7 @@ export default function App() {
       <Route path="/painel/:rest*" component={() => <AdminRoute component={PainelPage} />} />
       <Route path="/painel" component={() => <AdminRoute component={PainelPage} />} />
       <Route path="/minha-conta/agendamentos" component={() => <UserRoute component={UserAppointmentsPage} />} />
+      <Route path="/concluir-cadastro" component={CompleteRegistrationPage} />
       <Route path="/minha-conta" component={() => <UserRoute component={MinhaContaPage} />} />
       <Route>Não encontrado.</Route>
     </Switch>
