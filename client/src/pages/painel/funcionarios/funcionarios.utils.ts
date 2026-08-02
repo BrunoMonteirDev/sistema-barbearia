@@ -22,15 +22,18 @@ export function criarHorariosVazio(): HorariosPorDia {
   };
 }
 
-export function normalizarHorarios(raw: any): HorariosPorDia {
+export function normalizarHorarios(raw: unknown): HorariosPorDia {
   const base = criarHorariosVazio();
   if (!raw || typeof raw !== "object") return base;
 
   const result = { ...base };
+  const horariosRecebidos = raw as Record<string, unknown>;
 
   (Object.keys(base) as WeekdayKey[]).forEach((dia) => {
-    if (Array.isArray(raw[dia])) {
-      result[dia] = raw[dia].filter((h: any) => typeof h === "string");
+    if (Array.isArray(horariosRecebidos[dia])) {
+      result[dia] = horariosRecebidos[dia].filter(
+        (horario): horario is string => typeof horario === "string",
+      );
     }
   });
 

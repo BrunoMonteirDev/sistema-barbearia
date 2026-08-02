@@ -1,4 +1,4 @@
-import { Component, type ErrorInfo, type ReactNode } from 'react'
+import { Component, type ReactNode } from 'react'
 
 type Props = { children: ReactNode }
 type State = { erro: boolean }
@@ -10,7 +10,7 @@ export class ErrorBoundary extends Component<Props, State> {
     return { erro: true }
   }
 
-  componentDidCatch(_error: Error, _info: ErrorInfo) {
+  componentDidCatch() {
     // A interface permanece utilizável; o diagnóstico detalhado fica no console.
   }
 

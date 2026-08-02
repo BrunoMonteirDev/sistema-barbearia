@@ -6,7 +6,7 @@ import { useAuth } from '@/contexts/AuthContext'
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [location] = useLocation()
-  const { user, profile } = useAuth()
+  const { user } = useAuth()
 
   const navItems = [
     { href: '/', label: 'Inicio' },
@@ -39,7 +39,7 @@ export default function Header() {
             {user ? (
               <Link href="/painel" className="flex items-center gap-2 btn-primary text-sm">
                 <User className="h-4 w-4" />
-                {profile?.nome || 'Painel'}
+                {user.nome || 'Painel'}
               </Link>
             ) : (
               <Link href="/login" className="btn-primary text-sm">

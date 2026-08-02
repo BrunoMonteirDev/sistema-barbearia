@@ -1,9 +1,9 @@
-import { Router } from 'express'
+import { Router, type Response } from 'express'
 import { evolutionService } from '../services/evolution.service'
 
 const router = Router()
 
-function responderErro(res: any, error: unknown) {
+function responderErro(res: Response, error: unknown) {
   const mensagem = error instanceof Error ? error.message : 'Não foi possível comunicar com a Evolution.'
   return res.status(502).json({ error: mensagem })
 }

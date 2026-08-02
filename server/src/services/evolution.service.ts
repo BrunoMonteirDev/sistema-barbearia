@@ -10,6 +10,14 @@ type EstadoEvolution = {
   estado: string | null
   mensagem?: string
 }
+type RespostaEvolution = {
+  instance?: { instanceName?: string; state?: string }
+  name?: string
+  state?: string
+  status?: string
+  response?: { message?: string }
+  message?: string
+}
 export type ModelosMensagemWhatsApp = { criacao: string; remarcacao: string; cancelamento: string; atualizacao: string; lembrete: string; pendente: string; confirmado: string; concluido: string; atrasado: string }
 export type RegrasEnvioAutomatico = { criacao: boolean; remarcacao: boolean; cancelamento: boolean; pendente: boolean; confirmado: boolean; concluido: boolean; atrasado: boolean; lembrete: boolean; antecedenciaLembreteMinutos: number }
 const regrasPadrao: RegrasEnvioAutomatico = { criacao: false, remarcacao: false, cancelamento: false, pendente: false, confirmado: false, concluido: false, atrasado: false, lembrete: false, antecedenciaLembreteMinutos: 60 }
@@ -39,13 +47,15 @@ async function requisitar(caminho: string, opcoes: RequestInit = {}) {
     ...opcoes,
     headers: { apikey: apiKey, 'content-type': 'application/json', ...opcoes.headers },
   })
-  const dados = await resposta.json().catch(() => ({}))
-  if (!resposta.ok) throw new Error(dados?.response?.message || dados?.message || `Evolution respondeu ${resposta.status}.`)
+  const dados: unknown = await resposta.json().catch(() => ({}))
+  const respostaEvolution = dados && typeof dados === 'object' ? dados as RespostaEvolution : {}
+  if (!resposta.ok) throw new Error(respostaEvolution.response?.message || respostaEvolution.message || `Evolution respondeu ${resposta.status}.`)
   return dados
 }
 
-function estadoConectado(dados: any) {
-  const estado = String(dados?.instance?.state ?? dados?.state ?? dados?.status ?? '').toLowerCase()
+function estadoConectado(dados: unknown) {
+  const resposta = dados && typeof dados === 'object' ? dados as RespostaEvolution : {}
+  const estado = String(resposta.instance?.state ?? resposta.state ?? resposta.status ?? '').toLowerCase()
   return { estado: estado || null, conectada: ['open', 'connected'].includes(estado) }
 }
 
@@ -59,7 +69,10 @@ export const evolutionService = {
     if (!url || !apiKey) return { configurada: false, disponivel: false, instanciaCriada: false, conectada: false, instancia: null, nomeExibicao: null, estado: null, mensagem: 'Integração local não configurada.' }
     try {
       const instancias = await requisitar('/instance/fetchInstances')
-      const criada = Array.isArray(instancias) && instancias.some((item: any) => item?.instance?.instanceName === instancia || item?.name === instancia)
+      const criada = Array.isArray(instancias) && instancias.some((item: unknown) => {
+        const itemEvolution = item && typeof item === 'object' ? item as RespostaEvolution : {}
+        return itemEvolution.instance?.instanceName === instancia || itemEvolution.name === instancia
+      })
       if (!criada) return { configurada: true, disponivel: true, instanciaCriada: false, conectada: false, instancia, nomeExibicao, estado: null }
       const dados = await requisitar(`/instance/connectionState/${encodeURIComponent(instancia)}`)
       const { estado, conectada } = estadoConectado(dados)

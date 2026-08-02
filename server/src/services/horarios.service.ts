@@ -59,6 +59,11 @@ export function temConflito(inicioA: string, duracaoA: number, inicioB: string, 
   return aInicio < bFim && bInicio < aFim
 }
 
+/**
+ * Calcula os horários em que um serviço cabe integralmente na jornada do profissional.
+ * Reservas canceladas não bloqueiam o horário; na remarcação, o próprio agendamento pode
+ * ser ignorado para não gerar conflito consigo mesmo.
+ */
 export async function listarHorariosDisponiveis(profissionalId: string, servicoId: string, data: string, ignorarAgendamentoId?: string) {
   const servico = await prisma.servico.findFirst({ where: { id: servicoId, ativo: true } })
   if (!servico) return []

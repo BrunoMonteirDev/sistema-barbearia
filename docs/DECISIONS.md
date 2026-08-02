@@ -10,6 +10,28 @@ O objetivo é manter histórico das escolhas realizadas, evitando dúvidas futur
 
 ---
 
+# DEC-017
+
+# Validação de disponibilidade em duas camadas
+
+## Status
+
+Aceita
+
+## Contexto
+
+O horário apresentado ao cliente pode deixar de estar livre entre a consulta e a confirmação.
+
+## Decisão
+
+Calcular os horários no serviço `horarios.service.ts`, validar novamente no endpoint de criação e manter uma restrição parcial no PostgreSQL para reservas não canceladas.
+
+## Motivo e consequências
+
+A combinação mantém a interface rápida, concentra a regra reutilizável e transforma disputa simultânea em resposta HTTP 409, sem expor erro interno. A solução é simples para o escopo de uma barbearia e evita confiar apenas no frontend.
+
+---
+
 # DEC-016
 
 # Arquitetura atual com React/Vite e Express

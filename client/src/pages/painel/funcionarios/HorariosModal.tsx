@@ -1,10 +1,10 @@
 import { Clock, Copy, Loader2 } from 'lucide-react'
-import { Funcionario, WeekdayKey } from './funcionarios.types'
+import { Funcionario, HorariosPorDia, WeekdayKey } from './funcionarios.types'
 
 interface Props {
     modalAberto: boolean
     selectedFuncionario: Funcionario | null
-    horariosEdicao: any
+    horariosEdicao: HorariosPorDia | null
     diaAtivo: WeekdayKey
     setDiaAtivo: (v: WeekdayKey) => void
     copiarDeId: string
