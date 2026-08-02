@@ -154,3 +154,8 @@ Para testes locais, o canal de notificações usará Evolution API em containers
 Docker, autenticada por chave de API e conectada a um número de teste por QR
 Code. A solução não é destinada à produção e falhas de transmissão não podem
 interromper criação, cancelamento ou remarcação de agendamentos.
+
+RF18 - Gestão da instância WhatsApp [IMPLEMENTADO]
+O administrador poderá consultar o estado da Evolution API, criar a instância
+local, exibir QR Code para conectá-la e solicitar reconexão. A chave global não
+é exposta ao navegador; permanece exclusivamente no ambiente do backend.

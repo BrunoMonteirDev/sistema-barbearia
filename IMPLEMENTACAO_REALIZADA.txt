@@ -173,6 +173,9 @@ Histórico
 - Infraestrutura local de testes da Evolution API criada com Docker Desktop,
   PostgreSQL e Redis isolados. Credenciais ficam apenas em .env.evolution,
   ignorado pelo Git, e a instância barbearia-teste foi criada por QR Code.
+- Painel administrativo recebeu a aba WhatsApp: consulta de status, criação de
+  instância, QR Code para conexão e reconexão. Falhas externas são isoladas e
+  não interrompem nenhum fluxo de agendamento.
 
 4. PENDÊNCIAS PRINCIPAIS
 

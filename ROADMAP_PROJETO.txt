@@ -145,3 +145,7 @@ ATUALIZAÇÃO — EVOLUTION API (02/08/2026)
   em volumes e chaves fora do versionamento.
 - Próximo subpasso: confirmar a conexão da instância por QR Code e adaptar a
   camada de notificações ao contrato HTTP da Evolution.
+- [CONCLUÍDO] Aba administrativa para status, criação, conexão QR e reconexão.
+- [CONCLUÍDO] A camada de notificações usa o envio de texto da Evolution e
+  registra êxito ou falha sem afetar o agendamento.
+- [PENDENTE] Definir política de conteúdo, frequência, consentimento e lembretes.

@@ -6,8 +6,8 @@ vi.mock('../lib/prisma', () => ({ prisma: { agendamento: { findUnique: mocks.fin
 import { notificacaoService } from './notificacao.service'
 
 describe('notificacaoService', () => {
-  beforeEach(() => { vi.clearAllMocks(); delete process.env.QUEPASA_API_URL; delete process.env.QUEPASA_API_TOKEN })
-  it('registra pendência sem impedir o fluxo quando Quepasa não está configurado', async () => {
+  beforeEach(() => { vi.clearAllMocks(); delete process.env.EVOLUTION_API_URL; delete process.env.EVOLUTION_API_KEY })
+  it('registra pendência sem impedir o fluxo quando Evolution não está configurada', async () => {
     mocks.findUnique.mockResolvedValue({ id: 'ag-1', data: '2026-08-10', hora: '10:00', usuario: { telefone: '(44) 99999-9999' }, profissional: { nome: 'Carlos' }, servico: { nome: 'Corte' } })
     await notificacaoService.enviar('ag-1', 'CRIACAO')
     expect(mocks.create).toHaveBeenCalledWith({ data: expect.objectContaining({ agendamentoId: 'ag-1', destino: '5544999999999', status: 'PENDENTE_CONFIGURACAO' }) })

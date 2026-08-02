@@ -8,6 +8,7 @@ import AgendamentosPage from "./painel/AgendamentosPage";
 import DashboardPage from "./painel/DashboardPage";
 import WhatsAppConfigPage from "./painel/WhatsAppConfigPage";
 import RegrasNegocioPage from "./painel/RegrasNegocioPage";
+import EvolutionPage from "./painel/EvolutionPage";
 
 const sidebarItems: SidebarItem[] = [
   { href: "/painel", label: "Dashboard", exact: true },
@@ -17,6 +18,7 @@ const sidebarItems: SidebarItem[] = [
   { href: "/painel/profissionais", label: "Profissionais" },
   { href: "/painel/configuracoes", label: "Configurações" },
   { href: "/painel/regras-negocio", label: "Regras de negócio" },
+  { href: "/painel/whatsapp", label: "WhatsApp" },
 ];
 
 export default function PainelPage() {
@@ -38,6 +40,7 @@ export default function PainelPage() {
           <Route path="/painel/agendamentos" component={AgendamentosPage} />
           <Route path="/painel/configuracoes" component={WhatsAppConfigPage} />
           <Route path="/painel/regras-negocio" component={RegrasNegocioPage} />
+          <Route path="/painel/whatsapp" component={EvolutionPage} />
         </Switch>
       </main>
     </div>

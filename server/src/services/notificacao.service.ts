@@ -1,4 +1,5 @@
 import { prisma } from '../lib/prisma'
+import { evolutionService } from './evolution.service'
 
 type TipoNotificacao = 'CRIACAO' | 'REMARCACAO' | 'CANCELAMENTO'
 
@@ -18,12 +19,9 @@ export const notificacaoService = {
     if (!agendamento) return
     const destino = numeroWhatsApp(agendamento.usuario.telefone)
     if (!destino) return prisma.notificacaoAgendamento.create({ data: { agendamentoId, tipo, status: 'IGNORADA', erro: 'Cliente sem telefone.' } })
-    const url = process.env.QUEPASA_API_URL
-    const token = process.env.QUEPASA_API_TOKEN
-    if (!url || !token) return prisma.notificacaoAgendamento.create({ data: { agendamentoId, tipo, destino, status: 'PENDENTE_CONFIGURACAO', erro: 'Quepasa não configurado.' } })
+    if (!evolutionService.configurada()) return prisma.notificacaoAgendamento.create({ data: { agendamentoId, tipo, destino, status: 'PENDENTE_CONFIGURACAO', erro: 'Evolution API não configurada.' } })
     try {
-      const resposta = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` }, body: JSON.stringify({ to: destino, message: mensagem(tipo, agendamento) }) })
-      if (!resposta.ok) throw new Error(`Quepasa respondeu ${resposta.status}.`)
+      await evolutionService.enviarTexto(destino, mensagem(tipo, agendamento))
       return prisma.notificacaoAgendamento.create({ data: { agendamentoId, tipo, destino, status: 'ENVIADA' } })
     } catch (error) {
       return prisma.notificacaoAgendamento.create({ data: { agendamentoId, tipo, destino, status: 'FALHOU', erro: error instanceof Error ? error.message : 'Falha desconhecida.' } })

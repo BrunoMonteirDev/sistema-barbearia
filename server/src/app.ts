@@ -6,6 +6,7 @@ import profissionaisRoutes from './routes/profissionais'
 import agendamentosRoutes from './routes/agendamentos'
 import configuracoesRoutes from './routes/configuracoes'
 import usuariosRoutes from './routes/usuarios'
+import evolutionRoutes from './routes/evolution'
 import { authenticate, requireAdmin } from './middlewares/auth'
 import { prisma } from './lib/prisma'
 
@@ -22,4 +23,5 @@ app.use('/api/servicos', servicosRoutes)
 app.use('/api/profissionais', profissionaisRoutes)
 app.use('/api/agendamentos', authenticate, agendamentosRoutes)
 app.use('/api/configuracoes', authenticate, requireAdmin, configuracoesRoutes)
+app.use('/api/integracoes/evolution', authenticate, requireAdmin, evolutionRoutes)
 app.use('/api/usuarios', authenticate, usuariosRoutes)
