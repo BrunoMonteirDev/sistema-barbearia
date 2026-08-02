@@ -32,6 +32,7 @@ Já entregue:
 - Testes de CRUD e permissões de usuários.
 - Testes de profissionais e disponibilidade semanal.
 - Testes de CRUD de serviços.
+- Testes da camada de API do cliente.
 
 Próximos itens:
 - Cobrir autenticação, permissões, usuários, profissionais, serviços,

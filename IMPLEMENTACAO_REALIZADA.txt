@@ -73,6 +73,8 @@ Histórico
   duplicados/inválidos, persistência da jornada e normalização de cadastro.
 - Cobertura do CRUD de serviços: listagem pública, criação, edição e
   desativação lógica.
+- Cobertura da camada de API do cliente: autenticação por token, consulta de
+  configuração pública, disponibilidade para remarcação e mensagens de erro.
 - Última validação concluída com build do cliente/servidor e 10 testes passando.
 
 4. PENDÊNCIAS PRINCIPAIS
