@@ -71,6 +71,8 @@ Histórico
   cliente sem e-mail, validação de senha e desativação lógica.
 - Cobertura de profissionais e disponibilidade semanal: validação, horários
   duplicados/inválidos, persistência da jornada e normalização de cadastro.
+- Cobertura do CRUD de serviços: listagem pública, criação, edição e
+  desativação lógica.
 - Última validação concluída com build do cliente/servidor e 10 testes passando.
 
 4. PENDÊNCIAS PRINCIPAIS
