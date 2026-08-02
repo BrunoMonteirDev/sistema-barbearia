@@ -127,6 +127,7 @@ Medição mais recente (02/08/2026):
 - Foco recebe animação curta de zoom, desativável pela preferência de reduzir animações.
 - Setas do teclado percorrem controles acionáveis sem interferir na edição de campos.
 - Atalho "Pular para o conteúdo principal" disponível no primeiro foco por Tab.
+- Menu administrativo anuncia a página ativa com aria-current.
 - Login oferece retorno ao início e não executa consulta de perfil sem sessão.
 - Alto contraste revisado: superfícies, textos, ícones, links, bordas e estados
   de hover usam combinações legíveis sobre o fundo escuro.

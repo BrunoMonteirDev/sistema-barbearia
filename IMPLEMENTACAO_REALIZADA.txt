@@ -229,6 +229,8 @@ Histórico
   retorno ao início ou nova tentativa.
 - Atalho de teclado "Pular para o conteúdo principal" permite ignorar navegação
   repetitiva e acessar diretamente a área útil da página.
+- Menu administrativo informa semanticamente a página ativa para leitores de
+  tela por meio de aria-current.
 
 4. PENDÊNCIAS PRINCIPAIS
 

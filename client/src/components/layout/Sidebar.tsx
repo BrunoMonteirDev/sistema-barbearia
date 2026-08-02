@@ -28,7 +28,7 @@ export default function Sidebar({ items, onSignOut, title = 'Barbearia' }: Sideb
         {items.map((item) => {
           const isActive = item.exact ? location === item.href : location === item.href || location.startsWith(`${item.href}/`)
           const Icon = item.icon
-          return <Link key={item.href} href={item.href} className={`flex shrink-0 items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-colors ${isActive ? 'bg-primary-500 text-white' : 'text-gray-200 hover:bg-secondary-400 hover:text-white'}`}>{Icon && <Icon className="h-5 w-5" aria-hidden="true" />}{item.label}</Link>
+          return <Link key={item.href} href={item.href} aria-current={isActive ? 'page' : undefined} className={`flex shrink-0 items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-colors ${isActive ? 'bg-primary-500 text-white' : 'text-gray-200 hover:bg-secondary-400 hover:text-white'}`}>{Icon && <Icon className="h-5 w-5" aria-hidden="true" />}{item.label}</Link>
         })}
       </nav>
       <div className="border-t border-secondary-400 p-3 md:mt-auto">
