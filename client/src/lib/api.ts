@@ -5,7 +5,7 @@ export interface Profissional { id: string; nome: string; telefone?: string | nu
 export interface Agendamento { id: string; data: string; hora: string; status: string; observacao?: string | null; usuario?: Usuario; profissional?: Profissional; servico?: Servico }
 export interface RegrasAgendamento { antecedenciaCancelamentoHoras: number; antecedenciaRemarcacaoHoras: number; toleranciaAtrasoMinutos: number }
 export interface EvolutionStatus { configurada: boolean; disponivel: boolean; instanciaCriada: boolean; conectada: boolean; instancia: string | null; nomeExibicao: string | null; estado: string | null; mensagem?: string }
-export interface ModelosMensagemWhatsApp { criacao: string; remarcacao: string; cancelamento: string; atualizacao: string; pendente: string; confirmado: string; concluido: string; atrasado: string }
+export interface ModelosMensagemWhatsApp { criacao: string; remarcacao: string; cancelamento: string; atualizacao: string; lembrete: string; pendente: string; confirmado: string; concluido: string; atrasado: string }
 export interface RegrasEnvioAutomatico { criacao: boolean; remarcacao: boolean; cancelamento: boolean; pendente: boolean; confirmado: boolean; concluido: boolean; atrasado: boolean; lembrete: boolean; antecedenciaLembreteMinutos: number }
 export type DisponibilidadeFuncionario = Record<number, string[]>
 

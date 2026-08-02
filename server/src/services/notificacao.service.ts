@@ -12,7 +12,7 @@ function numeroWhatsApp(valor: string | null | undefined) {
 
 async function mensagem(tipo: TipoNotificacao, agendamento: { data: string; hora: string; usuario: { nome: string }; profissional: { nome: string }; servico: { nome: string } }) {
   const modelos = await evolutionService.obterModelosMensagens()
-  const chave = tipo === 'CRIACAO' ? 'criacao' : tipo === 'REMARCACAO' ? 'remarcacao' : tipo === 'CANCELAMENTO' ? 'cancelamento' : tipo === 'PENDENTE' ? 'pendente' : tipo === 'CONFIRMADO' ? 'confirmado' : tipo === 'CONCLUIDO' ? 'concluido' : tipo === 'ATRASADO' ? 'atrasado' : tipo === 'LEMBRETE' ? 'confirmado' : 'atualizacao'
+  const chave = tipo === 'CRIACAO' ? 'criacao' : tipo === 'REMARCACAO' ? 'remarcacao' : tipo === 'CANCELAMENTO' ? 'cancelamento' : tipo === 'PENDENTE' ? 'pendente' : tipo === 'CONFIRMADO' ? 'confirmado' : tipo === 'CONCLUIDO' ? 'concluido' : tipo === 'ATRASADO' ? 'atrasado' : tipo === 'LEMBRETE' ? 'lembrete' : 'atualizacao'
   const modelo = modelos[chave]
   return modelo.replace(/{{cliente}}/g, agendamento.usuario.nome).replace(/{{servico}}/g, agendamento.servico.nome).replace(/{{profissional}}/g, agendamento.profissional.nome).replace(/{{data}}/g, agendamento.data).replace(/{{hora}}/g, agendamento.hora)
 }

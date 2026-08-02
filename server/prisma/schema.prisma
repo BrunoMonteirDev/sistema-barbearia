@@ -133,6 +133,7 @@ model Configuracao {
   mensagemWhatsappRemarcacao String? @map("mensagem_whatsapp_remarcacao") @db.Text
   mensagemWhatsappCancelamento String? @map("mensagem_whatsapp_cancelamento") @db.Text
   mensagemWhatsappAtualizacao String? @map("mensagem_whatsapp_atualizacao") @db.Text
+  mensagemWhatsappLembrete String? @map("mensagem_whatsapp_lembrete") @db.Text
   mensagensWhatsappStatus Json? @map("mensagens_whatsapp_status")
   envioAutomaticoWhatsapp Boolean @default(false) @map("envio_automatico_whatsapp")
   regrasEnvioAutomatico Json? @map("regras_envio_automatico")
