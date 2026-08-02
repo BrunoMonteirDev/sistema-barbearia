@@ -40,6 +40,9 @@ Já entregue:
 - Testes do contexto de autenticação: restauração, invalidação de token,
   login local/Google, cadastro e encerramento de sessão.
 - Teste do fluxo de agendamento e da etapa de revisão.
+- Regressões da API de agendamento: dados inválidos, profissional sem
+  preferência, cadastro pendente, indisponibilidade, conflito concorrente e
+  privacidade do histórico.
 - Testes de interface de Meus agendamentos.
 - Testes de regressão do modo automático de WhatsApp: padrão desativado e envio
   somente após habilitação explícita por evento.

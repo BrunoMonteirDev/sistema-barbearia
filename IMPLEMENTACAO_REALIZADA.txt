@@ -123,6 +123,9 @@ Histórico
   configuração pública, disponibilidade para remarcação e mensagens de erro.
 - Teste de interface do agendamento online em quatro etapas, validando a
   obrigatoriedade da revisão antes da confirmação.
+- Testes de rota reforçam a criação do agendamento, a escolha automática de
+  profissional, bloqueios de disponibilidade/cadastro e o acesso privado ao
+  histórico.
 - Testes de interface de Meus agendamentos: remarcação, cancelamento, histórico
   e bloqueio das ações em atendimentos concluídos.
 - Agenda administrativa diária com profissionais em colunas, horários em linhas,
