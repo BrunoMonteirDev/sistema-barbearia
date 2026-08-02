@@ -37,7 +37,7 @@ function normalizePayload(body: Record<string, unknown>) {
 
 router.get('/me', async (req, res) => {
   const usuario = await usuarioService.buscarPorId(req.auth!.sub)
-  if (!usuario) return res.status(404).json({ error: 'Usuário não encontrado.' })
+  if (!usuario || usuario.ativo === false) return res.status(401).json({ error: 'Sessão inválida ou conta desativada.' })
   return res.json(mapUsuario(usuario))
 })
 

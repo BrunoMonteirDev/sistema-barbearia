@@ -258,6 +258,9 @@ usuários nem concluir agendamentos, inclusive se sair e retornar ao sistema.
 - Teste de integração valida as configurações administrativas: acesso restrito
   ao administrador, persistência das regras e exposição pública limitada aos
   dados de contato usados pela interface.
+- Sessões existentes não mantêm acesso ao perfil após a conta ser desativada;
+  a consulta de perfil retorna erro de autenticação e o cliente encerra a
+  sessão local.
 
 5. LIMPEZA DE CÓDIGO
 

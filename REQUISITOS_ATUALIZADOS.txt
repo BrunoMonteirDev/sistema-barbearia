@@ -205,3 +205,7 @@ RN15 - Proteção das configurações [IMPLEMENTADO]
 Somente administradores podem consultar ou alterar configurações e regras de
 negócio. A consulta pública retorna exclusivamente telefone de WhatsApp, e-mail
 e Instagram necessários à comunicação na interface.
+
+RN16 - Invalidação de sessão após exclusão [IMPLEMENTADO]
+Uma conta desativada não pode reutilizar um token já emitido para consultar o
+perfil. A aplicação deve encerrar a sessão local e exigir nova autenticação.

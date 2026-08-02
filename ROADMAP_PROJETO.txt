@@ -190,6 +190,8 @@ ATUALIZAÇÃO — QUALIDADE DO LOGIN GOOGLE (02/08/2026)
   há teste de regressão contra o contorno da interface por chamada direta.
 - [CONCLUÍDO] Teste de integração cobre permissões e persistência das
   configurações administrativas e a rota pública de contato.
+- [CONCLUÍDO] Sessões de contas desativadas são invalidadas na consulta de
+  perfil, protegendo o fluxo de exclusão e reativação por Google.
 
 ATUALIZAÇÃO — EVOLUTION API (02/08/2026)
 

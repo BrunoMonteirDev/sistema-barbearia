@@ -97,6 +97,7 @@ describe('API - conflito real de agendamento', () => {
     await request(app).post('/api/auth/login').send({ email: 'conta.ativa@teste.local', password: 'SenhaForte!9' }).expect(200)
     await prisma.usuario.update({ where: { id: usuario!.id }, data: { ativo: false } })
     await request(app).post('/api/auth/login').send({ email: 'conta.ativa@teste.local', password: 'SenhaForte!9' }).expect(401)
+    await request(app).get('/api/usuarios/me').set('authorization', `Bearer ${cadastro.body.token}`).expect(401)
   })
 
   it('conclui o cadastro pendente e libera os dados da conta Google', async () => {
