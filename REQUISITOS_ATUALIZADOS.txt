@@ -69,9 +69,13 @@ agendamentos e configurações.
 RF14 - Agenda em calendário [IMPLEMENTADO]
 Exibir agenda diária/semanal por profissional, com filtros e ações rápidas.
 
-RF15 - Notificações WhatsApp [PENDENTE]
+RF15 - Notificações WhatsApp [IMPLEMENTADO PARCIAL]
 Integrar Quepasa para confirmação, cancelamento e remarcação. Falha de envio não
 pode impedir a operação principal.
+
+A camada de envio assíncrono e registro de diagnóstico está implementada. O
+disparo real depende das variáveis QUEPASA_API_URL e QUEPASA_API_TOKEN e da
+validação do contrato da instância Quepasa escolhida.
 
 RF16 - VLibras [PENDENTE]
 Integrar VLibras às páginas públicas e à conta do usuário.

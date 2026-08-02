@@ -23,6 +23,7 @@ vi.mock("../services/horarios.service", () => ({
 vi.mock("../services/regras-agendamento.service", () => ({
   atualizarAtrasados: vi.fn(), regrasAgendamento: mocks.regrasAgendamento, respeitaAntecedencia: mocks.respeitaAntecedencia,
 }));
+vi.mock('../services/notificacao.service', () => ({ notificacaoService: { enviar: vi.fn().mockResolvedValue(undefined) } }));
 
 import agendamentosRoutes from "./agendamentos";
 

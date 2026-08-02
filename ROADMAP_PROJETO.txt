@@ -107,6 +107,12 @@ Próximos itens:
 - Confirmação, cancelamento e remarcação; falha de envio não bloqueia a operação.
 - Mocks e validação em ambiente controlado.
 
+Status: [EM ANDAMENTO]
+- Camada desacoplada entregue e ligada a criação, remarcação e cancelamento.
+- Resultados são registrados para diagnóstico e falhas não impedem a operação.
+- Pendente: cadastrar credenciais Quepasa, ajustar o contrato HTTP à instância
+  utilizada e validar disparos reais em ambiente controlado.
+
 9. LIMPEZA E DOCUMENTAÇÃO                                      [PENDENTE / CONTÍNUA]
 - Primeiro lote de código Supabase/fluxos antigos sem consumidores removido
   (agendamento legado e agenda administrativa duplicada).

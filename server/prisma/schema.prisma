@@ -71,9 +71,23 @@ model Agendamento {
   profissional    Profissional  @relation(fields: [profissionalId], references: [id])
   servico         Servico       @relation(fields: [servicoId], references: [id])
   historicos      HistoricoAgendamento[]
+  notificacoes    NotificacaoAgendamento[]
 
   @@unique([profissionalId, data, hora])
   @@map("agendamentos")
+}
+
+model NotificacaoAgendamento {
+  id              String       @id @default(uuid())
+  agendamentoId   String       @map("agendamento_id")
+  tipo            String
+  destino         String?
+  status          String
+  erro            String?
+  createdAt       DateTime     @default(now()) @map("created_at")
+  agendamento     Agendamento  @relation(fields: [agendamentoId], references: [id], onDelete: Cascade)
+
+  @@map("notificacoes_agendamentos")
 }
 
 model HistoricoAgendamento {

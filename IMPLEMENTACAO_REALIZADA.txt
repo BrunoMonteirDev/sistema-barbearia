@@ -164,6 +164,11 @@ Histórico
 - Agenda administrativa visual validada: as visões de dia e semana possuem
   filtros, navegação de período e ações rápidas. Testes cobrem renderização dos
   blocos, visão semanal e confirmação rápida.
+- Base de notificações WhatsApp entregue: eventos de criação, remarcação e
+  cancelamento disparam uma camada assíncrona, que registra o resultado no banco
+  sem bloquear o fluxo principal. A integração Quepasa usa exclusivamente
+  QUEPASA_API_URL e QUEPASA_API_TOKEN; sem credenciais, a notificação fica
+  registrada como pendente de configuração.
 
 4. PENDÊNCIAS PRINCIPAIS
 

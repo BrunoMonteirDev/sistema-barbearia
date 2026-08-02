@@ -9,6 +9,7 @@ import {
   validarDisponibilidade,
 } from "../services/horarios.service";
 import { atualizarAtrasados, regrasAgendamento, respeitaAntecedencia } from "../services/regras-agendamento.service";
+import { notificacaoService } from '../services/notificacao.service';
 
 const router = Router();
 const appointmentStatuses = [
@@ -132,6 +133,7 @@ router.post("/", async (req, res) => {
     const agendamento = await prisma.agendamento.create({
       data: { usuarioId, profissionalId, servicoId, data, hora, observacao },
     });
+    void notificacaoService.enviar(agendamento.id, 'CRIACAO').catch(console.error);
     return res.status(201).json(agendamento);
   } catch (error) {
     console.error(error);
@@ -201,6 +203,7 @@ router.patch("/:id/cancelar", async (req, res) => {
   }
   const atualizado = await prisma.agendamento.update({ where: { id: agendamento.id }, data: { status: "CANCELADO" } });
   await prisma.historicoAgendamento.create({ data: { agendamentoId: agendamento.id, autorId: req.auth!.sub, tipo: "CANCELAMENTO", dadosAnteriores: { status: agendamento.status }, dadosNovos: { status: "CANCELADO" } } });
+  void notificacaoService.enviar(agendamento.id, 'CANCELAMENTO').catch(console.error);
   return res.json(atualizado);
 });
 
@@ -224,6 +227,7 @@ router.patch("/:id/remarcar", async (req, res) => {
   if (!(await validarDisponibilidade(profissionalId, servicoId, data, hora, agendamento.id))) return res.status(409).json({ error: "Este horário não está disponível." });
   const atualizado = await prisma.agendamento.update({ where: { id: agendamento.id }, data: { data, hora, profissionalId, servicoId } });
   await prisma.historicoAgendamento.create({ data: { agendamentoId: agendamento.id, autorId: req.auth!.sub, tipo: "REMARCACAO", dadosAnteriores: { data: agendamento.data, hora: agendamento.hora, profissionalId: agendamento.profissionalId, servicoId: agendamento.servicoId }, dadosNovos: { data, hora, profissionalId, servicoId } } });
+  void notificacaoService.enviar(agendamento.id, 'REMARCACAO').catch(console.error);
   return res.json(atualizado);
 });
 
