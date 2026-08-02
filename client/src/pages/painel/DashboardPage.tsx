@@ -6,8 +6,8 @@ import { api, type Agendamento, type EvolutionStatus, type Profissional, type Us
 
 type DashboardData = { agendamentos: Agendamento[]; clientes: Usuario[]; profissionais: Profissional[] }
 
-const statusLabel: Record<string, string> = { PENDENTE: 'Pendente', CONFIRMADO: 'Confirmado', CONCLUIDO: 'Concluído', CANCELADO: 'Cancelado' }
-const statusClass: Record<string, string> = { PENDENTE: 'bg-amber-100 text-amber-900', CONFIRMADO: 'bg-blue-100 text-blue-900', CONCLUIDO: 'bg-emerald-100 text-emerald-900', CANCELADO: 'bg-red-100 text-red-900' }
+export const statusLabel: Record<string, string> = { PENDENTE: 'Pendente', CONFIRMADO: 'Confirmado', CONCLUIDO: 'Concluído', CANCELADO: 'Cancelado', ATRASADO: 'Atrasado' }
+export const statusClass: Record<string, string> = { PENDENTE: 'bg-amber-100 text-amber-900', CONFIRMADO: 'bg-blue-100 text-blue-900', CONCLUIDO: 'bg-emerald-100 text-emerald-900', CANCELADO: 'bg-slate-200 text-slate-800', ATRASADO: 'bg-red-100 text-red-900' }
 
 function hoje() {
   return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo' }).format(new Date())

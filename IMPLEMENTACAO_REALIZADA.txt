@@ -224,6 +224,7 @@ Histórico
 - Dashboard administrativo exibe o estado da conexão WhatsApp: verificando,
   não configurado, indisponível, instância não criada, desconectado ou conectado,
   com acesso direto ao gerenciamento da integração.
+- Dashboard identifica o status ATRASADO com rótulo textual e estilo próprio.
 
 4. PENDÊNCIAS PRINCIPAIS
 

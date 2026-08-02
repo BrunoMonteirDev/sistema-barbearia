@@ -194,6 +194,7 @@ ATUALIZAÇÃO — EVOLUTION API (02/08/2026)
   granular dos eventos e antecedência configurável do lembrete.
 - [CONCLUÍDO] Dashboard apresenta o status da conexão WhatsApp e atalho para
   gerenciar a instância.
+- [CONCLUÍDO] Dashboard apresenta ATRASADO com texto e estilo próprios.
 
 ATUALIZAÇÃO — LIMPEZA DE CÓDIGO (02/08/2026)
 
