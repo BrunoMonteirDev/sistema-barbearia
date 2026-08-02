@@ -116,6 +116,13 @@ export const evolutionService = {
     return this.obterModelosMensagens()
   },
 
+  async envioAutomaticoAtivo() { return Boolean((await prisma.configuracao.findFirst({ select: { envioAutomaticoWhatsapp: true } }))?.envioAutomaticoWhatsapp) },
+  async atualizarEnvioAutomatico(ativo: unknown) {
+    if (typeof ativo !== 'boolean') throw new Error('Valor de envio automatico invalido.')
+    const config = await prisma.configuracao.findFirst()
+    return config ? prisma.configuracao.update({ where: { id: config.id }, data: { envioAutomaticoWhatsapp: ativo } }) : prisma.configuracao.create({ data: { envioAutomaticoWhatsapp: ativo } })
+  },
+
   async enviarTexto(numero: string, texto: string) {
     const { instancia } = configuracao()
     return requisitar(`/message/sendText/${encodeURIComponent(instancia)}`, { method: 'POST', body: JSON.stringify({ number: numero, text: texto }) })

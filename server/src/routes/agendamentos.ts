@@ -133,6 +133,7 @@ router.post("/", async (req, res) => {
     const agendamento = await prisma.agendamento.create({
       data: { usuarioId, profissionalId, servicoId, data, hora, observacao },
     });
+    void notificacaoService.enviarSeAutomatico(agendamento.id, 'CRIACAO');
     return res.status(201).json(agendamento);
   } catch (error) {
     console.error(error);
@@ -202,6 +203,7 @@ router.patch("/:id/cancelar", async (req, res) => {
   }
   const atualizado = await prisma.agendamento.update({ where: { id: agendamento.id }, data: { status: "CANCELADO" } });
   await prisma.historicoAgendamento.create({ data: { agendamentoId: agendamento.id, autorId: req.auth!.sub, tipo: "CANCELAMENTO", dadosAnteriores: { status: agendamento.status }, dadosNovos: { status: "CANCELADO" } } });
+  void notificacaoService.enviarSeAutomatico(agendamento.id, 'CANCELAMENTO');
   return res.json(atualizado);
 });
 
@@ -225,6 +227,7 @@ router.patch("/:id/remarcar", async (req, res) => {
   if (!(await validarDisponibilidade(profissionalId, servicoId, data, hora, agendamento.id))) return res.status(409).json({ error: "Este horário não está disponível." });
   const atualizado = await prisma.agendamento.update({ where: { id: agendamento.id }, data: { data, hora, profissionalId, servicoId } });
   await prisma.historicoAgendamento.create({ data: { agendamentoId: agendamento.id, autorId: req.auth!.sub, tipo: "REMARCACAO", dadosAnteriores: { data: agendamento.data, hora: agendamento.hora, profissionalId: agendamento.profissionalId, servicoId: agendamento.servicoId }, dadosNovos: { data, hora, profissionalId, servicoId } } });
+  void notificacaoService.enviarSeAutomatico(agendamento.id, 'REMARCACAO');
   return res.json(atualizado);
 });
 
@@ -235,6 +238,7 @@ router.patch("/:id/status", requireAdmin, async (req, res) => {
   if (!agendamento) return res.status(404).json({ error: "Agendamento não encontrado." });
   const atualizado = await prisma.agendamento.update({ where: { id: agendamento.id }, data: { status: req.body.status } });
   await prisma.historicoAgendamento.create({ data: { agendamentoId: agendamento.id, autorId: req.auth!.sub, tipo: "ATUALIZACAO_STATUS", dadosAnteriores: { status: agendamento.status }, dadosNovos: { status: req.body.status } } });
+  void notificacaoService.enviarSeAutomatico(agendamento.id, req.body.status);
   return res.json(atualizado);
 });
 

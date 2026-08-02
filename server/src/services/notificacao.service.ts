@@ -18,6 +18,10 @@ async function mensagem(tipo: TipoNotificacao, agendamento: { data: string; hora
 }
 
 export const notificacaoService = {
+  async enviarSeAutomatico(agendamentoId: string, tipo: TipoNotificacao) {
+    if (!(await evolutionService.envioAutomaticoAtivo())) return null
+    return this.enviar(agendamentoId, tipo)
+  },
   async podeEnviar(agendamentoId: string) {
     const agendamento = await prisma.agendamento.findUnique({ where: { id: agendamentoId }, include: { usuario: true } })
     if (!agendamento) throw new Error('Agendamento não encontrado.')
