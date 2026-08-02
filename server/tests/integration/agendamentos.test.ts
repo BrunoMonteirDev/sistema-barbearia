@@ -1,4 +1,5 @@
 import request from 'supertest'
+import bcrypt from 'bcryptjs'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { app } from '../../src/app'
 import { prisma } from '../../src/lib/prisma'
@@ -81,5 +82,20 @@ describe('API - conflito real de agendamento', () => {
 
     expect((await prisma.agendamento.findUnique({ where: { id: agendamento.id } }))?.hora).toBe('11:00')
     expect(await prisma.historicoAgendamento.findFirst({ where: { agendamentoId: agendamento.id, autorId: cliente.id, tipo: 'REMARCACAO' } })).toBeTruthy()
+  })
+
+  it('aplica senha forte no cadastro e gera sessao somente para conta ativa', async () => {
+    await request(app).post('/api/auth/register').send({ nome: 'Senha fraca', email: 'senha.fraca@teste.local', password: '123' }).expect(400)
+    expect(await prisma.usuario.findUnique({ where: { email: 'senha.fraca@teste.local' } })).toBeNull()
+
+    const cadastro = await request(app).post('/api/auth/register').send({ nome: 'Conta ativa', email: 'conta.ativa@teste.local', password: 'SenhaForte!9', telefone: '44999999999' }).expect(201)
+    expect(cadastro.body.token).toEqual(expect.any(String))
+    const usuario = await prisma.usuario.findUnique({ where: { email: 'conta.ativa@teste.local' } })
+    expect(usuario?.senhaHash).not.toBe('SenhaForte!9')
+    expect(await bcrypt.compare('SenhaForte!9', usuario!.senhaHash!)).toBe(true)
+
+    await request(app).post('/api/auth/login').send({ email: 'conta.ativa@teste.local', password: 'SenhaForte!9' }).expect(200)
+    await prisma.usuario.update({ where: { id: usuario!.id }, data: { ativo: false } })
+    await request(app).post('/api/auth/login').send({ email: 'conta.ativa@teste.local', password: 'SenhaForte!9' }).expect(401)
   })
 })

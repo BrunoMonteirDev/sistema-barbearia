@@ -22,7 +22,8 @@ Funcionário e Administrador. Cliente criado pelo administrador pode não ter e-
 
 RF02 - Autenticação e senha [IMPLEMENTADO]
 Autenticar por e-mail e senha com JWT, proteger rotas, recuperar e alterar senha
-com regras de força.
+com regras de força. O cadastro público rejeita senha fora da política, e conta
+desativada não pode iniciar uma nova sessão.
 
 RF03 - Profissionais [IMPLEMENTADO]
 Cadastrar, editar, ativar/desativar profissionais e configurar sua jornada por

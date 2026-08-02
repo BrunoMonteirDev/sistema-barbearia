@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs'
 import { OAuth2Client } from 'google-auth-library'
 import { usuarioService } from '../services/usuario.service'
 import { signToken } from '../middlewares/auth'
+import { validarSenha } from '../services/senha.service'
 
 const router = Router()
 
@@ -24,7 +25,7 @@ router.post('/login', async (req, res) => {
 
     const usuario = await usuarioService.buscarPorEmail(email)
 
-    if (!usuario || !usuario.senhaHash) {
+    if (!usuario || usuario.ativo === false || !usuario.senhaHash) {
       return res.status(401).json({ error: 'Credenciais inválidas.' })
     }
 
@@ -48,6 +49,9 @@ router.post('/register', async (req, res) => {
     if (!nome || !email || !password) {
       return res.status(400).json({ error: 'Nome, email e senha são obrigatórios.' })
     }
+
+    const erroSenha = validarSenha(password)
+    if (erroSenha) return res.status(400).json({ error: erroSenha })
 
     const existente = await usuarioService.buscarPorEmail(email)
 

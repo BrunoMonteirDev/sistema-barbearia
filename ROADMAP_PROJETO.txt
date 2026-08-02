@@ -45,6 +45,8 @@ Já entregue:
   outro cliente.
 - Integração real de remarcação do próprio cliente para um horário disponível,
   incluindo o histórico da alteração.
+- Integração real de autenticação: política de senha forte, hash no cadastro,
+  sessão de conta ativa e bloqueio de conta desativada.
 
 Próximos itens:
 - Cobrir autenticação, permissões, usuários, profissionais, serviços,

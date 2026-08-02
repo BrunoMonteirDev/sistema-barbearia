@@ -45,17 +45,24 @@ describe("rotas de autenticação", () => {
 
   it("impede cadastro com e-mail já utilizado", async () => {
     mocks.buscarPorEmail.mockResolvedValue({ id: "u1" });
-    const response = await request(app).post("/auth/register").send({ nome: "Cliente", email: "cliente@teste.com", password: "Senha@123" });
+    const response = await request(app).post("/auth/register").send({ nome: "Cliente", email: "cliente@teste.com", password: "Senha@7294" });
     expect(response.status).toBe(409);
   });
 
   it("cria cliente e emite sessão no cadastro válido", async () => {
     mocks.buscarPorEmail.mockResolvedValue(null);
     mocks.criar.mockResolvedValue({ id: "u2", nome: "Novo", email: "novo@teste.com", nivel: "Cliente" });
-    const response = await request(app).post("/auth/register").send({ nome: "Novo", email: "novo@teste.com", password: "Senha@123", telefone: "44999999999" });
+    const response = await request(app).post("/auth/register").send({ nome: "Novo", email: "novo@teste.com", password: "Senha@7294", telefone: "44999999999" });
     expect(response.status).toBe(201);
     expect(mocks.criar).toHaveBeenCalledWith(expect.objectContaining({ nivel: "Cliente", telefone: "44999999999" }));
     expect(response.body.token).toEqual(expect.any(String));
+  });
+
+  it("rejeita login de conta desativada", async () => {
+    mocks.buscarPorEmail.mockResolvedValue({ id: "u1", ativo: false, senhaHash: "hash" });
+    const response = await request(app).post("/auth/login").send({ email: "cliente@teste.com", password: "Senha@7294" });
+    expect(response.status).toBe(401);
+    expect(mocks.compare).not.toHaveBeenCalled();
   });
 
   it("cria conta Google com cadastro pendente após validar o token", async () => {
