@@ -73,6 +73,7 @@ Próximos itens:
 - Widget inicializado corretamente mesmo quando o script externo é carregado
   depois do evento de carregamento da página (cenário de SPA).
 - Diálogos de cliente de remarcação e histórico migrados para o modal acessível.
+- Modal de agendamento administrativo também migrado para o modal acessível.
 - Login oferece retorno ao início e não executa consulta de perfil sem sessão.
 - Alto contraste revisado: superfícies, textos, ícones, links, bordas e estados
   de hover usam combinações legíveis sobre o fundo escuro.

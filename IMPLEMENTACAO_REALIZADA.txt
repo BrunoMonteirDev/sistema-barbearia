@@ -99,6 +99,10 @@ Histórico
   é posicionado no canto inferior direito.
 - Diálogos de remarcação e histórico de Meus agendamentos agora reutilizam o
   modal acessível, com foco inicial, foco preso por Tab, Esc e retorno de foco.
+- Modal administrativo de criar, editar e visualizar agendamentos migrado para
+  o mesmo componente acessível, inclusive nas ações de fechar e salvar.
+- Gerador de senha forte corrigido para nunca retornar combinações que violem
+  as regras de repetição ou sequência; sua regressão é verificada em 100 senhas.
 - Tela de login ganhou retorno explícito ao menu inicial. A consulta de sessão
   só é feita quando existe token armazenado, eliminando o 401 esperado de
   usuários desconectados no console do navegador.

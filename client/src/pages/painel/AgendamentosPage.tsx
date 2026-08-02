@@ -18,7 +18,7 @@ import {
   type Servico,
   type Usuario,
 } from "@/lib/api";
-import { ConfirmDialog } from "@/components/ui/modal";
+import { ConfirmDialog, Modal } from "@/components/ui/modal";
 import { formatarTelefoneBrasileiro } from "@/utils/telefone";
 
 type FormData = {
@@ -478,25 +478,11 @@ export default function AgendamentosPage() {
         </table>
       </div>}
       {modal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="modal-title"
-            className="w-full max-w-2xl rounded-xl bg-white p-6 shadow-xl"
-          >
-            <div className="mb-5 flex items-center justify-between">
-              <h2 id="modal-title" className="text-xl font-bold">
-                {modal === "novo"
-                  ? "Novo agendamento"
-                  : modal === "editar"
-                    ? "Editar agendamento"
-                    : "Detalhes do agendamento"}
-              </h2>
-              <button onClick={closeModal} aria-label="Fechar">
-                ×
-              </button>
-            </div>
+        <Modal
+          title={modal === "novo" ? "Novo agendamento" : modal === "editar" ? "Editar agendamento" : "Detalhes do agendamento"}
+          onClose={closeModal}
+          footer={<><button type="button" onClick={closeModal} className="rounded px-4 py-2 text-gray-700 hover:bg-gray-100">Fechar</button>{modal !== "visualizar" && <button type="button" onClick={save} className="btn-primary">Salvar</button>}</>}
+        >
             {modal === "visualizar" && selected ? (
               <div className="grid gap-3 sm:grid-cols-2">
                 <Detail label="Cliente" value={selected.usuario?.nome} />
@@ -660,21 +646,7 @@ export default function AgendamentosPage() {
                 </Filter>
               </div>
             )}
-            <div className="mt-6 flex justify-end gap-3">
-              <button
-                onClick={closeModal}
-                className="rounded px-4 py-2 text-gray-700 hover:bg-gray-100"
-              >
-                Fechar
-              </button>
-              {modal !== "visualizar" && (
-                <button onClick={save} className="btn-primary">
-                  Salvar
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
+        </Modal>
       )}
       {pendingAction && (
         <ConfirmDialog
