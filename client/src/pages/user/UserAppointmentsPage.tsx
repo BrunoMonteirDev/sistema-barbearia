@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import toast from "react-hot-toast";
 import { CalendarPlus, History, Pencil } from "lucide-react";
 import { api, type Agendamento } from "@/lib/api";
+import { Modal } from "@/components/ui/modal";
 import { UserLayout } from "./MinhaContaPage";
 
 type Historico = {
@@ -124,7 +125,7 @@ export default function UserAppointmentsPage() {
 }
 
 function Dialog({ titulo, aoFechar, children }: { titulo: string; aoFechar: () => void; children: ReactNode }) {
-  return <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/45 p-4" role="presentation" onMouseDown={aoFechar}><section role="dialog" aria-modal="true" aria-label={titulo} className="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl" onMouseDown={(event) => event.stopPropagation()}><div className="flex items-start justify-between gap-4"><h2 className="text-xl font-bold text-slate-950">{titulo}</h2><button type="button" onClick={aoFechar} className="rounded p-1 text-slate-500 hover:bg-slate-100" aria-label="Fechar">×</button></div>{children}</section></div>;
+  return <Modal title={titulo} onClose={aoFechar}>{children}</Modal>;
 }
 
 function formatarData(data: string) { return new Date(`${data}T12:00:00`).toLocaleDateString("pt-BR"); }

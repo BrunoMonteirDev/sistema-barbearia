@@ -97,6 +97,8 @@ Histórico
 - Inicialização do VLibras adaptada para SPA: quando o script chega após o
   carregamento da página, a rotina oficial de montagem é executada e o widget
   é posicionado no canto inferior direito.
+- Diálogos de remarcação e histórico de Meus agendamentos agora reutilizam o
+  modal acessível, com foco inicial, foco preso por Tab, Esc e retorno de foco.
 - Tela de login ganhou retorno explícito ao menu inicial. A consulta de sessão
   só é feita quando existe token armazenado, eliminando o 401 esperado de
   usuários desconectados no console do navegador.
