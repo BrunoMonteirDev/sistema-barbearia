@@ -45,7 +45,9 @@ Próximos itens:
 - Alcançar 100% dos fluxos críticos de autenticação/agendamento.
 - Alcançar 80% de linhas, funções, branches e statements da base ativa.
 
-5. AGENDA ADMINISTRATIVA EM CALENDÁRIO                         [PENDENTE]
+5. AGENDA ADMINISTRATIVA EM CALENDÁRIO                         [EM ANDAMENTO]
+- Visão diária entregue com profissionais em colunas, horários em linhas,
+  navegação por data, filtros e ações rápidas.
 - Visualização diária/semanal, horários em linhas e profissionais em colunas.
 - Blocos com cliente, serviço, duração e status textual.
 - Filtros, navegação e ações rápidas.

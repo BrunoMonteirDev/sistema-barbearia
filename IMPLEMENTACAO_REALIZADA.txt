@@ -79,6 +79,8 @@ Histórico
   obrigatoriedade da revisão antes da confirmação.
 - Testes de interface de Meus agendamentos: remarcação, cancelamento, histórico
   e bloqueio das ações em atendimentos concluídos.
+- Agenda administrativa diária com profissionais em colunas, horários em linhas,
+  filtros existentes, navegação por dia, blocos de atendimento e ações rápidas.
 - Última validação concluída com build do cliente/servidor e 10 testes passando.
 
 4. PENDÊNCIAS PRINCIPAIS

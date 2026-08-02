@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   CalendarPlus,
+  CalendarDays,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   Eye,
   Pencil,
   Trash2,
@@ -72,6 +75,7 @@ export default function AgendamentosPage() {
   const [criandoCliente, setCriandoCliente] = useState(false);
   const [novoCliente, setNovoCliente] = useState({ nome: "", telefone: "" });
   const [buscaCliente, setBuscaCliente] = useState("");
+  const [visualizacao, setVisualizacao] = useState<"lista" | "agenda">("lista");
 
   const jaTerminou = (item: Agendamento) => {
     if (
@@ -137,6 +141,13 @@ export default function AgendamentosPage() {
       ),
     [filtros, items],
   );
+
+  const dataAgenda = filtros.data || new Date().toLocaleDateString("en-CA");
+  const mudarDiaAgenda = (dias: number) => {
+    const data = new Date(`${dataAgenda}T12:00:00`);
+    data.setDate(data.getDate() + dias);
+    setFiltros((current) => ({ ...current, data: data.toLocaleDateString("en-CA") }));
+  };
 
   const openNew = () => {
     setForm(emptyForm);
@@ -334,7 +345,14 @@ export default function AgendamentosPage() {
           ))}
         </Filter>
       </div>
-      <div className="overflow-x-auto rounded-xl bg-white shadow-sm">
+      <div className="flex items-center justify-between gap-3">
+        <div className="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-sm">
+          <button type="button" onClick={() => setVisualizacao("lista")} className={`rounded-md px-3 py-2 text-sm font-semibold ${visualizacao === "lista" ? "bg-secondary-800 text-white" : "text-slate-600 hover:bg-slate-100"}`}>Lista</button>
+          <button type="button" onClick={() => setVisualizacao("agenda")} className={`inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold ${visualizacao === "agenda" ? "bg-secondary-800 text-white" : "text-slate-600 hover:bg-slate-100"}`}><CalendarDays className="h-4 w-4" />Agenda diária</button>
+        </div>
+        {visualizacao === "agenda" && <div className="flex items-center gap-1"><button type="button" aria-label="Dia anterior" onClick={() => mudarDiaAgenda(-1)} className="rounded-md p-2 text-slate-700 hover:bg-slate-100"><ChevronLeft className="h-5 w-5" /></button><strong className="min-w-40 text-center text-sm capitalize text-slate-800">{new Date(`${dataAgenda}T12:00:00`).toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" })}</strong><button type="button" aria-label="Próximo dia" onClick={() => mudarDiaAgenda(1)} className="rounded-md p-2 text-slate-700 hover:bg-slate-100"><ChevronRight className="h-5 w-5" /></button></div>}
+      </div>
+      {visualizacao === "agenda" ? <AgendaDiaria items={filteredItems.filter((item) => item.data === dataAgenda)} profissionais={profissionais.filter((profissional) => !filtros.profissional || profissional.id === filtros.profissional)} onEdit={openEdit} onConfirm={confirmarAgendamento} onConclude={concluirAgendamento} /> : <div className="overflow-x-auto rounded-xl bg-white shadow-sm">
         <table className="min-w-full text-left text-sm">
           <thead className="border-b bg-gray-50 text-xs uppercase text-gray-500">
             <tr>
@@ -457,7 +475,7 @@ export default function AgendamentosPage() {
             )}
           </tbody>
         </table>
-      </div>
+      </div>}
       {modal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div
@@ -736,4 +754,27 @@ function Detail({ label, value }: { label: string; value?: string }) {
       <p className="font-medium">{value ?? "—"}</p>
     </div>
   );
+}
+
+export function AgendaDiaria({
+  items,
+  profissionais,
+  onEdit,
+  onConfirm,
+  onConclude,
+}: {
+  items: Agendamento[];
+  profissionais: Profissional[];
+  onEdit: (item: Agendamento) => void;
+  onConfirm: (item: Agendamento) => Promise<void>;
+  onConclude: (item: Agendamento) => Promise<void>;
+}) {
+  const horarios = Array.from({ length: 24 }, (_, index) => {
+    const minutos = 8 * 60 + index * 30;
+    return `${String(Math.floor(minutos / 60)).padStart(2, "0")}:${String(minutos % 60).padStart(2, "0")}`;
+  });
+
+  if (!profissionais.length) return <div className="rounded-xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-600">Não há profissionais para exibir nesta agenda.</div>;
+
+  return <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm"><div className="min-w-220"><div className="grid border-b border-slate-200 bg-slate-50" style={{ gridTemplateColumns: `72px repeat(${profissionais.length}, minmax(180px, 1fr))` }}><div className="p-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Hora</div>{profissionais.map((profissional) => <div key={profissional.id} className="border-l border-slate-200 p-3 text-sm font-bold text-slate-900">{profissional.nome}</div>)}</div>{horarios.map((hora) => <div key={hora} className="grid min-h-18 border-b border-slate-100" style={{ gridTemplateColumns: `72px repeat(${profissionais.length}, minmax(180px, 1fr))` }}><div className="p-3 text-xs font-semibold text-slate-500">{hora}</div>{profissionais.map((profissional) => { const agendamentos = items.filter((item) => item.profissional?.id === profissional.id && item.hora === hora); return <div key={profissional.id} className="border-l border-slate-100 p-1.5">{agendamentos.map((item) => <article key={item.id} onClick={() => onEdit(item)} className={`cursor-pointer rounded-md p-2 text-xs shadow-sm transition hover:ring-2 hover:ring-secondary-300 ${statusStyle[item.status] ?? "bg-slate-100 text-slate-700"}`}><p className="font-bold">{item.usuario?.nome ?? "Cliente"}</p><p className="mt-0.5 truncate">{item.servico?.nome ?? "Serviço"} · {item.servico?.duracao ?? 0} min</p><p className="mt-1 font-semibold">{statusLabels[item.status] ?? item.status}</p>{item.status === "PENDENTE" && <button type="button" onClick={(event) => { event.stopPropagation(); void onConfirm(item); }} className="mt-2 rounded bg-white/80 px-2 py-1 font-bold text-emerald-800 hover:bg-white">Confirmar</button>}{["CONFIRMADO", "ATRASADO"].includes(item.status) && <button type="button" onClick={(event) => { event.stopPropagation(); void onConclude(item); }} className="mt-2 rounded bg-white/80 px-2 py-1 font-bold text-secondary-800 hover:bg-white">Concluir</button>}</article>)}</div>})}</div>)}</div></div>;
 }
