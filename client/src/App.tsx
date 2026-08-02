@@ -10,6 +10,7 @@ import MinhaContaPage from '@/pages/user/MinhaContaPage'
 import UserAppointmentsPage from '@/pages/user/UserAppointmentsPage'
 import { AcessibilidadeControls } from '@/components/AcessibilidadeControls'
 import { VLibras } from '@/components/VLibras'
+import { KeyboardArrowNavigation } from '@/components/KeyboardArrowNavigation'
 
 export default function App() {
   return <AuthProvider>
@@ -30,6 +31,7 @@ export default function App() {
       </ToastBar>}
     </Toaster>
     <AcessibilidadeControls />
+    <KeyboardArrowNavigation />
     <VLibras />
     <Switch>
       <Route path="/" component={HomePage} />

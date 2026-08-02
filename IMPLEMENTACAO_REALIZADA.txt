@@ -107,13 +107,16 @@ Histórico
   e halo escuro, perceptíveis em fundos claros, escuros e alto contraste.
 - Indicador de foco ampliado para 4px/halo de 8px e animação de zoom de 1 segundo
   (pico de 12%) ao trocar de controle com o teclado, respeitando a preferência de reduzir animações.
+- Navegação por setas adicionada para controles acionáveis com foco. Inputs,
+  textareas e selects preservam suas setas nativas; diálogos limitam a navegação
+  aos seus próprios controles.
 - Tela de login ganhou retorno explícito ao menu inicial. A consulta de sessão
   só é feita quando existe token armazenado, eliminando o 401 esperado de
   usuários desconectados no console do navegador.
 - Alto contraste ajustado para normalizar superfícies utilitárias, textos,
   ícones, links e bordas: nenhum status, link ou ícone permanece em cor escura
   sobre fundo preto, e as interações de hover continuam perceptíveis.
-- Última validação concluída com build do cliente/servidor e 61 testes passando.
+- Última validação concluída com build do cliente/servidor e 63 testes passando.
 
 4. PENDÊNCIAS PRINCIPAIS
 
