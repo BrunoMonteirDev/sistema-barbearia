@@ -69,6 +69,8 @@ Histórico
   limites numéricos e persistência das configurações válidas.
 - Cobertura do CRUD administrativo de usuários: perfil próprio, permissão,
   cliente sem e-mail, validação de senha e desativação lógica.
+- Cobertura de profissionais e disponibilidade semanal: validação, horários
+  duplicados/inválidos, persistência da jornada e normalização de cadastro.
 - Última validação concluída com build do cliente/servidor e 10 testes passando.
 
 4. PENDÊNCIAS PRINCIPAIS
