@@ -16,6 +16,8 @@ describe("VLibras", () => {
     localizacao.valor = "/";
     const { container } = render(<VLibras />);
     expect(container.querySelector("[vw]")).toBeInTheDocument();
+    expect(container.querySelector("[vw-access-button]")).toBeInTheDocument();
+    expect(container.querySelector("[vw-plugin-wrapper]")).toBeInTheDocument();
     expect(document.getElementById("vlibras-plugin")).toHaveAttribute("src", "https://vlibras.gov.br/app/vlibras-plugin.js");
   });
 

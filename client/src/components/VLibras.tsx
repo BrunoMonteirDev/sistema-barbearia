@@ -10,10 +10,16 @@ const scriptId = "vlibras-plugin";
 export function VLibras() {
   const [localizacao] = useLocation();
   const raizRef = useRef<HTMLDivElement>(null);
+  const botaoRef = useRef<HTMLDivElement>(null);
+  const conteudoRef = useRef<HTMLDivElement>(null);
+  const topoRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (localizacao.startsWith("/painel")) return;
     raizRef.current?.setAttribute("vw", "");
+    botaoRef.current?.setAttribute("vw-access-button", "");
+    conteudoRef.current?.setAttribute("vw-plugin-wrapper", "");
+    topoRef.current?.setAttribute("vw-plugin-top-wrapper", "");
     const iniciar = () => {
       if (window.VLibras && !document.documentElement.dataset.vlibrasInicializado) {
         new window.VLibras.Widget("https://vlibras.gov.br/app");
@@ -32,5 +38,5 @@ export function VLibras() {
   }, [localizacao]);
 
   if (localizacao.startsWith("/painel")) return null;
-  return <div ref={raizRef} className="enabled"><div className="vw-access-button" /><div className="vw-plugin-wrapper"><div className="vw-plugin-top-wrapper" /></div></div>;
+  return <div ref={raizRef} className="enabled"><div ref={botaoRef} /><div ref={conteudoRef}><div ref={topoRef} /></div></div>;
 }

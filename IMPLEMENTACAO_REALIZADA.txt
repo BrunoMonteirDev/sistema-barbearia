@@ -89,6 +89,9 @@ Histórico
   por Esc e retorno do foco ao elemento que abriu o diálogo.
 - Integração do VLibras nas páginas públicas e de conta, com carregamento único
   do widget e sem exibição no painel administrativo.
+- Estrutura do VLibras corrigida para usar os atributos oficiais do plugin
+  (vw-access-button e vw-plugin-wrapper), garantindo a criação do botão azul
+  do tradutor em desktop e mobile.
 - Alto contraste ajustado para normalizar superfícies utilitárias, textos,
   ícones, links e bordas: nenhum status, link ou ícone permanece em cor escura
   sobre fundo preto, e as interações de hover continuam perceptíveis.
