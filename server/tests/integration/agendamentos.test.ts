@@ -140,4 +140,30 @@ describe('API - conflito real de agendamento', () => {
     expect((await prisma.agendamento.findUnique({ where: { id: agendamento.id } }))?.status).toBe('CONFIRMADO')
     expect(await prisma.historicoAgendamento.count()).toBe(0)
   })
+
+  it('permite ao administrador atualizar status e registra historico auditavel', async () => {
+    const cliente = await prisma.usuario.create({ data: { nome: 'Cliente status', email: 'cliente.status@teste.local', senhaHash: 'hash' } })
+    const administrador = await prisma.usuario.create({ data: { nome: 'Admin status', email: 'admin.status@teste.local', senhaHash: 'hash', nivel: 'Administrador' } })
+    const profissional = await prisma.profissional.create({ data: { nome: 'Profissional de teste' } })
+    const servico = await prisma.servico.create({ data: { nome: 'Servico de teste', duracao: 30, preco: 30 } })
+    const agendamento = await prisma.agendamento.create({ data: { usuarioId: cliente.id, profissionalId: profissional.id, servicoId: servico.id, data: dataTeste, hora: '10:00', status: 'PENDENTE' } })
+    const authorization = `Bearer ${signToken({ id: administrador.id, nivel: 'Administrador' })}`
+
+    await request(app).patch(`/api/agendamentos/${agendamento.id}/status`).set('authorization', authorization).send({ status: 'CONFIRMADO' }).expect(200)
+
+    expect((await prisma.agendamento.findUnique({ where: { id: agendamento.id } }))?.status).toBe('CONFIRMADO')
+    expect(await prisma.historicoAgendamento.findFirst({ where: { agendamentoId: agendamento.id, autorId: administrador.id, tipo: 'ATUALIZACAO_STATUS' } })).toBeTruthy()
+  })
+
+  it('impede cliente de atualizar status diretamente', async () => {
+    const cliente = await prisma.usuario.create({ data: { nome: 'Cliente sem permissao', email: 'cliente.sem.permissao@teste.local', senhaHash: 'hash' } })
+    const profissional = await prisma.profissional.create({ data: { nome: 'Profissional de teste' } })
+    const servico = await prisma.servico.create({ data: { nome: 'Servico de teste', duracao: 30, preco: 30 } })
+    const agendamento = await prisma.agendamento.create({ data: { usuarioId: cliente.id, profissionalId: profissional.id, servicoId: servico.id, data: dataTeste, hora: '10:00', status: 'PENDENTE' } })
+    const authorization = `Bearer ${signToken({ id: cliente.id, nivel: 'Cliente' })}`
+
+    await request(app).patch(`/api/agendamentos/${agendamento.id}/status`).set('authorization', authorization).send({ status: 'CONFIRMADO' }).expect(403)
+
+    expect((await prisma.agendamento.findUnique({ where: { id: agendamento.id } }))?.status).toBe('PENDENTE')
+  })
 })

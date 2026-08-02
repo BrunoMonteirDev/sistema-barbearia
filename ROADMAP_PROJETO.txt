@@ -52,6 +52,8 @@ Já entregue:
   o atendimento nem produz histórico.
 - Integração real do prazo de cancelamento: cliente fora da antecedência mantém
   o atendimento inalterado, enquanto a exceção administrativa segue coberta.
+- Integração real de atualização de status: administrador registra histórico e
+  cliente não possui permissão para a ação.
 
 Próximos itens:
 - Cobrir autenticação, permissões, usuários, profissionais, serviços,

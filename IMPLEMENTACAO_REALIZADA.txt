@@ -61,7 +61,7 @@ Histórico
 - App Express separado do listen para permitir testes HTTP.
 - Scripts na raiz: npm test, npm run test:watch, npm run test:coverage e npm run test:integration.
 - Testes iniciais para senha, telefone, regra de antecedência e fluxo de remarcação.
-- Testes para disponibilidade, conflitos, autenticação, permissões,
+- Testes pa+ra disponibilidade, conflitos, autenticação, permissões,
   cancelamento e remarcação.
 - Estrutura de integração preparada com DATABASE_URL_TEST, protegida contra uso
   acidental do banco de desenvolvimento.
@@ -84,6 +84,8 @@ Histórico
   os dados originais do agendamento.
 - Integração real bloqueia cancelamento do cliente fora da antecedência e mantém
   o status original.
+- Integração real valida atualização administrativa de status com histórico e
+  bloqueia essa ação para clientes.
 - Cobertura é medida com limite global de 80%; o relatório atual aponta as
   lacunas restantes no cliente e servidor, impedindo aprovação enganosa.
 - Regressões de notificações automáticas cobrem o padrão desativado e o disparo
