@@ -181,6 +181,12 @@ Status: [EM ANDAMENTO]
   contato do encarregado de dados, prazo de retenção e procedimento formal de
   atendimento a solicitações LGPD.
 
+CHECKLIST DE VALIDACAO EXTERNA
+
+- O arquivo VALIDACAO_MANUAL.txt concentra as validacoes restantes que exigem
+  browser, dispositivo, credenciais, envio real ou revisao humana. Nenhum item
+  dessa lista deve ser marcado como concluido sem evidencia registrada.
+
 ONDE ESTAMOS AGORA
 
 O sistema já entrega os fluxos centrais, agenda visual, acessibilidade básica e

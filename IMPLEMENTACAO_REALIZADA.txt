@@ -284,6 +284,9 @@ usuários nem concluir agendamentos, inclusive se sair e retornar ao sistema.
   carregamento, perfil incompatível, cadastro Google pendente e acesso admin.
 - O contexto de autenticação do cliente passou a ser testado para restauração
   de sessão, token inválido, login local, login Google, cadastro e logout.
+- Foi criado o checklist VALIDACAO_MANUAL.txt para controlar as validacoes de
+  agenda, acessibilidade, Google publicado, WhatsApp real e conformidade que
+  exigem evidencia externa aos testes automatizados.
 
 5. LIMPEZA DE CÓDIGO
 

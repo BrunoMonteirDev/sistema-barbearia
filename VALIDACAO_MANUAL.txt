@@ -1,0 +1,48 @@
+VALIDACAO MANUAL E EXTERNA
+Atualizado em: 02/08/2026
+
+Este checklist registra verificacoes que dependem de navegador, dispositivo,
+credenciais ou avaliacao humana. Elas nao sao substituidas pelos testes Vitest e
+Supertest. Preencha data, responsavel e resultado ao executar cada item.
+
+1. AGENDA ADMINISTRATIVA
+[ ] Desktop: verificar visao diaria, semanal, filtros e navegacao entre datas.
+[ ] Mobile: verificar rolagem horizontal/vertical, blocos de agenda e acoes.
+[ ] Confirmar, concluir, cancelar e remarcar em um agendamento de teste.
+
+2. ACESSIBILIDADE
+[ ] Tab/Shift+Tab: foco visivel em menu, formularios, cards e botoes.
+[ ] Setas: navegar somente por controles acionaveis, sem alterar inputs.
+[ ] Modal: foco preso, Esc fecha e foco retorna ao controle que abriu o modal.
+[ ] Alto contraste, texto maior e reduzir animacoes em paginas publica, conta e painel.
+[ ] VLibras aparece e continua disponivel apos trocar rotas sem recarregar a pagina.
+[ ] Lighthouse (desktop e mobile): registrar pontuacoes de Accessibility,
+    Performance, Best Practices e SEO.
+[ ] Leitor de tela: validar nomes de botoes, erros, avisos temporarios e status.
+
+3. LOGIN GOOGLE EM PRODUCAO
+[ ] Confirmar VITE_GOOGLE_CLIENT_ID no ambiente publicado, nunca no repositorio.
+[ ] Login de conta nova abre conclusao de cadastro uma unica vez.
+[ ] Cadastro pendente continua bloqueando conta e agendamento apos novo login.
+[ ] Conta local de e-mail Google verificado e vinculada sem duplicar usuario.
+[ ] Conta desativada reativa como pendente e exige conclusao novamente.
+
+4. WHATSAPP / EVOLUTION EM AMBIENTE CONTROLADO
+[ ] Criar instancia, conectar QR, desconectar e reconectar pelo painel.
+[ ] Confirmar envio manual de criacao, remarcacao, cancelamento e status.
+[ ] Confirmar que nao ha envio automatico com a opcao principal desligada.
+[ ] Habilitar um evento automatico de teste e validar apenas esse evento.
+[ ] Validar lembrete na antecedencia configurada e ausencia de reenvio.
+[ ] Simular Evolution indisponivel: operacao de agendamento permanece concluida
+    e o diagnostico registra a falha.
+
+5. PRIVACIDADE E OPERACAO
+[ ] Responsavel legal revisa privacidade, termos, cookies e base legal LGPD.
+[ ] Definir encarregado/canal de contato, retencao e processo de solicitacao de dados.
+[ ] Definir politica operacional de consentimento, frequencia e conteudo WhatsApp.
+
+6. REGISTRO DE EXECUCAO
+Data: ____________________
+Responsavel: ______________
+Ambiente/URL: ______________
+Resultado e evidencias: _________________________________________________
