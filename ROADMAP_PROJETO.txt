@@ -45,6 +45,8 @@ Já entregue:
   somente após habilitação explícita por evento.
 - Testes de lembrete automático: momento configurado e ausência de reenvio após
   entrega registrada.
+- Regressões unitárias de notificação: template resolvido, envio entregue,
+  falha externa isolada, ausência de telefone e janela de lembrete.
 - Integração real para conflito de horário e cancelamento administrativo fora do
   prazo, incluindo a criação de histórico.
 - Integração real de permissão: cliente não consegue cancelar agendamento de

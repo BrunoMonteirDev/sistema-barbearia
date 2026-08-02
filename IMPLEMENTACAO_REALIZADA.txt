@@ -107,6 +107,8 @@ Histórico
   lacunas restantes no cliente e servidor, impedindo aprovação enganosa.
 - Regressões de notificações automáticas cobrem o padrão desativado e o disparo
   limitado aos eventos explicitamente habilitados pelo administrador.
+- Notificações cobrem também template, entrega, erro externo isolado, telefone
+  ausente e verificação da janela de lembrete.
 - Lembretes automáticos possuem testes para a antecedência configurada e para a
   prevenção de reenvio após uma entrega já registrada.
 - Cobertura adicional das APIs de regras de negócio, incluindo criação inicial,
