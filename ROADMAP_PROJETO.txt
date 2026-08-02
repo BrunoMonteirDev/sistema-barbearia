@@ -34,6 +34,7 @@ Já entregue:
 - Testes de CRUD de serviços.
 - Testes da camada de API do cliente.
 - Teste do fluxo de agendamento e da etapa de revisão.
+- Testes de interface de Meus agendamentos.
 
 Próximos itens:
 - Cobrir autenticação, permissões, usuários, profissionais, serviços,

@@ -77,6 +77,8 @@ Histórico
   configuração pública, disponibilidade para remarcação e mensagens de erro.
 - Teste de interface do agendamento online em quatro etapas, validando a
   obrigatoriedade da revisão antes da confirmação.
+- Testes de interface de Meus agendamentos: remarcação, cancelamento, histórico
+  e bloqueio das ações em atendimentos concluídos.
 - Última validação concluída com build do cliente/servidor e 10 testes passando.
 
 4. PENDÊNCIAS PRINCIPAIS
