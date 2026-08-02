@@ -45,10 +45,12 @@ Próximos itens:
 - Alcançar 100% dos fluxos críticos de autenticação/agendamento.
 - Alcançar 80% de linhas, funções, branches e statements da base ativa.
 
-5. AGENDA ADMINISTRATIVA EM CALENDÁRIO                         [EM ANDAMENTO]
+5. AGENDA ADMINISTRATIVA EM CALENDÁRIO                         [CONCLUÍDO]
 - Visão diária entregue com profissionais em colunas, horários em linhas,
   navegação por data, filtros e ações rápidas.
 - Visão semanal entregue com agenda resumida por dia e ações rápidas.
+- Testes automatizados cobrem blocos da agenda diária, visão semanal e ação de
+  confirmação; falta somente validação visual manual final em desktop e mobile.
 - Blocos com cliente, serviço, duração e status textual.
 - Filtros, navegação e ações rápidas.
 - Pendente: validação visual manual em desktop e mobile.

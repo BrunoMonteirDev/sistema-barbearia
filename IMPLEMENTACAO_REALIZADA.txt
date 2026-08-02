@@ -161,6 +161,9 @@ Histórico
 - Configurações administrativas de contato ampliadas: WhatsApp, e-mail e link
   do Instagram são persistidos pelo painel e refletidos no rodapé público,
   incluindo ícones clicáveis de Instagram e WhatsApp.
+- Agenda administrativa visual validada: as visões de dia e semana possuem
+  filtros, navegação de período e ações rápidas. Testes cobrem renderização dos
+  blocos, visão semanal e confirmação rápida.
 
 4. PENDÊNCIAS PRINCIPAIS
 
