@@ -5,7 +5,9 @@ export type TipoNotificacao = 'CRIACAO' | 'REMARCACAO' | 'CANCELAMENTO' | 'ATUAL
 
 function numeroWhatsApp(valor: string | null | undefined) {
   const digitos = valor?.replace(/\D/g, '') ?? ''
-  return digitos ? (digitos.startsWith('55') ? digitos : `55${digitos}`) : null
+  if (!digitos) return null
+  const numeroComDdi = digitos.startsWith('55') ? digitos : `55${digitos}`
+  return `+${numeroComDdi}`
 }
 
 function mensagem(tipo: TipoNotificacao, agendamento: { data: string; hora: string; profissional: { nome: string }; servico: { nome: string } }) {

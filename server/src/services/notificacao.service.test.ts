@@ -10,7 +10,7 @@ describe('notificacaoService', () => {
   it('registra pendência sem impedir o fluxo quando Evolution não está configurada', async () => {
     mocks.findUnique.mockResolvedValue({ id: 'ag-1', data: '2026-08-10', hora: '10:00', usuario: { telefone: '(44) 99999-9999' }, profissional: { nome: 'Carlos' }, servico: { nome: 'Corte' } })
     await notificacaoService.enviar('ag-1', 'CRIACAO')
-    expect(mocks.create).toHaveBeenCalledWith({ data: expect.objectContaining({ agendamentoId: 'ag-1', destino: '5544999999999', status: 'PENDENTE_CONFIGURACAO' }) })
+    expect(mocks.create).toHaveBeenCalledWith({ data: expect.objectContaining({ agendamentoId: 'ag-1', destino: '+5544999999999', status: 'PENDENTE_CONFIGURACAO' }) })
   })
   it('registra notificação ignorada quando o cliente não possui telefone', async () => {
     mocks.findUnique.mockResolvedValue({ id: 'ag-1', usuario: { telefone: null }, profissional: { nome: 'Carlos' }, servico: { nome: 'Corte' } })
