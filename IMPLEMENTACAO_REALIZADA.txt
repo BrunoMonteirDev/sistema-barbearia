@@ -214,3 +214,10 @@ Também está planejado o login com Google. Após a primeira autenticação por
 Google, uma pessoa sem cadastro completo deverá ser encaminhada à conclusão de
 cadastro. Enquanto esse cadastro estiver pendente, não poderá acessar a área de
 usuários nem concluir agendamentos, inclusive se sair e retornar ao sistema.
+
+5. LIMPEZA DE CÓDIGO
+
+- Não há referências ativas a Supabase ou Next.js no cliente ou servidor.
+- Removidas as páginas sem rota nem consumidores: a antiga página pública de
+  serviços e o painel financeiro legado. O CRUD administrativo de serviços
+  permanece ativo.

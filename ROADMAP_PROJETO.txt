@@ -175,3 +175,9 @@ ATUALIZAÇÃO — EVOLUTION API (02/08/2026)
   tratada pela interface e pela API.
 - [CONCLUÍDO] Modo automático opcional e inicialmente desativado, com seleção
   granular dos eventos e antecedência configurável do lembrete.
+
+ATUALIZAÇÃO — LIMPEZA DE CÓDIGO (02/08/2026)
+
+- [CONCLUÍDO] A busca não encontra referências ativas a Supabase ou Next.js.
+- [CONCLUÍDO] Removidas a página pública de serviços e o painel financeiro sem
+  rota nem consumidores; os fluxos administrativos ativos não foram afetados.
