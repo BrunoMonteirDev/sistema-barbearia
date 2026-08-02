@@ -35,6 +35,13 @@ describe("rotas de profissionais", () => {
     await request(app).put("/profissionais/p1/disponibilidade").send({ disponibilidade: [] }).expect(400);
   });
 
+  it("rejeita dia ou horário inválido sem apagar a disponibilidade atual", async () => {
+    mocks.findUnique.mockResolvedValue({ id: "p1" });
+    await request(app).put("/profissionais/p1/disponibilidade").send({ disponibilidade: { 1: ["10:15"] } }).expect(400);
+    await request(app).put("/profissionais/p1/disponibilidade").send({ disponibilidade: { 9: ["08:00"] } }).expect(400);
+    expect(mocks.transaction).not.toHaveBeenCalled();
+  });
+
   it("rejeita disponibilidade para profissional inexistente", async () => {
     mocks.findUnique.mockResolvedValue(null);
     await request(app).put("/profissionais/p1/disponibilidade").send({ disponibilidade: { 1: ["08:00"] } }).expect(404);
@@ -44,7 +51,7 @@ describe("rotas de profissionais", () => {
     mocks.findUnique.mockResolvedValue({ id: "p1" });
     mocks.deleteMany.mockReturnValue({});
     mocks.createMany.mockReturnValue({});
-    await request(app).put("/profissionais/p1/disponibilidade").send({ disponibilidade: { 1: ["08:00", "08:00", "08:30", "10:15"], 9: ["08:00"] } }).expect(200, { ok: true });
+    await request(app).put("/profissionais/p1/disponibilidade").send({ disponibilidade: { 1: ["08:00", "08:00", "08:30"] } }).expect(200, { ok: true });
     expect(mocks.createMany).toHaveBeenCalledWith({ data: [{ profissionalId: "p1", diaSemana: 1, hora: "08:00" }, { profissionalId: "p1", diaSemana: 1, hora: "08:30" }] });
   });
 
@@ -55,7 +62,7 @@ describe("rotas de profissionais", () => {
 
   it("normaliza e cria profissional com dados válidos", async () => {
     mocks.create.mockResolvedValue({ id: "p1", nome: "Carlos", email: "carlos@teste.com", ativo: true });
-    const response = await request(app).post("/profissionais").send({ nome: " Carlos ", telefone: "44999999999", email: "CARLOS@TESTE.COM" });
+    const response = await request(app).post("/profissionais").send({ nome: " Carlos ", telefone: "(44) 99999-9999", email: "CARLOS@TESTE.COM" });
     expect(response.status).toBe(201);
     expect(mocks.create).toHaveBeenCalledWith({ data: { nome: "Carlos", telefone: "44999999999", email: "carlos@teste.com", ativo: true } });
   });

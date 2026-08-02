@@ -271,6 +271,8 @@ usuários nem concluir agendamentos, inclusive se sair e retornar ao sistema.
   leitores de tela anunciem avisos e erros sem interromper a interação atual.
 - Histórico de agendamento validado por integração: o dono e o administrador
   podem consultar os eventos, enquanto outro cliente não recebe acesso.
+- Disponibilidade de profissionais agora é validada integralmente antes da
+  gravação; dias ou blocos inválidos não apagam a jornada existente.
 
 5. LIMPEZA DE CÓDIGO
 

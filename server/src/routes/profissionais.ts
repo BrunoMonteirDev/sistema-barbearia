@@ -8,14 +8,14 @@ const router = Router()
 function getPayload(body: Record<string, unknown>) {
   return {
     nome: typeof body.nome === 'string' ? body.nome.trim() : '',
-    telefone: typeof body.telefone === 'string' ? body.telefone.trim() : null,
+    telefone: typeof body.telefone === 'string' ? body.telefone.replace(/\D/g, '') : null,
     email: typeof body.email === 'string' ? body.email.trim().toLowerCase() : null,
     ativo: typeof body.ativo === 'boolean' ? body.ativo : true,
   }
 }
 
 function hasValidData(data: ReturnType<typeof getPayload>) {
-  return Boolean(data.nome && data.telefone && data.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))
+  return Boolean(data.nome.length >= 2 && data.telefone && data.telefone.length >= 10 && data.telefone.length <= 11 && data.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))
 }
 
 router.get('/', async (_req, res) => {
@@ -66,11 +66,14 @@ router.put('/:id/disponibilidade', authenticate, requireAdmin, async (req, res) 
     const profissional = await prisma.profissional.findUnique({ where: { id: profissionalId } })
     if (!profissional) return res.status(404).json({ error: 'Funcionário não encontrado.' })
 
-    const blocos = Object.entries(disponibilidade).flatMap(([dia, horas]) => {
+    const blocos = [] as Array<{ profissionalId: string; diaSemana: number; hora: string }>
+    for (const [dia, horas] of Object.entries(disponibilidade)) {
       const diaSemana = Number(dia)
-      if (!Number.isInteger(diaSemana) || diaSemana < 0 || diaSemana > 6 || !Array.isArray(horas)) return []
-      return [...new Set(horas)].filter(isValidBlock).map(hora => ({ profissionalId, diaSemana, hora }))
-    })
+      if (!Number.isInteger(diaSemana) || diaSemana < 0 || diaSemana > 6 || !Array.isArray(horas) || horas.some(hora => !isValidBlock(hora))) {
+        return res.status(400).json({ error: 'Disponibilidade contém dia ou horário inválido.' })
+      }
+      blocos.push(...[...new Set(horas)].map(hora => ({ profissionalId, diaSemana, hora: hora as string })))
+    }
 
     await prisma.$transaction([
       prisma.disponibilidadeProfissional.deleteMany({ where: { profissionalId } }),

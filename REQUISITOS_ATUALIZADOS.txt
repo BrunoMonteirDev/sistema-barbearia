@@ -231,3 +231,8 @@ tela em uma região de status, além de possuírem texto e botão para fechament
 RN21 - Privacidade do histórico [IMPLEMENTADO]
 O histórico de um agendamento é acessível apenas ao cliente proprietário e ao
 administrador. Outros clientes devem receber resposta de acesso negado.
+
+RN22 - Integridade da disponibilidade profissional [IMPLEMENTADO]
+Cada dia deve estar entre domingo e sábado e cada horário deve ser um bloco
+válido de 30 minutos. Uma configuração inválida é rejeitada antes de alterar a
+jornada já cadastrada.

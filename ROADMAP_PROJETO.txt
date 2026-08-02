@@ -202,6 +202,8 @@ ATUALIZAÇÃO — QUALIDADE DO LOGIN GOOGLE (02/08/2026)
   de status, sem depender exclusivamente de cor ou animação.
 - [CONCLUÍDO] Permissões de visualização do histórico de agendamento cobertas
   por integração para cliente proprietário, outro cliente e administrador.
+- [CONCLUÍDO] Disponibilidade profissional validada por unidade e integração,
+  preservando horários existentes quando a nova configuração for inválida.
 
 ATUALIZAÇÃO — EVOLUTION API (02/08/2026)
 

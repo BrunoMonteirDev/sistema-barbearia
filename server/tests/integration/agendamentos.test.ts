@@ -234,6 +234,26 @@ describe('API - conflito real de agendamento', () => {
     expect(historicoAdmin.body).toHaveLength(1)
   })
 
+  it('salva disponibilidade válida do profissional e rejeita blocos inválidos', async () => {
+    const administrador = await prisma.usuario.create({ data: { nome: 'Admin disponibilidade', email: 'admin.disponibilidade@teste.local', senhaHash: 'hash', nivel: 'Administrador' } })
+    const profissional = await prisma.profissional.create({ data: { nome: 'Profissional disponibilidade' } })
+    const authorization = `Bearer ${signToken({ id: administrador.id, nivel: 'Administrador' })}`
+
+    await request(app)
+      .put(`/api/profissionais/${profissional.id}/disponibilidade`)
+      .set('authorization', authorization)
+      .send({ disponibilidade: { 1: ['08:00', '08:30'], 2: ['09:00'] } })
+      .expect(200, { ok: true })
+    expect(await prisma.disponibilidadeProfissional.count({ where: { profissionalId: profissional.id } })).toBe(3)
+
+    await request(app)
+      .put(`/api/profissionais/${profissional.id}/disponibilidade`)
+      .set('authorization', authorization)
+      .send({ disponibilidade: { 1: ['08:15'] } })
+      .expect(400)
+    expect(await prisma.disponibilidadeProfissional.count({ where: { profissionalId: profissional.id } })).toBe(3)
+  })
+
   it('marca atendimento passado como atrasado conforme a tolerancia configurada', async () => {
     const cliente = await prisma.usuario.create({ data: { nome: 'Cliente atraso', email: 'cliente.atraso@teste.local', senhaHash: 'hash' } })
     const profissional = await prisma.profissional.create({ data: { nome: 'Profissional de teste' } })
