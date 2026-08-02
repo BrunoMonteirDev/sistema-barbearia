@@ -35,6 +35,8 @@ Já entregue:
 - Testes da camada de API do cliente.
 - Teste do fluxo de agendamento e da etapa de revisão.
 - Testes de interface de Meus agendamentos.
+- Testes de regressão do modo automático de WhatsApp: padrão desativado e envio
+  somente após habilitação explícita por evento.
 
 Próximos itens:
 - Cobrir autenticação, permissões, usuários, profissionais, serviços,
