@@ -72,6 +72,8 @@ Histórico
   ocupam o mesmo intervalo de um profissional.
 - Integração real valida a exceção administrativa: cancelamento fora da
   antecedência continua permitido e cria o respectivo histórico.
+- Integração real de permissões impede que um cliente cancele o agendamento de
+  outro cliente, preservando status e histórico.
 - Cobertura é medida com limite global de 80%; o relatório atual aponta as
   lacunas restantes no cliente e servidor, impedindo aprovação enganosa.
 - Regressões de notificações automáticas cobrem o padrão desativado e o disparo

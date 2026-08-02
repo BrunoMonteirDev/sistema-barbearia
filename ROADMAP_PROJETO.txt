@@ -41,6 +41,8 @@ Já entregue:
   entrega registrada.
 - Integração real para conflito de horário e cancelamento administrativo fora do
   prazo, incluindo a criação de histórico.
+- Integração real de permissão: cliente não consegue cancelar agendamento de
+  outro cliente.
 
 Próximos itens:
 - Cobrir autenticação, permissões, usuários, profissionais, serviços,

@@ -50,4 +50,18 @@ describe('API - conflito real de agendamento', () => {
     expect((await prisma.agendamento.findUnique({ where: { id: agendamento.id } }))?.status).toBe('CANCELADO')
     expect(await prisma.historicoAgendamento.findFirst({ where: { agendamentoId: agendamento.id, autorId: administrador.id, tipo: 'CANCELAMENTO' } })).toBeTruthy()
   })
+
+  it('impede que um cliente cancele o agendamento de outra pessoa', async () => {
+    const dono = await prisma.usuario.create({ data: { nome: 'Dono do horario', email: 'dono.permissao@teste.local', senhaHash: 'hash' } })
+    const outroCliente = await prisma.usuario.create({ data: { nome: 'Outro cliente', email: 'outro.permissao@teste.local', senhaHash: 'hash' } })
+    const profissional = await prisma.profissional.create({ data: { nome: 'Profissional de teste' } })
+    const servico = await prisma.servico.create({ data: { nome: 'Servico de teste', duracao: 30, preco: 30 } })
+    const agendamento = await prisma.agendamento.create({ data: { usuarioId: dono.id, profissionalId: profissional.id, servicoId: servico.id, data: '2030-08-05', hora: '10:00', status: 'CONFIRMADO' } })
+    const authorization = `Bearer ${signToken({ id: outroCliente.id, nivel: 'Cliente' })}`
+
+    await request(app).patch(`/api/agendamentos/${agendamento.id}/cancelar`).set('authorization', authorization).expect(403)
+
+    expect((await prisma.agendamento.findUnique({ where: { id: agendamento.id } }))?.status).toBe('CONFIRMADO')
+    expect(await prisma.historicoAgendamento.count()).toBe(0)
+  })
 })
