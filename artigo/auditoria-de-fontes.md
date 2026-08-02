@@ -10,6 +10,9 @@ Consulta realizada em 02/08/2026. Fontes oficiais foram selecionadas para susten
 | Histórico de migrations deve ficar versionado | Prisma | documentação oficial | https://www.prisma.io/docs/orm/prisma-migrate/understanding-prisma-migrate/migration-histories | Sim | condiz com `server/prisma/migrations` |
 | PostgreSQL oferece constraints e chaves relacionais | PostgreSQL Global Development Group | documentação oficial | https://www.postgresql.org/docs/current/ddl.html | Sim | usada na integridade |
 | WCAG orienta acessibilidade e requer avaliação humana além da automação | W3C | recomendação | https://www.w3.org/TR/WCAG22/ | Sim | fundamenta a limitação de acessibilidade |
+| Pequenas empresas possuem especificidades na gestão da informação | Moraes e Escrivão Filho | artigo científico | https://doi.org/10.1590/S0100-19652006000300012 | Sim | fundamenta a contextualização do problema |
+| TI deve considerar a realidade das pequenas empresas | Moraes, Terence e Escrivão Filho | artigo científico | https://doi.org/10.4301/S1807-17752004000100003 | Sim | fundamenta o refinamento de escopo |
+| Recomendações brasileiras orientam acessibilidade digital | Governo Digital | fonte institucional | https://www.gov.br/governodigital/pt-br/acessibilidade-e-usuario/acessibilidade-digital/modelo-de-acessibilidade | Sim | complementar à WCAG |
 | Testes com Vitest são executados por comando | Vitest | documentação oficial | https://vitest.dev/guide/ | Pendente de nova consulta | a ferramenta está confirmada no repositório; referência deve ser revisada antes da submissão |
 | Metodologia aplicada/exploratória/qualitativa | [REFERÊNCIA PENDENTE DE VERIFICAÇÃO] | bibliografia metodológica | — | Não | requer validação com orientador e fonte acadêmica específica |
 
@@ -26,3 +29,7 @@ REACT. **Quick Start**. Disponível em: <https://react.dev/learn>. Acesso em: 2 
 TYPESCRIPT. **The TypeScript Handbook**. Disponível em: <https://www.typescriptlang.org/docs/handbook/intro>. Acesso em: 2 ago. 2026.
 
 WORLD WIDE WEB CONSORTIUM. **Web Content Accessibility Guidelines (WCAG) 2.2**. 2024. Disponível em: <https://www.w3.org/TR/WCAG22/>. Acesso em: 2 ago. 2026.
+
+MORAES, Giseli Diniz de Almeida; ESCRIVÃO FILHO, Edmundo. **A gestão da informação diante das especificidades das pequenas empresas**. Ciência da Informação, v. 35, n. 3, p. 124-132, 2006. DOI: <https://doi.org/10.1590/S0100-19652006000300012>.
+
+MORAES, Giseli Diniz de Almeida; TERENCE, Ana Cláudia Fernandes; ESCRIVÃO FILHO, Edmundo. **A tecnologia da informação como suporte à gestão estratégica da informação na pequena empresa**. Journal of Information Systems and Technology Management, v. 1, n. 1, p. 27-43, 2004. DOI: <https://doi.org/10.4301/S1807-17752004000100003>.
