@@ -103,6 +103,8 @@ Histórico
   o mesmo componente acessível, inclusive nas ações de fechar e salvar.
 - Gerador de senha forte corrigido para nunca retornar combinações que violem
   as regras de repetição ou sequência; sua regressão é verificada em 100 senhas.
+- Foco por teclado reforçado globalmente: controles ativos exibem contorno âmbar
+  de 3px e halo escuro, perceptíveis em fundos claros, escuros e alto contraste.
 - Tela de login ganhou retorno explícito ao menu inicial. A consulta de sessão
   só é feita quando existe token armazenado, eliminando o 401 esperado de
   usuários desconectados no console do navegador.

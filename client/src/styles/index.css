@@ -56,8 +56,17 @@ a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid #0e3746;
+  outline: 3px solid #fbbf24 !important;
   outline-offset: 3px;
+  box-shadow: 0 0 0 6px rgba(15, 23, 42, 0.72) !important;
+}
+
+[role="button"]:focus-visible,
+[role="switch"]:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid #fbbf24 !important;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px rgba(15, 23, 42, 0.72) !important;
 }
 
 html.acessibilidade-fonte-grande {
