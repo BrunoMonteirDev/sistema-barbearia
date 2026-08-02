@@ -15,9 +15,11 @@ import { KeyboardArrowNavigation } from '@/components/KeyboardArrowNavigation'
 import { CookieNotice } from '@/components/CookieNotice'
 import LegalPage from '@/pages/LegalPage'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { SkipToContent } from '@/components/SkipToContent'
 
 export default function App() {
   return <ErrorBoundary><AuthProvider>
+    <SkipToContent />
     <Toaster position="top-center" toastOptions={{ duration: 1000 }}>
       {(currentToast) => <ToastBar toast={currentToast}>
         {({ icon, message }) => <>
@@ -38,6 +40,7 @@ export default function App() {
     <KeyboardArrowNavigation />
     <VLibras />
     <CookieNotice />
+    <div id="conteudo-principal" tabIndex={-1}>
     <Switch>
       <Route path="/" component={HomePage} />
       <Route path="/login" component={LoginPage} />
@@ -52,5 +55,6 @@ export default function App() {
       <Route path="/minha-conta" component={() => <UserRoute component={MinhaContaPage} />} />
       <Route>Não encontrado.</Route>
     </Switch>
+    </div>
   </AuthProvider></ErrorBoundary>
 }
