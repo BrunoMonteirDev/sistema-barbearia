@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
+  <title id="title">Relação entre problema, objetivo, sistema e resultado</title>
+  <desc id="desc">Diagrama que mostra a passagem da organização dispersa da agenda para um sistema que apresenta horários compatíveis e organiza as reservas.</desc>
+  <defs><style>.box{fill:#fff;stroke:#1f4b73;stroke-width:3;rx:14}.ttl{font:700 23px Arial;fill:#102a43;text-anchor:middle}.txt{font:16px Arial;fill:#334e68;text-anchor:middle}.arr{stroke:#b22222;stroke-width:4;marker-end:url(#m)}</style><marker id="m" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0 0 L0 6 L8 3z" fill="#b22222"/></marker></defs>
+  <rect width="1200" height="360" fill="#f7fafc"/><text x="600" y="52" class="ttl" style="font-size:29px">Síntese do problema e da solução proposta</text>
+  <rect x="45" y="125" width="235" height="140" class="box"/><text x="162" y="171" class="ttl">Problema</text><text x="162" y="205" class="txt">Mensagens e anotações</text><text x="162" y="231" class="txt">dificultam consultar a agenda</text>
+  <line x1="280" y1="195" x2="365" y2="195" class="arr"/>
+  <rect x="370" y="125" width="220" height="140" class="box"/><text x="480" y="171" class="ttl">Objetivo</text><text x="480" y="205" class="txt">Organizar reservas considerando</text><text x="480" y="231" class="txt">jornada e duração</text>
+  <line x1="590" y1="195" x2="675" y2="195" class="arr"/>
+  <rect x="680" y="125" width="220" height="140" class="box"/><text x="790" y="171" class="ttl">Sistema web</text><text x="790" y="205" class="txt">Fluxo, regras e controle</text><text x="790" y="231" class="txt">administrativo</text>
+  <line x1="900" y1="195" x2="985" y2="195" class="arr"/>
+  <rect x="990" y="125" width="165" height="140" class="box"/><text x="1072" y="171" class="ttl">Resultado</text><text x="1072" y="205" class="txt">Horários</text><text x="1072" y="231" class="txt">compatíveis</text>
+</svg>

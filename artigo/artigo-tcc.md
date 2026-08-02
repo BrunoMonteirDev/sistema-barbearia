@@ -1,6 +1,6 @@
-# DESENVOLVIMENTO DE UM SISTEMA WEB PARA AGENDAMENTO E GESTÃO DE HORÁRIOS EM BARBEARIAS
+# DESENVOLVIMENTO DE UM SISTEMA WEB PARA ORGANIZAÇÃO DE AGENDAMENTOS EM BARBEARIAS
 
-## DEVELOPMENT OF A WEB SYSTEM FOR APPOINTMENT SCHEDULING AND TIME MANAGEMENT IN BARBERSHOPS
+## DEVELOPMENT OF A WEB SYSTEM FOR APPOINTMENT ORGANIZATION IN BARBERSHOPS
 
 **[AUTORIA, FILIAÇÃO E ORCID — PENDENTE DE CONFIRMAÇÃO]**
 
@@ -28,6 +28,16 @@ A questão de pesquisa é: como desenvolver um sistema web simples e responsivo 
 
 Para apresentar o percurso adotado, o artigo reúne a fundamentação que orienta o problema, os materiais e métodos empregados, o desenvolvimento da solução e a discussão dos resultados obtidos.
 
+Conforme sintetizado na Figura 1, o trabalho parte de uma organização dispersa da agenda, propõe um fluxo que considera as condições reais de atendimento e resulta em uma solução verificável. O diagrama antecipa a relação entre o problema estudado e as escolhas desenvolvidas nas seções seguintes.
+
+Figura 1 — Relação entre problema, objetivo, sistema e resultado
+
+![Relação entre problema, objetivo, sistema e resultado](figuras/problema-objetivo-resultado.svg)
+
+Fonte: Elaborado pelo autor (2026).
+
+O esquema não substitui a discussão detalhada, mas ajuda a situar o leitor antes da fundamentação teórica. A próxima seção aprofunda os conceitos que sustentam cada uma dessas etapas.
+
 ## 2 DESENVOLVIMENTO
 
 ### 2.1 Fundamentação teórica
@@ -46,7 +56,7 @@ Esse entendimento aproxima o agendamento de uma atividade de gestão da informa�
 
 #### 2.1.3 Desenvolvimento web, dados e acessibilidade
 
-A solução foi organizada como aplicação web com interface, operações de servidor, regras de negócio e banco relacional. Essa separação facilita a manutenção porque a tela não decide sozinha se uma reserva é válida. A interface foi construída com componentes React; TypeScript auxiliou a consistência de dados; a API organizou as operações; e o banco relacional preservou relações entre usuários, profissionais, serviços e reservas (REACT, 2026; TYPESCRIPT, 2026; POSTGRESQL GLOBAL DEVELOPMENT GROUP, 2026). O Prisma foi utilizado para manter o modelo de dados e seu histórico de alterações versionados (PRISMA, 2026a; PRISMA, 2026b).
+A solução foi organizada como aplicação web com interface, operações de servidor, regras de negócio e banco relacional. Essa separação facilita a manutenção porque a tela não decide sozinha se uma reserva é válida. A interface foi construída com componentes React; TypeScript auxiliou a consistência de dados; a API organizou as operações; e o banco relacional preservou relações entre usuários, profissionais, serviços e reservas (REACT, 2026; TYPESCRIPT, 2026; POSTGRESQL GLOBAL DEVELOPMENT GROUP, 2026). A organização incremental do trabalho, com atenção a requisitos e validações, também se relaciona a princípios da engenharia de software apresentados por Sommerville (2022). O Prisma foi utilizado para manter o modelo de dados e seu histórico de alterações versionados (PRISMA, 2026a; PRISMA, 2026b).
 
 Usabilidade e acessibilidade também foram consideradas na interface por meio de navegação por teclado, atalho para conteúdo principal, mensagens de retorno e recursos de apoio. A WCAG 2.2 orienta acessibilidade para diferentes necessidades e ressalta que a avaliação deve combinar recursos automatizados e análise humana (W3C, 2024). O Modelo de Acessibilidade em Governo Eletrônico também oferece orientação nacional complementar para serviços digitais (BRASIL, 2026). Por isso, o trabalho descreve medidas implementadas, mas não declara conformidade completa.
 
@@ -99,9 +109,9 @@ Os requisitos, as decisões de escopo e as tecnologias apresentadas orientaram a
 
 A solução foi organizada em camadas para que a experiência na tela, as decisões sobre a agenda e a persistência dos dados não dependessem de um único componente. O cliente acessa a interface web; as solicitações são recebidas pela API; as regras verificam identidade, permissões, jornada, duração e conflito; por fim, as informações são consultadas ou registradas no banco. Essa organização torna possível aplicar a mesma regra tanto no agendamento do cliente quanto nas operações administrativas.
 
-Conforme apresentado na Figura 1, a interface não se comunica diretamente com o banco de dados. A API funciona como ponto de passagem das operações e evita que uma alteração de tela, por si só, autorize uma reserva incompatível. O uso de serviços de negócio entre a API e a persistência concentra as verificações que precisam ocorrer antes de criar, cancelar ou remarcar um agendamento.
+Conforme apresentado na Figura 2, a interface não se comunica diretamente com o banco de dados. A API funciona como ponto de passagem das operações e evita que uma alteração de tela, por si só, autorize uma reserva incompatível. O uso de serviços de negócio entre a API e a persistência concentra as verificações que precisam ocorrer antes de criar, cancelar ou remarcar um agendamento.
 
-Figura 1 — Arquitetura geral da aplicação
+Figura 2 — Arquitetura geral da aplicação
 
 ![Arquitetura geral da aplicação](figuras/arquitetura-aplicacao.svg)
 
@@ -113,9 +123,9 @@ O diagrama também evidencia que o Prisma não é uma segunda base de dados: ele
 
 O sistema possui uma página inicial que apresenta o serviço de agendamento e orienta o acesso ao fluxo de reserva. A linguagem da interface prioriza ações compreensíveis, como escolher profissional, serviço, data e horário. Essa escolha reduz a necessidade de o cliente conhecer termos internos do sistema e mantém o foco na decisão que precisa tomar a cada etapa.
 
-Conforme será apresentado na Figura 2, a entrada para o agendamento é visível desde a tela inicial. A captura final deverá mostrar a página em estado sem dados pessoais. Além de apresentar o serviço, essa tela oferece acesso ao cadastro e à autenticação, necessários quando o usuário chega à confirmação de uma reserva.
+Conforme será apresentado na Figura 3, a entrada para o agendamento é visível desde a tela inicial. A captura final deverá mostrar a página em estado sem dados pessoais. Além de apresentar o serviço, essa tela oferece acesso ao cadastro e à autenticação, necessários quando o usuário chega à confirmação de uma reserva.
 
-Figura 2 — Página inicial do sistema
+Figura 3 — Página inicial do sistema
 
 [FIGURA PENDENTE — captura atual da página inicial, em resolução adequada e sem dados pessoais.]
 
@@ -127,25 +137,25 @@ A interface foi planejada para ser responsiva, isto é, adaptar a organização 
 
 O agendamento ocorre em etapas. Inicialmente, o cliente seleciona um profissional ou informa não ter preferência. Em seguida, escolhe o serviço e uma data. Somente então a aplicação apresenta horários compatíveis. Depois de escolher um horário, o usuário visualiza uma revisão com profissional, serviço, data, duração e valor; a confirmação exige aceite explícito e autenticação quando necessária.
 
-Conforme apresentado na Figura 3, a seleção do profissional é uma decisão que antecede o cálculo da disponibilidade. Quando existe preferência, a agenda daquele profissional é consultada. Quando não há preferência, o sistema pode buscar um profissional ativo compatível com o período solicitado. Em ambos os casos, a escolha não elimina a verificação posterior de jornada e duração.
+Conforme apresentado na Figura 4, a seleção do profissional é uma decisão que antecede o cálculo da disponibilidade. Quando existe preferência, a agenda daquele profissional é consultada. Quando não há preferência, o sistema pode buscar um profissional ativo compatível com o período solicitado. Em ambos os casos, a escolha não elimina a verificação posterior de jornada e duração.
 
-Figura 3 — Seleção do profissional no fluxo de agendamento
+Figura 4 — Seleção do profissional no fluxo de agendamento
 
 [FIGURA PENDENTE — captura da etapa de seleção do profissional, incluindo a opção “sem preferência”.]
 
 Fonte: Elaborado pelo autor (2026).
 
-A etapa seguinte apresenta os serviços disponíveis, conforme a Figura 4. Cada serviço possui informações que influenciam o restante do fluxo, especialmente duração e valor. Assim, a tela não é apenas um catálogo: a seleção determina quanto tempo consecutivo a reserva precisará ocupar na agenda.
+A etapa seguinte apresenta os serviços disponíveis, conforme a Figura 5. Cada serviço possui informações que influenciam o restante do fluxo, especialmente duração e valor. Assim, a tela não é apenas um catálogo: a seleção determina quanto tempo consecutivo a reserva precisará ocupar na agenda.
 
-Figura 4 — Seleção do serviço
+Figura 5 — Seleção do serviço
 
 [FIGURA PENDENTE — captura da etapa de seleção do serviço.]
 
 Fonte: Elaborado pelo autor (2026).
 
-O encadeamento completo está sintetizado na Figura 5. A representação evidencia que a confirmação não ocorre logo após a escolha do horário: há uma etapa de revisão e, se necessário, autenticação. Ao fim, a disponibilidade é consultada novamente antes do armazenamento, porque um período que estava livre durante a consulta pode ter sido reservado por outra pessoa.
+O encadeamento completo está sintetizado na Figura 6. A representação evidencia que a confirmação não ocorre logo após a escolha do horário: há uma etapa de revisão e, se necessário, autenticação. Ao fim, a disponibilidade é consultada novamente antes do armazenamento, porque um período que estava livre durante a consulta pode ter sido reservado por outra pessoa.
 
-Figura 5 — Fluxo de confirmação do agendamento
+Figura 6 — Fluxo de confirmação do agendamento
 
 ![Fluxo de confirmação do agendamento](figuras/fluxo-agendamento.svg)
 
@@ -157,9 +167,9 @@ Antes da gravação, a disponibilidade é verificada novamente. Essa segunda con
 
 Cada profissional possui uma jornada semanal configurada em intervalos de trinta minutos. A administração define em quais dias e períodos o profissional pode atender. Essa configuração antecede o agendamento e transforma a rotina do estabelecimento em informação consultável pelo sistema, em vez de depender de uma decisão informal a cada mensagem recebida.
 
-Conforme a Figura 6, a área administrativa permite configurar a jornada de maneira separada dos dados cadastrais do profissional. Essa separação é importante porque uma alteração na escala não exige recriar o cadastro do barbeiro. Também permite que profissionais diferentes possuam horários de atendimento distintos.
+Conforme a Figura 7, a área administrativa permite configurar a jornada de maneira separada dos dados cadastrais do profissional. Essa separação é importante porque uma alteração na escala não exige recriar o cadastro do barbeiro. Também permite que profissionais diferentes possuam horários de atendimento distintos.
 
-Figura 6 — Configuração da jornada de um profissional
+Figura 7 — Configuração da jornada de um profissional
 
 [FIGURA PENDENTE — captura da configuração semanal da jornada, sem dados pessoais.]
 
@@ -169,9 +179,9 @@ A escolha de intervalos de trinta minutos não significa que todos os serviços 
 
 #### 2.3.5 Cálculo dos horários disponíveis e regras de negócio
 
-Ao escolher uma data e um serviço, o sistema consulta a jornada aplicável, os agendamentos ativos e a duração selecionada. Conforme a Figura 7, o calendário aparece antes dos horários: o cliente escolhe o dia e visualiza apenas as opções disponíveis para ele. Não basta que o horário inicial esteja livre; todo o tempo necessário para o serviço deve permanecer livre dentro da jornada.
+Ao escolher uma data e um serviço, o sistema consulta a jornada aplicável, os agendamentos ativos e a duração selecionada. Conforme a Figura 8, o calendário aparece antes dos horários: o cliente escolhe o dia e visualiza apenas as opções disponíveis para ele. Não basta que o horário inicial esteja livre; todo o tempo necessário para o serviço deve permanecer livre dentro da jornada.
 
-Figura 7 — Calendário e horários disponíveis
+Figura 8 — Calendário e horários disponíveis
 
 [FIGURA PENDENTE — captura da etapa de data e horários disponíveis, com um serviço selecionado.]
 
@@ -197,17 +207,17 @@ O Quadro 3 sintetiza as regras que conectam a interface ao comportamento esperad
 
 #### 2.3.6 Revisão, confirmação, cancelamento e remarcação
 
-Depois de escolher o horário, o cliente recebe uma revisão das informações. Conforme a Figura 8, essa etapa reúne profissional, serviço, data, horário, duração e valor, permitindo identificar um erro antes da confirmação. O aceite explícito impede que a reserva seja criada somente pela seleção de um horário, comportamento que poderia surpreender o usuário e dificultar a correção.
+Depois de escolher o horário, o cliente recebe uma revisão das informações. Conforme a Figura 9, essa etapa reúne profissional, serviço, data, horário, duração e valor, permitindo identificar um erro antes da confirmação. O aceite explícito impede que a reserva seja criada somente pela seleção de um horário, comportamento que poderia surpreender o usuário e dificultar a correção.
 
-Figura 8 — Revisão e confirmação do agendamento
+Figura 9 — Revisão e confirmação do agendamento
 
 [FIGURA PENDENTE — captura da revisão, do aceite e da ação de confirmar.]
 
 Fonte: Elaborado pelo autor (2026).
 
-Após a confirmação, o cliente pode consultar seus próprios agendamentos, conforme a Figura 9. O histórico permite acompanhar a situação da reserva e disponibiliza cancelamento ou remarcação quando o prazo configurado permite. A remarcação não é tratada como edição livre de uma reserva existente: ela volta a consultar data, jornada e disponibilidade antes de registrar a alteração, preservando o histórico do processo.
+Após a confirmação, o cliente pode consultar seus próprios agendamentos, conforme a Figura 10. O histórico permite acompanhar a situação da reserva e disponibiliza cancelamento ou remarcação quando o prazo configurado permite. A remarcação não é tratada como edição livre de uma reserva existente: ela volta a consultar data, jornada e disponibilidade antes de registrar a alteração, preservando o histórico do processo.
 
-Figura 9 — Área e histórico de agendamentos do cliente
+Figura 10 — Área e histórico de agendamentos do cliente
 
 [FIGURA PENDENTE — captura da área do cliente com ações de cancelamento ou remarcação.]
 
@@ -219,17 +229,17 @@ Essas etapas mantêm o cliente informado sobre o que foi escolhido e evitam que 
 
 A área administrativa reúne o cadastro de serviços, profissionais e usuários, a configuração da jornada, a agenda e os estados dos atendimentos. O administrador prepara as condições que sustentam a reserva pública: ativa profissionais, registra os serviços oferecidos, informa duração e valor e define a jornada de cada profissional.
 
-Conforme a Figura 10, o painel organiza o acesso a essas funções sem expor suas operações ao perfil de cliente. Essa separação atende tanto à necessidade de organização do estabelecimento quanto ao princípio de limitar operações conforme a função do usuário. A tela final deverá utilizar dados demonstrativos para não divulgar informações pessoais.
+Conforme a Figura 11, o painel organiza o acesso a essas funções sem expor suas operações ao perfil de cliente. Essa separação atende tanto à necessidade de organização do estabelecimento quanto ao princípio de limitar operações conforme a função do usuário. A tela final deverá utilizar dados demonstrativos para não divulgar informações pessoais.
 
-Figura 10 — Painel administrativo
+Figura 11 — Painel administrativo
 
 [FIGURA PENDENTE — captura do painel administrativo com dados demonstrativos.]
 
 Fonte: Elaborado pelo autor (2026).
 
-A agenda administrativa, ilustrada na Figura 11, permite visualizar e acompanhar os estados das reservas. Esse recurso não substitui o cálculo de disponibilidade feito no agendamento; ele oferece ao responsável uma visão consolidada para acompanhar pendências, confirmações, atendimentos concluídos, cancelados ou atrasados e tomar decisões operacionais.
+A agenda administrativa, ilustrada na Figura 12, permite visualizar e acompanhar os estados das reservas. Esse recurso não substitui o cálculo de disponibilidade feito no agendamento; ele oferece ao responsável uma visão consolidada para acompanhar pendências, confirmações, atendimentos concluídos, cancelados ou atrasados e tomar decisões operacionais.
 
-Figura 11 — Agenda administrativa
+Figura 12 — Agenda administrativa
 
 [FIGURA PENDENTE — captura da agenda administrativa com dados demonstrativos.]
 
@@ -243,15 +253,21 @@ O token de autenticação é utilizado pela aplicação para identificar a sess�
 
 #### 2.3.9 Estrutura do banco de dados
 
-O modelo relacional representa os dados necessários para preservar o vínculo entre a pessoa atendida, o profissional responsável, o serviço e o período reservado. Conforme apresentado na Figura 12, a entidade Usuário representa clientes e administradores. A entidade Profissional registra os dados dos barbeiros e se relaciona à jornada semanal, que informa em quais períodos eles podem atender.
+O modelo relacional representa os dados necessários para preservar o vínculo entre a pessoa atendida, o profissional responsável, o serviço e o período reservado. Conforme apresentado na Figura 13, a entidade Usuário representa clientes e administradores. A entidade Profissional registra os dados dos barbeiros e se relaciona à jornada semanal, que informa em quais períodos eles podem atender.
 
-Figura 12 — Modelo relacional do núcleo de agendamento
+Figura 13 — Modelo relacional do núcleo de agendamento
 
 ![Modelo relacional do núcleo de agendamento](figuras/modelo-relacional.svg)
 
 Fonte: Elaborado pelo autor (2026).
 
 A entidade Serviço armazena, entre outras informações, duração e valor. Esses atributos são utilizados tanto para apresentar a opção ao cliente quanto para determinar o espaço necessário na agenda. A entidade Agendamento centraliza a relação entre usuário, profissional e serviço, registrando data, horário e situação do atendimento. Histórico e notificações complementam o acompanhamento das alterações e comunicações, sem substituir a reserva principal.
+
+Em termos de responsabilidade, Usuário concentra a identidade de quem utiliza a solução e diferencia clientes de administradores. Profissional representa quem presta o atendimento e recebe uma jornada própria; por isso, não se presume que todos os barbeiros possuam a mesma rotina. Serviço descreve o atendimento ofertado e fornece, principalmente, os dados usados pelo cálculo de duração e pela apresentação do valor.
+
+Agendamento é a entidade central porque materializa a escolha de um usuário por um serviço, profissional, data e horário. Seus relacionamentos impedem que uma reserva seja tratada como informação isolada: ela depende de registros previamente existentes e gera histórico quando alterada. Essa organização preserva a rastreabilidade de cancelamentos e remarcações, em vez de simplesmente substituir dados anteriores.
+
+Os relacionamentos entre as entidades permitem que a jornada informe o que pode ser consultado, o serviço determine o tempo necessário e o agendamento registre a ocupação efetiva. Assim, o modelo evita duplicar no cadastro do cliente ou do profissional informações que pertencem à reserva e fornece uma base relacional para as validações discutidas nas seções anteriores.
 
 O modelo também separa disponibilidade e agendamento. A jornada define uma condição geral de atendimento; o agendamento registra uma ocupação específica. Essa separação permite que a aplicação consulte primeiro a rotina do profissional e, depois, desconte os períodos ocupados. A estrutura de dados apresentada sustenta os resultados e cenários discutidos na seção seguinte.
 
@@ -358,6 +374,8 @@ Foram alcançados os objetivos ligados ao núcleo de agendamento, à administra�
 
 Além da implementação do sistema, o desenvolvimento deste trabalho permitiu consolidar conhecimentos relacionados à engenharia de software, modelagem de banco de dados, arquitetura cliente-servidor, testes automatizados e documentação técnica. O percurso demonstra que o refinamento contínuo do escopo é determinante para entregar uma solução funcional, compreensível e consistente, especialmente quando se busca resolver com profundidade um problema operacional delimitado.
 
+Espera-se que este trabalho possa servir como base para futuras evoluções do sistema e para outros projetos acadêmicos voltados à informatização de pequenos estabelecimentos prestadores de serviços.
+
 ## AGRADECIMENTOS
 [PENDENTE DE CONFIRMAÇÃO PELO AUTOR]
 
@@ -387,6 +405,8 @@ OWASP. **Authorization Cheat Sheet**. 2026. Disponível em: <https://cheatsheets
 ISO. **ISO/IEC 25010:2011: Systems and software engineering — Systems and software Quality Requirements and Evaluation**. 2011. Disponível em: <https://www.iso.org/standard/35733.html>. Acesso em: 2 ago. 2026.
 
 CRESWELL, John W.; CRESWELL, J. David. **Research design: qualitative, quantitative, and mixed methods approaches**. 6. ed. Thousand Oaks: SAGE, 2023.
+
+SOMMERVILLE, Ian. **Software engineering**. 10. ed. Pearson, 2022. ISBN 978-0-13-750314-8.
 
 REACT. **Learn React**. Disponível em: <https://react.dev/learn>. Acesso em: 2 ago. 2026.
 

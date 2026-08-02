@@ -16,6 +16,7 @@ Consulta realizada em 02/08/2026. Fontes oficiais foram selecionadas para susten
 | Autorização deve ser verificada para cada solicitação | OWASP | guia técnico institucional | https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html | Sim | fundamenta autenticação e autorização |
 | Qualidade de software envolve requisitos e avaliação | ISO/IEC 25010 | norma técnica | https://www.iso.org/standard/35733.html | Sim | usada para contextualizar os testes |
 | Desenvolvimento tecnológico aplicado pode combinar decisões de método e evidências | Creswell e Creswell | bibliografia metodológica | https://us.sagepub.com/en-us/nam/research-design/book255675 | Sim | fundamenta a descrição metodológica sem caracterizar pesquisa de campo |
+| Engenharia de software envolve processos, técnicas e validação de sistemas confiáveis | Sommerville | livro acadêmico | https://www.pearson.com/en-us/subject-catalog/p/software-engineering/P200000003258 | Sim | fundamenta a abordagem incremental e os requisitos do sistema |
 | Testes com Vitest são executados por comando | Vitest | documentação oficial | https://vitest.dev/guide/ | Pendente de nova consulta | ferramenta confirmada no repositório; não utilizada como referência central no artigo |
 
 ## Referências prontas para revisão editorial
@@ -41,3 +42,5 @@ CRESWELL, John W.; CRESWELL, J. David. **Research design: qualitative, quantitat
 OWASP. **Authorization Cheat Sheet**. Disponível em: <https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html>. Acesso em: 2 ago. 2026.
 
 ISO. **ISO/IEC 25010:2011: Systems and software engineering — Systems and software Quality Requirements and Evaluation**. Disponível em: <https://www.iso.org/standard/35733.html>. Acesso em: 2 ago. 2026.
+
+SOMMERVILLE, Ian. **Software engineering**. 10. ed. Pearson, 2022. ISBN 978-0-13-750314-8.
