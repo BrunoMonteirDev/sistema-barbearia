@@ -203,6 +203,9 @@ Histórico
   lembrete. A antecedência do lembrete é configurável entre 5 minutos e 7 dias.
 - O agendador verifica lembretes a cada minuto, registra os resultados e nunca
   impede a operação principal se a Evolution estiver indisponível.
+- Dashboard administrativo exibe o estado da conexão WhatsApp: verificando,
+  não configurado, indisponível, instância não criada, desconectado ou conectado,
+  com acesso direto ao gerenciamento da integração.
 
 4. PENDÊNCIAS PRINCIPAIS
 

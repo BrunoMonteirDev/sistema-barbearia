@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
-import { CalendarDays, CalendarPlus, CheckCircle2, ChevronRight, CircleDollarSign, Clock3, ListTodo, Scissors, UsersRound } from 'lucide-react'
+import { CalendarDays, CalendarPlus, CheckCircle2, ChevronRight, CircleDollarSign, Clock3, ListTodo, MessageCircle, Scissors, UsersRound, Wifi, WifiOff } from 'lucide-react'
 import { Link } from 'wouter'
 import toast from 'react-hot-toast'
-import { api, type Agendamento, type Profissional, type Usuario } from '@/lib/api'
+import { api, type Agendamento, type EvolutionStatus, type Profissional, type Usuario } from '@/lib/api'
 
 type DashboardData = { agendamentos: Agendamento[]; clientes: Usuario[]; profissionais: Profissional[] }
 
@@ -17,8 +17,18 @@ function moeda(valor: number) {
   return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 }
 
+export function estadoWhatsApp(status: EvolutionStatus | null) {
+  if (!status) return { titulo: 'Verificando WhatsApp', detalhe: 'Consultando a integracao.', conectado: false, classe: 'bg-slate-100 text-slate-600' }
+  if (!status.configurada) return { titulo: 'WhatsApp nao configurado', detalhe: 'Configure a integracao para usar notificacoes.', conectado: false, classe: 'bg-amber-100 text-amber-800' }
+  if (!status.disponivel) return { titulo: 'WhatsApp indisponivel', detalhe: status.mensagem ?? 'A Evolution API nao respondeu.', conectado: false, classe: 'bg-red-100 text-red-800' }
+  if (!status.instanciaCriada) return { titulo: 'Instancia nao criada', detalhe: 'Crie a instancia para conectar o WhatsApp.', conectado: false, classe: 'bg-slate-100 text-slate-700' }
+  if (status.conectada) return { titulo: 'WhatsApp conectado', detalhe: status.nomeExibicao ?? 'Pronto para notificacoes.', conectado: true, classe: 'bg-emerald-100 text-emerald-800' }
+  return { titulo: 'WhatsApp desconectado', detalhe: 'Reconecte o numero para enviar notificacoes.', conectado: false, classe: 'bg-amber-100 text-amber-800' }
+}
+
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardData>({ agendamentos: [], clientes: [], profissionais: [] })
+  const [whatsApp, setWhatsApp] = useState<EvolutionStatus | null>(null)
   const [loading, setLoading] = useState(true)
   const dataHoje = hoje()
 
@@ -27,6 +37,7 @@ export default function DashboardPage() {
       .then(([agendamentos, usuarios, profissionais]) => setData({ agendamentos, clientes: usuarios.filter(usuario => usuario.nivel === 'Cliente'), profissionais }))
       .catch(error => toast.error(error instanceof Error ? error.message : 'Não foi possível carregar o dashboard.'))
       .finally(() => setLoading(false))
+    void api.evolution.status().then(setWhatsApp).catch(() => setWhatsApp({ configurada: true, disponivel: false, instanciaCriada: false, conectada: false, instancia: null, nomeExibicao: null, estado: null, mensagem: 'Nao foi possivel consultar a Evolution.' }))
   }, [])
 
   const resumo = useMemo(() => {
@@ -52,6 +63,7 @@ export default function DashboardPage() {
     { label: 'Clientes ativos', value: data.clientes.length, help: 'Clientes cadastrados', icon: UsersRound, color: 'bg-violet-50 text-violet-900' },
     { label: 'Faturamento do mês', value: moeda(resumo.faturamento), help: 'Somente concluídos', icon: CircleDollarSign, color: 'bg-emerald-50 text-emerald-900' },
   ]
+  const conexaoWhatsApp = estadoWhatsApp(whatsApp)
 
   return <section className="mx-auto max-w-7xl space-y-6">
     <header className="flex flex-col justify-between gap-4 border-b border-slate-200 pb-5 sm:flex-row sm:items-end">
@@ -68,7 +80,8 @@ export default function DashboardPage() {
         <div className="divide-y divide-slate-100">{loading ? <p className="p-8 text-center text-sm text-slate-500">Carregando agenda...</p> : resumo.proximos.length === 0 ? <div className="p-10 text-center"><CalendarDays className="mx-auto mb-3 h-8 w-8 text-slate-400" /><p className="font-medium text-slate-700">Nenhum atendimento agendado.</p><p className="mt-1 text-sm text-slate-500">Use o botão acima para criar um agendamento.</p></div> : resumo.proximos.map(item => <div key={item.id} className="flex items-center gap-4 px-5 py-4"><div className="w-14 shrink-0 rounded-md border border-slate-200 bg-slate-50 py-1.5 text-center"><p className="text-sm font-bold text-slate-900">{item.hora}</p><p className="text-[11px] font-medium uppercase text-slate-500">{item.data === dataHoje ? 'Hoje' : item.data.slice(8, 10) + '/' + item.data.slice(5, 7)}</p></div><div className="min-w-0 flex-1"><p className="truncate font-semibold text-slate-900">{item.usuario?.nome ?? 'Cliente não informado'}</p><p className="truncate text-sm text-slate-600">{item.servico?.nome ?? 'Serviço'} · {item.profissional?.nome ?? 'Profissional'}</p></div><span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${statusClass[item.status] ?? 'bg-slate-100 text-slate-700'}`}>{statusLabel[item.status] ?? item.status}</span></div>)}</div>
       </article>
 
-      <aside className="space-y-6"><article className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm"><h2 className="font-semibold text-slate-900">Equipe</h2><p className="mt-1 text-sm text-slate-600">{loading ? 'Carregando...' : `${data.profissionais.filter(item => item.ativo).length} profissionais ativos`}</p><div className="mt-5 flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-md bg-secondary-50 text-secondary-700"><Scissors className="h-5 w-5" /></span><div><p className="text-sm font-medium text-slate-800">Gerencie disponibilidade</p><Link href="/painel/profissionais" className="text-sm font-semibold text-primary-700 hover:text-primary-900">Ver profissionais</Link></div></div></article>
+      <aside className="space-y-6"><article className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm"><div className="flex items-start justify-between gap-3"><div><h2 className="font-semibold text-slate-900">WhatsApp</h2><p className="mt-1 text-sm text-slate-600">Canal de notificacoes</p></div><span className={`grid h-10 w-10 place-items-center rounded-md ${conexaoWhatsApp.classe}`}>{conexaoWhatsApp.conectado ? <Wifi className="h-5 w-5" aria-hidden="true" /> : <WifiOff className="h-5 w-5" aria-hidden="true" />}</span></div><p className="mt-4 font-semibold text-slate-900" aria-live="polite">{conexaoWhatsApp.titulo}</p><p className="mt-1 text-sm text-slate-600">{conexaoWhatsApp.detalhe}</p><Link href="/painel/whatsapp" className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary-700 hover:text-primary-900"><MessageCircle className="h-4 w-4" />Gerenciar WhatsApp</Link></article>
+        <article className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm"><h2 className="font-semibold text-slate-900">Equipe</h2><p className="mt-1 text-sm text-slate-600">{loading ? 'Carregando...' : `${data.profissionais.filter(item => item.ativo).length} profissionais ativos`}</p><div className="mt-5 flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-md bg-secondary-50 text-secondary-700"><Scissors className="h-5 w-5" /></span><div><p className="text-sm font-medium text-slate-800">Gerencie disponibilidade</p><Link href="/painel/profissionais" className="text-sm font-semibold text-primary-700 hover:text-primary-900">Ver profissionais</Link></div></div></article>
         <article className="rounded-lg border border-slate-200 bg-slate-900 p-5 text-white shadow-sm"><CheckCircle2 className="h-6 w-6 text-emerald-300" /><h2 className="mt-4 font-semibold">Resumo de hoje</h2><p className="mt-1 text-sm text-slate-300">{loading ? 'Atualizando informações...' : resumo.confirmados ? `${resumo.confirmados} atendimento(s) confirmado(s) para hoje.` : 'Ainda não há atendimentos confirmados para hoje.'}</p><Link href="/painel/agendamentos" className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-white underline underline-offset-4 hover:text-slate-200">Organizar agenda <ChevronRight className="h-4 w-4" /></Link></article>
       </aside>
     </div>

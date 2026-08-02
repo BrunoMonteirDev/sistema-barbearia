@@ -175,6 +175,8 @@ ATUALIZAÇÃO — EVOLUTION API (02/08/2026)
   tratada pela interface e pela API.
 - [CONCLUÍDO] Modo automático opcional e inicialmente desativado, com seleção
   granular dos eventos e antecedência configurável do lembrete.
+- [CONCLUÍDO] Dashboard apresenta o status da conexão WhatsApp e atalho para
+  gerenciar a instância.
 
 ATUALIZAÇÃO — LIMPEZA DE CÓDIGO (02/08/2026)
 
