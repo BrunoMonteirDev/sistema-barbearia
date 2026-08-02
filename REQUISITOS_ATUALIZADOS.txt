@@ -219,3 +219,7 @@ RN18 - Validação do perfil próprio [IMPLEMENTADO]
 O usuário deve informar nome válido e, se desejar telefone, número brasileiro
 com DDD. A API normaliza o telefone e não remove campos de perfil que não foram
 enviados na atualização.
+
+RN19 - Exclusão confirmada da própria conta [IMPLEMENTADO]
+A desativação da conta exige a frase "EXCLUIR MINHA CONTA". Após confirmada,
+o token existente deixa de acessar o perfil e a sessão deve ser encerrada.

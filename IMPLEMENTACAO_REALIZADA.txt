@@ -265,6 +265,8 @@ usuários nem concluir agendamentos, inclusive se sair e retornar ao sistema.
   validando WhatsApp brasileiro, e-mail e URL completa opcional do Instagram.
 - A atualização do próprio perfil agora valida nome e telefone no backend,
   normaliza o telefone e preserva a data de nascimento quando ela não é editada.
+- O fluxo de exclusão da própria conta possui teste de integração completo:
+  exige a frase de confirmação, desativa a conta e invalida a sessão existente.
 
 5. LIMPEZA DE CÓDIGO
 

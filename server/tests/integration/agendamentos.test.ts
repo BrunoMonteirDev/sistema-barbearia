@@ -194,6 +194,26 @@ describe('API - conflito real de agendamento', () => {
       .expect(400)
   })
 
+  it('desativa a própria conta somente após confirmação e invalida a sessão', async () => {
+    const cliente = await prisma.usuario.create({ data: { nome: 'Cliente exclusão', email: 'cliente.exclusao@teste.local', senhaHash: 'hash' } })
+    const authorization = `Bearer ${signToken({ id: cliente.id, nivel: 'Cliente' })}`
+
+    await request(app)
+      .delete('/api/usuarios/me')
+      .set('authorization', authorization)
+      .send({ confirmacao: 'EXCLUIR' })
+      .expect(400)
+    expect((await prisma.usuario.findUnique({ where: { id: cliente.id } }))?.ativo).toBe(true)
+
+    await request(app)
+      .delete('/api/usuarios/me')
+      .set('authorization', authorization)
+      .send({ confirmacao: 'EXCLUIR MINHA CONTA' })
+      .expect(200, { success: true })
+    expect((await prisma.usuario.findUnique({ where: { id: cliente.id } }))?.ativo).toBe(false)
+    await request(app).get('/api/usuarios/me').set('authorization', authorization).expect(401)
+  })
+
   it('marca atendimento passado como atrasado conforme a tolerancia configurada', async () => {
     const cliente = await prisma.usuario.create({ data: { nome: 'Cliente atraso', email: 'cliente.atraso@teste.local', senhaHash: 'hash' } })
     const profissional = await prisma.profissional.create({ data: { nome: 'Profissional de teste' } })

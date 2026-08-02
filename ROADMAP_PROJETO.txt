@@ -196,6 +196,8 @@ ATUALIZAÇÃO — QUALIDADE DO LOGIN GOOGLE (02/08/2026)
   no backend, com regressão de dados inválidos na integração.
 - [CONCLUÍDO] Atualização de perfil validada no backend, com normalização de
   telefone e preservação de campos não alterados.
+- [CONCLUÍDO] Fluxo de exclusão validado por integração, incluindo confirmação,
+  desativação persistida e rejeição da sessão anterior.
 
 ATUALIZAÇÃO — EVOLUTION API (02/08/2026)
 
