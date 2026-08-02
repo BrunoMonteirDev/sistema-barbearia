@@ -27,6 +27,8 @@ Já entregue:
 - Vitest, React Testing Library e preparação para Supertest.
 - Scripts de testes, cobertura e integração.
 - Testes de senha, telefone, antecedência e remarcação.
+- Testes de disponibilidade, autenticação, permissões, cancelamento e regras
+  administrativas.
 
 Próximos itens:
 - Cobrir autenticação, permissões, usuários, profissionais, serviços,

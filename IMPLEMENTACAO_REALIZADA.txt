@@ -65,6 +65,8 @@ Histórico
   cancelamento e remarcação.
 - Estrutura de integração preparada com DATABASE_URL_TEST, protegida contra uso
   acidental do banco de desenvolvimento.
+- Cobertura adicional das APIs de regras de negócio, incluindo criação inicial,
+  limites numéricos e persistência das configurações válidas.
 - Última validação concluída com build do cliente/servidor e 10 testes passando.
 
 4. PENDÊNCIAS PRINCIPAIS
