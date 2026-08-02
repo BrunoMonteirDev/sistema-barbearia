@@ -23,4 +23,13 @@ describe("KeyboardArrowNavigation", () => {
     fireEvent.keyDown(campo, { key: "ArrowRight" });
     expect(campo).toHaveFocus();
   });
+  it("ativa o modo de teclado e o remove ao usar o mouse", () => {
+    render(<><KeyboardArrowNavigation /><input aria-label="Nome" /></>);
+
+    fireEvent.keyDown(document, { key: "Tab" });
+    expect(document.documentElement).toHaveClass("navegacao-por-teclado");
+
+    fireEvent.pointerDown(screen.getByRole("textbox", { name: "Nome" }));
+    expect(document.documentElement).not.toHaveClass("navegacao-por-teclado");
+  });
 });

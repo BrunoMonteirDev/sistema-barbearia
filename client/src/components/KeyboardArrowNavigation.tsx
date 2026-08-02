@@ -9,6 +9,16 @@ function campoComSetasNativas(elemento: HTMLElement) {
 /** Permite percorrer controles acionáveis com as setas sem interferir na edição de campos. */
 export function KeyboardArrowNavigation() {
   useEffect(() => {
+    const ativarModoTeclado = (event: KeyboardEvent) => {
+      if (["Tab", "ArrowRight", "ArrowDown", "ArrowLeft", "ArrowUp"].includes(event.key)) {
+        document.documentElement.classList.add("navegacao-por-teclado");
+      }
+    };
+
+    const desativarModoTeclado = () => {
+      document.documentElement.classList.remove("navegacao-por-teclado");
+    };
+
     const navegar = (event: KeyboardEvent) => {
       if (!["ArrowRight", "ArrowDown", "ArrowLeft", "ArrowUp"].includes(event.key) || event.altKey || event.ctrlKey || event.metaKey) return;
       const atual = document.activeElement;
@@ -25,8 +35,16 @@ export function KeyboardArrowNavigation() {
       focaveis[destino].focus();
     };
 
+    document.addEventListener("keydown", ativarModoTeclado);
     document.addEventListener("keydown", navegar);
-    return () => document.removeEventListener("keydown", navegar);
+    document.addEventListener("pointerdown", desativarModoTeclado, true);
+
+    return () => {
+      document.removeEventListener("keydown", ativarModoTeclado);
+      document.removeEventListener("keydown", navegar);
+      document.removeEventListener("pointerdown", desativarModoTeclado, true);
+      document.documentElement.classList.remove("navegacao-por-teclado");
+    };
   }, []);
 
   return null;
