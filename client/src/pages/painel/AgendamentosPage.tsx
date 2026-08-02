@@ -75,7 +75,7 @@ export default function AgendamentosPage() {
   const [criandoCliente, setCriandoCliente] = useState(false);
   const [novoCliente, setNovoCliente] = useState({ nome: "", telefone: "" });
   const [buscaCliente, setBuscaCliente] = useState("");
-  const [visualizacao, setVisualizacao] = useState<"lista" | "agenda">("lista");
+  const [visualizacao, setVisualizacao] = useState<"lista" | "agenda" | "semana">("lista");
 
   const jaTerminou = (item: Agendamento) => {
     if (
@@ -129,18 +129,18 @@ export default function AgendamentosPage() {
       .catch((error) => toast.error(error.message));
   }, []);
 
-  const filteredItems = useMemo(
+  const filteredByFields = useMemo(
     () =>
       items.filter(
         (item) =>
           (!filtros.cliente || item.usuario?.id === filtros.cliente) &&
           (!filtros.profissional ||
             item.profissional?.id === filtros.profissional) &&
-          (!filtros.data || item.data === filtros.data) &&
           (!filtros.status || item.status === filtros.status),
       ),
-    [filtros, items],
+    [filtros.cliente, filtros.profissional, filtros.status, items],
   );
+  const filteredItems = useMemo(() => filteredByFields.filter((item) => !filtros.data || item.data === filtros.data), [filteredByFields, filtros.data]);
 
   const dataAgenda = filtros.data || new Date().toLocaleDateString("en-CA");
   const mudarDiaAgenda = (dias: number) => {
@@ -348,11 +348,12 @@ export default function AgendamentosPage() {
       <div className="flex items-center justify-between gap-3">
         <div className="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-sm">
           <button type="button" onClick={() => setVisualizacao("lista")} className={`rounded-md px-3 py-2 text-sm font-semibold ${visualizacao === "lista" ? "bg-secondary-800 text-white" : "text-slate-600 hover:bg-slate-100"}`}>Lista</button>
-          <button type="button" onClick={() => setVisualizacao("agenda")} className={`inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold ${visualizacao === "agenda" ? "bg-secondary-800 text-white" : "text-slate-600 hover:bg-slate-100"}`}><CalendarDays className="h-4 w-4" />Agenda diária</button>
+          <button type="button" onClick={() => setVisualizacao("agenda")} className={`inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold ${visualizacao === "agenda" ? "bg-secondary-800 text-white" : "text-slate-600 hover:bg-slate-100"}`}><CalendarDays className="h-4 w-4" />Dia</button>
+          <button type="button" onClick={() => setVisualizacao("semana")} className={`rounded-md px-3 py-2 text-sm font-semibold ${visualizacao === "semana" ? "bg-secondary-800 text-white" : "text-slate-600 hover:bg-slate-100"}`}>Semana</button>
         </div>
-        {visualizacao === "agenda" && <div className="flex items-center gap-1"><button type="button" aria-label="Dia anterior" onClick={() => mudarDiaAgenda(-1)} className="rounded-md p-2 text-slate-700 hover:bg-slate-100"><ChevronLeft className="h-5 w-5" /></button><strong className="min-w-40 text-center text-sm capitalize text-slate-800">{new Date(`${dataAgenda}T12:00:00`).toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" })}</strong><button type="button" aria-label="Próximo dia" onClick={() => mudarDiaAgenda(1)} className="rounded-md p-2 text-slate-700 hover:bg-slate-100"><ChevronRight className="h-5 w-5" /></button></div>}
+        {visualizacao !== "lista" && <div className="flex items-center gap-1"><button type="button" aria-label={visualizacao === "semana" ? "Semana anterior" : "Dia anterior"} onClick={() => mudarDiaAgenda(visualizacao === "semana" ? -7 : -1)} className="rounded-md p-2 text-slate-700 hover:bg-slate-100"><ChevronLeft className="h-5 w-5" /></button><strong className="min-w-48 text-center text-sm capitalize text-slate-800">{visualizacao === "semana" ? rotuloSemana(dataAgenda) : new Date(`${dataAgenda}T12:00:00`).toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" })}</strong><button type="button" aria-label={visualizacao === "semana" ? "Próxima semana" : "Próximo dia"} onClick={() => mudarDiaAgenda(visualizacao === "semana" ? 7 : 1)} className="rounded-md p-2 text-slate-700 hover:bg-slate-100"><ChevronRight className="h-5 w-5" /></button></div>}
       </div>
-      {visualizacao === "agenda" ? <AgendaDiaria items={filteredItems.filter((item) => item.data === dataAgenda)} profissionais={profissionais.filter((profissional) => !filtros.profissional || profissional.id === filtros.profissional)} onEdit={openEdit} onConfirm={confirmarAgendamento} onConclude={concluirAgendamento} /> : <div className="overflow-x-auto rounded-xl bg-white shadow-sm">
+      {visualizacao === "agenda" ? <AgendaDiaria items={filteredByFields.filter((item) => item.data === dataAgenda)} profissionais={profissionais.filter((profissional) => !filtros.profissional || profissional.id === filtros.profissional)} onEdit={openEdit} onConfirm={confirmarAgendamento} onConclude={concluirAgendamento} /> : visualizacao === "semana" ? <AgendaSemanal items={filteredByFields} dataReferencia={dataAgenda} onEdit={openEdit} onConfirm={confirmarAgendamento} onConclude={concluirAgendamento} /> : <div className="overflow-x-auto rounded-xl bg-white shadow-sm">
         <table className="min-w-full text-left text-sm">
           <thead className="border-b bg-gray-50 text-xs uppercase text-gray-500">
             <tr>
@@ -777,4 +778,28 @@ export function AgendaDiaria({
   if (!profissionais.length) return <div className="rounded-xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-600">Não há profissionais para exibir nesta agenda.</div>;
 
   return <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm"><div className="min-w-220"><div className="grid border-b border-slate-200 bg-slate-50" style={{ gridTemplateColumns: `72px repeat(${profissionais.length}, minmax(180px, 1fr))` }}><div className="p-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Hora</div>{profissionais.map((profissional) => <div key={profissional.id} className="border-l border-slate-200 p-3 text-sm font-bold text-slate-900">{profissional.nome}</div>)}</div>{horarios.map((hora) => <div key={hora} className="grid min-h-18 border-b border-slate-100" style={{ gridTemplateColumns: `72px repeat(${profissionais.length}, minmax(180px, 1fr))` }}><div className="p-3 text-xs font-semibold text-slate-500">{hora}</div>{profissionais.map((profissional) => { const agendamentos = items.filter((item) => item.profissional?.id === profissional.id && item.hora === hora); return <div key={profissional.id} className="border-l border-slate-100 p-1.5">{agendamentos.map((item) => <article key={item.id} onClick={() => onEdit(item)} className={`cursor-pointer rounded-md p-2 text-xs shadow-sm transition hover:ring-2 hover:ring-secondary-300 ${statusStyle[item.status] ?? "bg-slate-100 text-slate-700"}`}><p className="font-bold">{item.usuario?.nome ?? "Cliente"}</p><p className="mt-0.5 truncate">{item.servico?.nome ?? "Serviço"} · {item.servico?.duracao ?? 0} min</p><p className="mt-1 font-semibold">{statusLabels[item.status] ?? item.status}</p>{item.status === "PENDENTE" && <button type="button" onClick={(event) => { event.stopPropagation(); void onConfirm(item); }} className="mt-2 rounded bg-white/80 px-2 py-1 font-bold text-emerald-800 hover:bg-white">Confirmar</button>}{["CONFIRMADO", "ATRASADO"].includes(item.status) && <button type="button" onClick={(event) => { event.stopPropagation(); void onConclude(item); }} className="mt-2 rounded bg-white/80 px-2 py-1 font-bold text-secondary-800 hover:bg-white">Concluir</button>}</article>)}</div>})}</div>)}</div></div>;
+}
+
+function inicioSemana(data: string) {
+  const valor = new Date(`${data}T12:00:00`);
+  valor.setDate(valor.getDate() - ((valor.getDay() + 6) % 7));
+  return valor;
+}
+
+function datasDaSemana(data: string) {
+  const inicio = inicioSemana(data);
+  return Array.from({ length: 7 }, (_, index) => {
+    const dia = new Date(inicio);
+    dia.setDate(inicio.getDate() + index);
+    return dia.toLocaleDateString("en-CA");
+  });
+}
+
+function rotuloSemana(data: string) {
+  const dias = datasDaSemana(data);
+  return `${new Date(`${dias[0]}T12:00:00`).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })} – ${new Date(`${dias[6]}T12:00:00`).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })}`;
+}
+
+export function AgendaSemanal({ items, dataReferencia, onEdit, onConfirm, onConclude }: { items: Agendamento[]; dataReferencia: string; onEdit: (item: Agendamento) => void; onConfirm: (item: Agendamento) => Promise<void>; onConclude: (item: Agendamento) => Promise<void> }) {
+  return <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-7">{datasDaSemana(dataReferencia).map((data) => { const doDia = items.filter((item) => item.data === data).sort((a, b) => a.hora.localeCompare(b.hora)); return <section key={data} className="min-h-44 rounded-xl border border-slate-200 bg-white p-3 shadow-sm"><h3 className="border-b border-slate-100 pb-2 text-sm font-bold capitalize text-slate-900">{new Date(`${data}T12:00:00`).toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit" })}</h3><div className="mt-3 space-y-2">{doDia.length ? doDia.map((item) => <article key={item.id} onClick={() => onEdit(item)} className={`cursor-pointer rounded-md p-2 text-xs shadow-sm transition hover:ring-2 hover:ring-secondary-300 ${statusStyle[item.status] ?? "bg-slate-100 text-slate-700"}`}><p className="font-bold">{item.hora} · {item.usuario?.nome ?? "Cliente"}</p><p className="mt-0.5 truncate">{item.profissional?.nome ?? "Profissional"} · {item.servico?.nome ?? "Serviço"}</p><p className="mt-1 font-semibold">{statusLabels[item.status] ?? item.status}</p>{item.status === "PENDENTE" && <button type="button" onClick={(event) => { event.stopPropagation(); void onConfirm(item); }} className="mt-2 rounded bg-white/80 px-2 py-1 font-bold text-emerald-800 hover:bg-white">Confirmar</button>}{["CONFIRMADO", "ATRASADO"].includes(item.status) && <button type="button" onClick={(event) => { event.stopPropagation(); void onConclude(item); }} className="mt-2 rounded bg-white/80 px-2 py-1 font-bold text-secondary-800 hover:bg-white">Concluir</button>}</article>) : <p className="pt-3 text-xs text-slate-400">Sem agendamentos.</p>}</div></section>})}</div>;
 }

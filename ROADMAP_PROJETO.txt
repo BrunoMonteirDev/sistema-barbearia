@@ -48,10 +48,10 @@ Próximos itens:
 5. AGENDA ADMINISTRATIVA EM CALENDÁRIO                         [EM ANDAMENTO]
 - Visão diária entregue com profissionais em colunas, horários em linhas,
   navegação por data, filtros e ações rápidas.
-- Visualização diária/semanal, horários em linhas e profissionais em colunas.
+- Visão semanal entregue com agenda resumida por dia e ações rápidas.
 - Blocos com cliente, serviço, duração e status textual.
 - Filtros, navegação e ações rápidas.
-- Validação visual desktop/mobile e testes.
+- Pendente: validação visual manual em desktop e mobile.
 
 6. LOGIN COM GOOGLE E CADASTRO PENDENTE                        [PENDENTE]
 - Adicionar autenticação pelo botão "Continuar com Google".
