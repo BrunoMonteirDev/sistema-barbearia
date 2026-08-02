@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { LoaderCircle, RefreshCw, Smartphone, Trash2, Unplug, Wifi, WifiOff } from 'lucide-react'
-import { api, type EvolutionStatus } from '@/lib/api'
+import { api, type EvolutionStatus, type ModelosMensagemWhatsApp } from '@/lib/api'
 
 const QR_EXPIRACAO_SEGUNDOS = 30
+const modelosPadrao: ModelosMensagemWhatsApp = { criacao: 'Ola, {{cliente}}! Seu agendamento de {{servico}} com {{profissional}} foi confirmado para {{data}} as {{hora}}.', remarcacao: 'Ola, {{cliente}}! Seu agendamento de {{servico}} foi remarcado para {{data}} as {{hora}} com {{profissional}}.', cancelamento: 'Ola, {{cliente}}! Seu agendamento de {{servico}} em {{data}} as {{hora}} foi cancelado.', atualizacao: 'Ola, {{cliente}}! Seu agendamento de {{servico}} com {{profissional}} foi atualizado: {{data}} as {{hora}}.' }
 
 export default function EvolutionPage() {
   const [status, setStatus] = useState<EvolutionStatus | null>(null)
@@ -11,8 +12,9 @@ export default function EvolutionPage() {
   const [segundosQr, setSegundosQr] = useState(0)
   const [nomeExibicao, setNomeExibicao] = useState('')
   const [carregando, setCarregando] = useState(false)
+  const [modelos, setModelos] = useState<ModelosMensagemWhatsApp>(modelosPadrao)
   const atualizar = async () => { try { const atual = await api.evolution.status(); setStatus(atual); setNomeExibicao(atual.nomeExibicao ?? '') } catch (error) { toast.error(error instanceof Error ? error.message : 'Não foi possível verificar a Evolution.') } }
-  useEffect(() => { void atualizar() }, [])
+  useEffect(() => { void atualizar(); void api.evolution.mensagens().then(setModelos).catch(() => {}) }, [])
   useEffect(() => {
     if (!qrCode || segundosQr <= 0) return
     const timer = window.setTimeout(() => setSegundosQr(atual => atual - 1), 1000)
@@ -41,6 +43,7 @@ export default function EvolutionPage() {
       await atualizar()
     } catch (error) { toast.error(error instanceof Error ? error.message : 'Não foi possível criar a instância.') } finally { setCarregando(false) }
   }
+  const salvarModelos = async () => { try { setModelos(await api.evolution.salvarMensagens(modelos)); toast.success('Mensagens salvas.'); } catch (error) { toast.error(error instanceof Error ? error.message : 'Nao foi possivel salvar as mensagens.') } }
   const conectado = Boolean(status?.conectada)
   const criada = Boolean(status?.instanciaCriada)
   return <section className="mx-auto max-w-3xl">
@@ -59,5 +62,6 @@ export default function EvolutionPage() {
       </div>}
       {qrCode && <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50 p-5 text-center"><h3 className="font-bold text-slate-900">Escaneie o QR Code</h3><p className="mt-1 text-sm text-slate-600">No WhatsApp: Aparelhos conectados → Conectar aparelho.</p><img className="mx-auto mt-4 h-64 w-64 rounded bg-white p-2" src={qrCode} alt="QR Code para conectar o WhatsApp" /><p className="mt-3 text-sm font-semibold text-amber-800">Expira em {segundosQr}s</p></div>}
     </div>
+    <div className="mt-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm"><h2 className="text-lg font-bold text-slate-900">Mensagens de notificacao</h2><p className="mt-1 text-sm text-slate-600">Variaveis disponiveis: cliente, servico, profissional, data e hora, entre chaves duplas.</p><div className="mt-5 grid gap-4">{([['criacao', 'Criacao ou confirmacao'], ['remarcacao', 'Remarcacao'], ['cancelamento', 'Cancelamento'], ['atualizacao', 'Atualizacao de status']] as const).map(([chave, titulo]) => <label key={chave} className="label">{titulo}<textarea className="input-field mt-1 min-h-24" maxLength={1000} value={modelos[chave]} onChange={event => setModelos(atual => ({ ...atual, [chave]: event.target.value }))} /></label>)}</div><button type="button" onClick={() => void salvarModelos()} className="btn-primary mt-5">Salvar mensagens</button></div>
   </section>
 }

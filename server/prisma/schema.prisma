@@ -129,6 +129,10 @@ model Configuracao {
   quantidadeCartoes Int?      @map("quantidade_cartoes")
   textoFidelidade   String?   @map("texto_fidelidade")
   evolutionNomeExibicao String? @map("evolution_nome_exibicao")
+  mensagemWhatsappCriacao String? @map("mensagem_whatsapp_criacao") @db.Text
+  mensagemWhatsappRemarcacao String? @map("mensagem_whatsapp_remarcacao") @db.Text
+  mensagemWhatsappCancelamento String? @map("mensagem_whatsapp_cancelamento") @db.Text
+  mensagemWhatsappAtualizacao String? @map("mensagem_whatsapp_atualizacao") @db.Text
   antecedenciaCancelamentoHoras Int @default(24) @map("antecedencia_cancelamento_horas")
   antecedenciaRemarcacaoHoras   Int @default(24) @map("antecedencia_remarcacao_horas")
   toleranciaAtrasoMinutos       Int @default(0) @map("tolerancia_atraso_minutos")

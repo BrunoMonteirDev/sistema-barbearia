@@ -34,4 +34,9 @@ router.put('/nome-exibicao', async (req, res) => {
   try { return res.json(await evolutionService.atualizarNomeExibicao(req.body.nome)) } catch (error) { return res.status(400).json({ error: error instanceof Error ? error.message : 'Nome inválido.' }) }
 })
 
+router.get('/mensagens', async (_req, res) => res.json(await evolutionService.obterModelosMensagens()))
+router.put('/mensagens', async (req, res) => {
+  try { return res.json(await evolutionService.atualizarModelosMensagens(req.body)) } catch (error) { return res.status(400).json({ error: error instanceof Error ? error.message : 'Modelos invalidos.' }) }
+})
+
 export default router

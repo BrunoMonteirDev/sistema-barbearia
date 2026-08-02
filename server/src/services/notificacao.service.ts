@@ -10,9 +10,10 @@ function numeroWhatsApp(valor: string | null | undefined) {
   return `+${numeroComDdi}`
 }
 
-function mensagem(tipo: TipoNotificacao, agendamento: { data: string; hora: string; profissional: { nome: string }; servico: { nome: string } }) {
-  const acao = tipo === 'CRIACAO' ? 'confirmado' : tipo === 'REMARCACAO' ? 'remarcado' : tipo === 'CANCELAMENTO' ? 'cancelado' : 'atualizado'
-  return `Seu agendamento foi ${acao}: ${agendamento.servico.nome} com ${agendamento.profissional.nome}, em ${agendamento.data} às ${agendamento.hora}.`
+async function mensagem(tipo: TipoNotificacao, agendamento: { data: string; hora: string; usuario: { nome: string }; profissional: { nome: string }; servico: { nome: string } }) {
+  const modelos = await evolutionService.obterModelosMensagens()
+  const modelo = modelos[tipo === 'CRIACAO' ? 'criacao' : tipo === 'REMARCACAO' ? 'remarcacao' : tipo === 'CANCELAMENTO' ? 'cancelamento' : 'atualizacao']
+  return modelo.replace(/{{cliente}}/g, agendamento.usuario.nome).replace(/{{servico}}/g, agendamento.servico.nome).replace(/{{profissional}}/g, agendamento.profissional.nome).replace(/{{data}}/g, agendamento.data).replace(/{{hora}}/g, agendamento.hora)
 }
 
 export const notificacaoService = {
@@ -28,7 +29,7 @@ export const notificacaoService = {
     if (!destino) return prisma.notificacaoAgendamento.create({ data: { agendamentoId, tipo, status: 'IGNORADA', erro: 'Cliente sem telefone.' } })
     if (!evolutionService.configurada()) return prisma.notificacaoAgendamento.create({ data: { agendamentoId, tipo, destino, status: 'PENDENTE_CONFIGURACAO', erro: 'Evolution API não configurada.' } })
     try {
-      await evolutionService.enviarTexto(destino, mensagem(tipo, agendamento))
+      await evolutionService.enviarTexto(destino, await mensagem(tipo, agendamento))
       return prisma.notificacaoAgendamento.create({ data: { agendamentoId, tipo, destino, status: 'ENVIADA' } })
     } catch (error) {
       return prisma.notificacaoAgendamento.create({ data: { agendamentoId, tipo, destino, status: 'FALHOU', erro: error instanceof Error ? error.message : 'Falha desconhecida.' } })
