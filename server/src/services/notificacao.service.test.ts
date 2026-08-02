@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const mocks = vi.hoisted(() => ({ findUnique: vi.fn(), create: vi.fn() }))
-const evolutionMocks = vi.hoisted(() => ({ configurada: vi.fn(), enviarTexto: vi.fn(), obterModelosMensagens: vi.fn(), envioAutomaticoAtivo: vi.fn() }))
-vi.mock('../lib/prisma', () => ({ prisma: { agendamento: { findUnique: mocks.findUnique }, notificacaoAgendamento: { create: mocks.create } } }))
+const mocks = vi.hoisted(() => ({ findUnique: vi.fn(), findMany: vi.fn(), create: vi.fn(), findFirst: vi.fn() }))
+const evolutionMocks = vi.hoisted(() => ({ configurada: vi.fn(), enviarTexto: vi.fn(), obterModelosMensagens: vi.fn(), envioAutomaticoAtivo: vi.fn(), regrasEnvioAutomatico: vi.fn() }))
+vi.mock('../lib/prisma', () => ({ prisma: { agendamento: { findUnique: mocks.findUnique, findMany: mocks.findMany }, notificacaoAgendamento: { create: mocks.create, findFirst: mocks.findFirst } } }))
 vi.mock('./evolution.service', () => ({ evolutionService: evolutionMocks }))
 
 import { notificacaoService } from './notificacao.service'
@@ -12,6 +12,7 @@ describe('notificacaoService', () => {
     vi.clearAllMocks()
     evolutionMocks.configurada.mockReturnValue(false)
     evolutionMocks.envioAutomaticoAtivo.mockResolvedValue(false)
+    evolutionMocks.regrasEnvioAutomatico.mockResolvedValue({ ativo: false, regras: { lembrete: false, antecedenciaLembreteMinutos: 60 } })
   })
 
   it('records a pending configuration without interrupting the operation', async () => {
@@ -38,5 +39,33 @@ describe('notificacaoService', () => {
     const enviar = vi.spyOn(notificacaoService, 'enviar').mockResolvedValue(undefined)
     await notificacaoService.enviarSeAutomatico('ag-1', 'CONFIRMADO')
     expect(enviar).toHaveBeenCalledWith('ag-1', 'CONFIRMADO')
+  })
+
+  it('sends a reminder at the configured time and only once', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2030-08-05T09:00:00'))
+    evolutionMocks.regrasEnvioAutomatico.mockResolvedValue({ ativo: true, regras: { lembrete: true, antecedenciaLembreteMinutos: 60 } })
+    mocks.findMany.mockResolvedValue([{ id: 'ag-1', data: '2030-08-05', hora: '10:00' }])
+    mocks.findFirst.mockResolvedValue(null)
+    const enviar = vi.spyOn(notificacaoService, 'enviar').mockResolvedValue(undefined)
+
+    await notificacaoService.processarLembretes()
+
+    expect(enviar).toHaveBeenCalledWith('ag-1', 'LEMBRETE')
+    vi.useRealTimers()
+  })
+
+  it('does not repeat a delivered reminder', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2030-08-05T09:00:00'))
+    evolutionMocks.regrasEnvioAutomatico.mockResolvedValue({ ativo: true, regras: { lembrete: true, antecedenciaLembreteMinutos: 60 } })
+    mocks.findMany.mockResolvedValue([{ id: 'ag-1', data: '2030-08-05', hora: '10:00' }])
+    mocks.findFirst.mockResolvedValue({ id: 'notificacao-ja-enviada' })
+    const enviar = vi.spyOn(notificacaoService, 'enviar').mockResolvedValue(undefined)
+
+    await notificacaoService.processarLembretes()
+
+    expect(enviar).not.toHaveBeenCalled()
+    vi.useRealTimers()
   })
 })

@@ -37,6 +37,8 @@ Já entregue:
 - Testes de interface de Meus agendamentos.
 - Testes de regressão do modo automático de WhatsApp: padrão desativado e envio
   somente após habilitação explícita por evento.
+- Testes de lembrete automático: momento configurado e ausência de reenvio após
+  entrega registrada.
 
 Próximos itens:
 - Cobrir autenticação, permissões, usuários, profissionais, serviços,

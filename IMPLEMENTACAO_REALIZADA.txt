@@ -74,6 +74,8 @@ Histórico
   lacunas restantes no cliente e servidor, impedindo aprovação enganosa.
 - Regressões de notificações automáticas cobrem o padrão desativado e o disparo
   limitado aos eventos explicitamente habilitados pelo administrador.
+- Lembretes automáticos possuem testes para a antecedência configurada e para a
+  prevenção de reenvio após uma entrega já registrada.
 - Cobertura adicional das APIs de regras de negócio, incluindo criação inicial,
   limites numéricos e persistência das configurações válidas.
 - Cobertura do CRUD administrativo de usuários: perfil próprio, permissão,
