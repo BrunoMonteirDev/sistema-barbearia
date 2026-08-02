@@ -1,45 +1,13 @@
 {
-  "name": "barbearia-system",
-  "version": "1.0.0",
-  "type": "module",
+  "name": "sistema-barbearia",
+  "private": true,
   "scripts": {
-    "dev": "next dev",
-    "dev:api": "tsx watch server/src/index.ts",
-    "start:api": "tsx server/src/index.ts",
     "dev:client": "npm --prefix client run dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "tsc --noEmit",
-    "seed": "tsx prisma/seed.ts",
-    "install:all": "npm install && cd client && npm install"
-  },
-  "dependencies": {
-    "@prisma/adapter-pg": "^7.9.0",
-    "@prisma/client": "^7.9.0",
-    "bcryptjs": "^2.4.3",
-    "cors": "^2.8.6",
-    "dotenv": "^17.3.1",
-    "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3",
-    "lucide-react": "^0.468.0",
-    "next": "^15.5.0",
-    "pg": "^8.22.0",
-    "prisma": "^7.9.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
-  },
-  "devDependencies": {
-    "@types/bcryptjs": "^2.4.6",
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.6",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^22.5.0",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.45",
-    "tailwindcss": "^3.4.17",
-    "tsx": "^4.23.1",
-    "typescript": "^5.5.4"
+    "dev:server": "npm --prefix server run dev",
+    "build": "npm --prefix client run build && npm --prefix server run build",
+    "test": "npm --prefix client run test && npm --prefix server run test",
+    "test:watch": "npm --prefix client run test:watch",
+    "test:coverage": "npm --prefix client run test:coverage && npm --prefix server run test:coverage",
+    "test:integration": "npm --prefix server run test:integration"
   }
 }

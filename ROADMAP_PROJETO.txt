@@ -1,0 +1,75 @@
+SISTEMA WEB DE AGENDAMENTO PARA BARBEARIAS
+Roadmap de desenvolvimento
+Atualizado em: 01/08/2026
+
+LEGENDA
+[CONCLUÍDO] entregue e validado
+[EM ANDAMENTO] foco atual
+[PENDENTE] ainda será implementado
+
+1. FUNDAÇÃO TÉCNICA E DADOS                                    [CONCLUÍDO]
+- React/Vite, Express, PostgreSQL, Prisma, JWT e migrations.
+- Usuários, profissionais, serviços, disponibilidade, agendamentos,
+  configurações e histórico.
+
+2. CADASTROS E EXPERIÊNCIA DO CLIENTE                          [CONCLUÍDO]
+- Home, autenticação, Minha conta, usuários unificados, serviços,
+  profissionais, disponibilidade semanal e agendamento em etapas.
+- Consulta, cancelamento, remarcação e histórico do cliente.
+
+3. PAINEL, STATUS E REGRAS                                    [CONCLUÍDO]
+- Dashboard, gestão de usuários, serviços, profissionais e agendamentos.
+- Status ATRASADO e regras configuráveis de prazo/tolerância.
+- Histórico de alterações de agendamentos.
+
+4. BASE DE QUALIDADE                                           [EM ANDAMENTO]
+Já entregue:
+- Vitest, React Testing Library e preparação para Supertest.
+- Scripts de testes, cobertura e integração.
+- Testes de senha, telefone, antecedência e remarcação.
+
+Próximos itens:
+- Cobrir autenticação, permissões, usuários, profissionais, serviços,
+  disponibilidade, agendamentos e status.
+- Criar PostgreSQL exclusivo para testes de integração.
+- Alcançar 100% dos fluxos críticos de autenticação/agendamento.
+- Alcançar 80% de linhas, funções, branches e statements da base ativa.
+
+5. AGENDA ADMINISTRATIVA EM CALENDÁRIO                         [PENDENTE]
+- Visualização diária/semanal, horários em linhas e profissionais em colunas.
+- Blocos com cliente, serviço, duração e status textual.
+- Filtros, navegação e ações rápidas.
+- Validação visual desktop/mobile e testes.
+
+6. LOGIN COM GOOGLE E CADASTRO PENDENTE                        [PENDENTE]
+- Adicionar autenticação pelo botão "Continuar com Google".
+- Criar/identificar o usuário pelo provedor Google.
+- Após o primeiro login Google, redirecionar usuários sem dados obrigatórios
+  para a tela de conclusão de cadastro.
+- Persistir o estado de cadastro pendente no banco.
+- Bloquear a aba de usuários e a confirmação de agendamento até a conclusão.
+- Aplicar o bloqueio também após logout e um novo login.
+- Cobrir autenticação, redirecionamento e bloqueios com testes automatizados.
+
+7. ACESSIBILIDADE                                               [PENDENTE]
+- Preferências persistidas: alto contraste, tamanho de fonte e redução de animações.
+- Revisão de labels, erros, foco, teclado, modais, ARIA e status sem depender só de cor.
+- VLibras, Lighthouse, teclado e leitor de tela.
+
+8. WHATSAPP E NOTIFICAÇÕES                                     [PENDENTE - ÚLTIMA ETAPA]
+- Usar o número configurado pelo administrador em todos os links.
+- Camada desacoplada de notificações e integração Quepasa por variáveis de ambiente.
+- Confirmação, cancelamento e remarcação; falha de envio não bloqueia a operação.
+- Mocks e validação em ambiente controlado.
+
+9. LIMPEZA E DOCUMENTAÇÃO                                      [PENDENTE / CONTÍNUA]
+- Remover código Supabase/fluxos antigos sem consumidores.
+- Atualizar documentação para React/Vite + Express + Prisma + JWT.
+- Registrar decisões novas: usuário unificado, Funcionário, e-mail opcional
+  pelo admin, ATRASADO, regras e histórico.
+
+ONDE ESTAMOS AGORA
+
+O sistema já entrega os fluxos centrais de uma barbearia. O próximo passo é
+ampliar os testes automatizados. Depois virão a agenda em calendário,
+acessibilidade e WhatsApp.

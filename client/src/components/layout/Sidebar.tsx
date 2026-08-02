@@ -20,10 +20,10 @@ export default function Sidebar({ items, onSignOut, title = 'Barbearia' }: Sideb
 
   return (
     <aside className="w-full shrink-0 bg-secondary-500 text-white md:min-h-screen md:w-64">
-      <div className="flex items-center gap-2 border-b border-secondary-400 px-5 py-5">
+      <Link href="/" className="flex items-center gap-2 border-b border-secondary-400 px-5 py-5">
         <Scissors className="h-6 w-6" aria-hidden="true" />
         <span className="text-lg font-bold">{title}</span>
-      </div>
+      </Link>
       <nav aria-label="Navegação do painel" className="flex gap-1 overflow-x-auto p-3 md:flex-col md:overflow-visible">
         {items.map((item) => {
           const isActive = item.exact ? location === item.href : location === item.href || location.startsWith(`${item.href}/`)

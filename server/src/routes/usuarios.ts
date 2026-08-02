@@ -1,5 +1,7 @@
 import { Router } from 'express'
+import { randomUUID } from 'node:crypto'
 import { usuarioService } from '../services/usuario.service'
+import { validarSenha } from '../services/senha.service'
 import { requireAdmin } from '../middlewares/auth'
 
 const router = Router()
@@ -22,7 +24,9 @@ function normalizePayload(body: Record<string, unknown>) {
 
   return {
     nome: String(body.nome ?? ''),
-    email: String(body.email ?? ''),
+    email: typeof body.email === 'string' && body.email.trim()
+      ? body.email.trim().toLowerCase()
+      : `cliente-${randomUUID()}@sem-email.local`,
     telefone: typeof body.telefone === 'string' ? body.telefone : null,
     senha: typeof body.senha === 'string' ? body.senha : undefined,
     nivel: typeof body.nivel === 'string' ? body.nivel : 'Cliente',
@@ -56,7 +60,10 @@ router.get('/', async (_req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const usuario = await usuarioService.criar(normalizePayload(req.body as Record<string, unknown>))
+    const dados = normalizePayload(req.body as Record<string, unknown>)
+    const erroSenha = dados.senha ? validarSenha(dados.senha) : null
+    if (erroSenha) return res.status(400).json({ error: erroSenha })
+    const usuario = await usuarioService.criar(dados)
     return res.status(201).json(mapUsuario(usuario))
   } catch (error) {
     console.error(error)
@@ -66,7 +73,10 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   try {
-    const usuario = await usuarioService.atualizar(req.params.id, normalizePayload(req.body as Record<string, unknown>))
+    const dados = normalizePayload(req.body as Record<string, unknown>)
+    const erroSenha = dados.senha ? validarSenha(dados.senha) : null
+    if (erroSenha) return res.status(400).json({ error: erroSenha })
+    const usuario = await usuarioService.atualizar(req.params.id, dados)
     return res.json(mapUsuario(usuario))
   } catch (error) {
     console.error(error)

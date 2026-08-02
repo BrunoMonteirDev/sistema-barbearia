@@ -1,0 +1,76 @@
+SISTEMA WEB DE AGENDAMENTO PARA BARBEARIAS
+Registro de implementação realizada
+Atualizado em: 01/08/2026
+
+1. ARQUITETURA IMPLEMENTADA
+
+O sistema utiliza React, TypeScript, Vite e Tailwind CSS no cliente; Node.js,
+Express, TypeScript e JWT na API; PostgreSQL e Prisma para persistência. A
+arquitetura atual é React/Vite + Express + Prisma + JWT, sem Supabase ou Next.js.
+
+2. FUNCIONALIDADES ENTREGUES
+
+Página pública e acesso
+- Home responsiva com identidade visual, navegação e chamada para agendar.
+- Cadastro, login, sessão JWT, recuperação e gerenciamento de senha.
+- Notificações no topo da tela, com botão para fechar e duração reduzida.
+
+Usuários
+- Perfis Cliente, Funcionário e Administrador em uma área administrativa unificada.
+- Criação, edição, ativação/desativação e gerenciamento de senha.
+- Cliente criado pelo administrador pode não ter e-mail; no autocadastro, e-mail é obrigatório.
+- Formatação de telefone brasileiro e regras de senha forte.
+- Área Minha conta para edição dos próprios dados.
+
+Serviços, profissionais e disponibilidade
+- CRUD de serviços: nome, descrição, duração, preço e status.
+- CRUD de profissionais e configuração de horários em blocos de 30 minutos.
+- Marcar/desmarcar todos os horários, copiar um dia e copiar a semana de outro profissional.
+- Validação da jornada e de blocos consecutivos para atender à duração do serviço.
+
+Agendamento
+- Fluxo em quatro etapas: profissional, serviço, data/horário e revisão.
+- Opção sem preferência de profissional quando houver disponibilidade.
+- Exibição de horários livres com validação no backend de jornada, duração e conflito.
+- Revisão obrigatória com profissional, serviço, data, horário, duração e valor.
+
+Agenda e regras
+- Dashboard e painel de gestão de agendamentos.
+- Status: PENDENTE, CONFIRMADO, CONCLUIDO, CANCELADO e ATRASADO.
+- Ações rápidas de confirmar, concluir e cancelar.
+- Regras configuráveis pelo administrador: antecedência de cancelamento,
+  antecedência de remarcação e tolerância de atraso.
+- Padrões iniciais: 24 horas, 24 horas e 0 minuto.
+- Agendamentos pendentes ou confirmados passam para ATRASADO quando excedem a tolerância.
+
+Cliente
+- Página separada de Meus agendamentos.
+- Cancelamento e remarcação para PENDENTE ou CONFIRMADO.
+- Remarcação reaproveita a disponibilidade e ignora o próprio agendamento no conflito.
+- Histórico visual de cada agendamento.
+
+Histórico
+- Registro de cancelamento, remarcação, alteração administrativa e troca rápida de status.
+- Cada evento armazena autor, data/hora, valores anteriores e valores novos.
+- Cliente vê somente o histórico dos próprios agendamentos; administrador vê todos.
+
+3. QUALIDADE E VALIDAÇÃO
+
+- Vitest configurado no cliente e no servidor.
+- React Testing Library configurada no cliente; Supertest instalado para integração.
+- App Express separado do listen para permitir testes HTTP.
+- Scripts na raiz: npm test, npm run test:watch, npm run test:coverage e npm run test:integration.
+- Testes iniciais para senha, telefone, regra de antecedência e fluxo de remarcação.
+- Última validação concluída com build do cliente/servidor e 10 testes passando.
+
+4. PENDÊNCIAS PRINCIPAIS
+
+A expansão da cobertura de testes, a agenda administrativa visual em calendário,
+os recursos completos de acessibilidade, a integração VLibras, a integração
+Quepasa/WhatsApp, a remoção de código legado e a atualização dos documentos
+técnicos antigos continuam pendentes.
+
+Também está planejado o login com Google. Após a primeira autenticação por
+Google, uma pessoa sem cadastro completo deverá ser encaminhada à conclusão de
+cadastro. Enquanto esse cadastro estiver pendente, não poderá acessar a área de
+usuários nem concluir agendamentos, inclusive se sair e retornar ao sistema.

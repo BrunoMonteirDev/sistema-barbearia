@@ -41,7 +41,7 @@ router.get('/admin', authenticate, requireAdmin, async (_req, res) => {
 router.get('/:id/disponibilidade', authenticate, requireAdmin, async (req, res) => {
   try {
     const horarios = await prisma.disponibilidadeProfissional.findMany({
-      where: { profissionalId: req.params.id },
+      where: { profissionalId: String(req.params.id) },
       orderBy: [{ diaSemana: 'asc' }, { hora: 'asc' }],
     })
     const disponibilidade = horarios.reduce<Record<number, string[]>>((acc, item) => {
@@ -62,17 +62,18 @@ router.put('/:id/disponibilidade', authenticate, requireAdmin, async (req, res) 
       return res.status(400).json({ error: 'Disponibilidade inválida.' })
     }
 
-    const profissional = await prisma.profissional.findUnique({ where: { id: req.params.id } })
+    const profissionalId = String(req.params.id)
+    const profissional = await prisma.profissional.findUnique({ where: { id: profissionalId } })
     if (!profissional) return res.status(404).json({ error: 'Funcionário não encontrado.' })
 
     const blocos = Object.entries(disponibilidade).flatMap(([dia, horas]) => {
       const diaSemana = Number(dia)
       if (!Number.isInteger(diaSemana) || diaSemana < 0 || diaSemana > 6 || !Array.isArray(horas)) return []
-      return [...new Set(horas)].filter(isValidBlock).map(hora => ({ profissionalId: req.params.id, diaSemana, hora }))
+      return [...new Set(horas)].filter(isValidBlock).map(hora => ({ profissionalId, diaSemana, hora }))
     })
 
     await prisma.$transaction([
-      prisma.disponibilidadeProfissional.deleteMany({ where: { profissionalId: req.params.id } }),
+      prisma.disponibilidadeProfissional.deleteMany({ where: { profissionalId } }),
       ...(blocos.length ? [prisma.disponibilidadeProfissional.createMany({ data: blocos })] : []),
     ])
 
@@ -99,7 +100,7 @@ router.put('/:id', authenticate, requireAdmin, async (req, res) => {
   try {
     const data = getPayload(req.body)
     if (!hasValidData(data)) return res.status(400).json({ error: 'Informe nome, telefone e e-mail válidos.' })
-    const profissional = await prisma.profissional.update({ where: { id: req.params.id }, data })
+    const profissional = await prisma.profissional.update({ where: { id: String(req.params.id) }, data })
     return res.json(profissional)
   } catch (error) {
     console.error(error)
@@ -109,7 +110,7 @@ router.put('/:id', authenticate, requireAdmin, async (req, res) => {
 
 router.delete('/:id', authenticate, requireAdmin, async (req, res) => {
   try {
-    const profissional = await prisma.profissional.update({ where: { id: req.params.id }, data: { ativo: false } })
+    const profissional = await prisma.profissional.update({ where: { id: String(req.params.id) }, data: { ativo: false } })
     return res.json(profissional)
   } catch (error) {
     console.error(error)

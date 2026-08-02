@@ -42,9 +42,11 @@ export const usuarioService = {
   },
 
   async atualizar(id: string, dados: Record<string, unknown>) {
+    const { senha, ...dadosUsuario } = dados
+    const senhaHash = typeof senha === 'string' && senha ? await bcrypt.hash(senha, 10) : undefined
     return prisma.usuario.update({
       where: { id },
-      data: dados
+      data: { ...dadosUsuario, ...(senhaHash ? { senhaHash } : {}) }
     })
   },
 

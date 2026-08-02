@@ -1,0 +1,124 @@
+SISTEMA WEB DE AGENDAMENTO PARA BARBEARIAS
+Documento de requisitos atualizado
+Versão 2.0 - 01/08/2026
+
+1. OBJETIVO
+
+Oferecer uma aplicação web para clientes agendarem atendimentos e para a
+barbearia administrar usuários, profissionais, serviços, disponibilidade,
+agenda e regras de negócio.
+
+2. ATORES
+
+Cliente: possui conta, edita seus dados e consulta/cancela/remarca seus agendamentos.
+Funcionário: usuário com perfil profissional e jornada configurável.
+Administrador: gerencia o estabelecimento e possui exceção às regras de prazo.
+
+3. REQUISITOS FUNCIONAIS
+
+RF01 - Usuários [IMPLEMENTADO]
+Cadastrar, editar, ativar/desativar e gerenciar usuários. Há perfis Cliente,
+Funcionário e Administrador. Cliente criado pelo administrador pode não ter e-mail.
+
+RF02 - Autenticação e senha [IMPLEMENTADO]
+Autenticar por e-mail e senha com JWT, proteger rotas, recuperar e alterar senha
+com regras de força.
+
+RF03 - Profissionais [IMPLEMENTADO]
+Cadastrar, editar, ativar/desativar profissionais e configurar sua jornada por
+dia da semana em blocos de 30 minutos.
+
+RF04 - Serviços [IMPLEMENTADO]
+Gerenciar nome, descrição, duração, preço e status de serviços.
+
+RF05 - Disponibilidade [IMPLEMENTADO]
+Exibir apenas horários dentro da jornada, compatíveis com a duração e sem conflitos.
+
+RF06 - Agendamento online [IMPLEMENTADO]
+Permitir seleção de profissional (inclusive sem preferência), serviço, data e
+horário, seguida de revisão obrigatória antes da confirmação.
+
+RF07 - Consulta de agendamentos [IMPLEMENTADO]
+Cliente visualiza somente seus agendamentos com serviço, profissional, data, hora e status.
+
+RF08 - Cancelamento [IMPLEMENTADO]
+Cliente pode cancelar PENDENTE ou CONFIRMADO dentro da antecedência configurada;
+administrador não possui essa restrição.
+
+RF09 - Remarcação [IMPLEMENTADO]
+Cliente pode remarcar PENDENTE ou CONFIRMADO dentro da antecedência configurada.
+O backend valida profissional, serviço, jornada, duração e conflito. O administrador
+pode remarcar sem a restrição de antecedência.
+
+RF10 - Regras de negócio [IMPLEMENTADO]
+Administrador configura antecedência de cancelamento, antecedência de remarcação
+e tolerância de atraso. Valores iniciais: 24h, 24h e 0 minuto.
+
+RF11 - Status [IMPLEMENTADO]
+Usar PENDENTE, CONFIRMADO, CONCLUIDO, CANCELADO e ATRASADO. Pendentes e confirmados
+tornam-se ATRASADO após a tolerância, sem cancelar automaticamente.
+
+RF12 - Histórico [IMPLEMENTADO]
+Registrar autor, momento, valores antigos e novos para cancelamento, remarcação,
+atualização administrativa e mudança de status.
+
+RF13 - Painel administrativo [IMPLEMENTADO]
+Disponibilizar dashboard, gestão de usuários, profissionais, serviços,
+agendamentos e configurações.
+
+RF14 - Agenda em calendário [PENDENTE]
+Exibir agenda diária/semanal por profissional, com filtros e ações rápidas.
+
+RF15 - Notificações WhatsApp [PENDENTE]
+Integrar Quepasa para confirmação, cancelamento e remarcação. Falha de envio não
+pode impedir a operação principal.
+
+RF16 - VLibras [PENDENTE]
+Integrar VLibras às páginas públicas e à conta do usuário.
+
+RF17 - Login com Google e conclusão de cadastro [PENDENTE]
+O sistema deverá oferecer login com Google. Quando uma pessoa autenticar pelo
+Google sem possuir cadastro completo, deverá ser direcionada para uma tela de
+conclusão de cadastro. O estado pendente deve permanecer salvo no banco; até a
+conclusão, a pessoa não poderá abrir a área de usuários nem confirmar um
+agendamento, mesmo após sair e retornar ao sistema.
+
+4. REQUISITOS NÃO FUNCIONAIS
+
+RNF01 - Arquitetura e portabilidade [IMPLEMENTADO]
+Frontend React/Vite, API Express, PostgreSQL e Prisma devem operar em navegadores modernos.
+
+RNF02 - Segurança [IMPLEMENTADO PARCIAL]
+Usar senha protegida, JWT e permissões. A expansão de testes de segurança é pendente.
+
+RNF03 - Usabilidade e responsividade [IMPLEMENTADO PARCIAL]
+Interface clara e responsiva para os fluxos principais; agenda em calendário ainda será validada.
+
+RNF04 - Acessibilidade [PENDENTE PARCIAL]
+Contraste, teclado, semântica, ARIA, alto contraste, tamanho de fonte, redução de
+animações, modais acessíveis, VLibras e testes com leitor de tela.
+
+RNF05 - Desempenho [IMPLEMENTADO PARCIAL]
+Operações e disponibilidade são validadas no backend; métricas formais são pendentes.
+
+RNF06 - Qualidade e manutenção [EM ANDAMENTO]
+Manter documentação e testes. Meta: 80% de cobertura da base ativa e 100% dos
+fluxos críticos de autenticação e agendamento.
+
+5. MODELO DE DADOS ATUAL
+
+Usuario, Profissional, Servico, DisponibilidadeProfissional, Agendamento,
+HistoricoAgendamento e Configuracao.
+
+6. REGRAS PRINCIPAIS
+
+- Não permitir conflitos considerando a duração do serviço.
+- Profissional e serviço precisam estar ativos.
+- Horário precisa respeitar a jornada do profissional.
+- Cliente somente altera seus próprios agendamentos.
+- Prazos de cancelamento/remarcação valem para cliente, não para administrador.
+- Toda alteração relevante gera histórico.
+
+7. FORA DO ESCOPO ATUAL
+
+Pagamentos online e lembretes automáticos antes da validação da integração Quepasa.

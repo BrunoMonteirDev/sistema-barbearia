@@ -29,12 +29,12 @@ router.post('/', authenticate, requireAdmin, async (req, res) => {
 })
 
 router.put('/:id', authenticate, requireAdmin, async (req, res) => {
-  const servico = await prisma.servico.update({ where: { id: req.params.id }, data: req.body })
+  const servico = await prisma.servico.update({ where: { id: String(req.params.id) }, data: req.body })
   return res.json(servico)
 })
 
 router.delete('/:id', authenticate, requireAdmin, async (req, res) => {
-  const servico = await prisma.servico.update({ where: { id: req.params.id }, data: { ativo: false } })
+  const servico = await prisma.servico.update({ where: { id: String(req.params.id) }, data: { ativo: false } })
   return res.json(servico)
 })
 
