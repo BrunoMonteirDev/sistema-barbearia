@@ -74,6 +74,8 @@ Histórico
   antecedência continua permitido e cria o respectivo histórico.
 - Integração real de permissões impede que um cliente cancele o agendamento de
   outro cliente, preservando status e histórico.
+- Integração real valida a remarcação do próprio cliente para horário disponível
+  e o registro do evento no histórico.
 - Cobertura é medida com limite global de 80%; o relatório atual aponta as
   lacunas restantes no cliente e servidor, impedindo aprovação enganosa.
 - Regressões de notificações automáticas cobrem o padrão desativado e o disparo

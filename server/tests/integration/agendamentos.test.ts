@@ -64,4 +64,22 @@ describe('API - conflito real de agendamento', () => {
     expect((await prisma.agendamento.findUnique({ where: { id: agendamento.id } }))?.status).toBe('CONFIRMADO')
     expect(await prisma.historicoAgendamento.count()).toBe(0)
   })
+
+  it('permite que o cliente remarque o proprio horario disponivel e registra o historico', async () => {
+    const cliente = await prisma.usuario.create({ data: { nome: 'Cliente de remarcacao', email: 'cliente.remarcacao@teste.local', senhaHash: 'hash' } })
+    const profissional = await prisma.profissional.create({ data: { nome: 'Profissional de teste' } })
+    const servico = await prisma.servico.create({ data: { nome: 'Servico de teste', duracao: 30, preco: 30 } })
+    await prisma.disponibilidadeProfissional.createMany({ data: [
+      { profissionalId: profissional.id, diaSemana: 1, hora: '10:00' },
+      { profissionalId: profissional.id, diaSemana: 1, hora: '10:30' },
+      { profissionalId: profissional.id, diaSemana: 1, hora: '11:00' },
+    ] })
+    const agendamento = await prisma.agendamento.create({ data: { usuarioId: cliente.id, profissionalId: profissional.id, servicoId: servico.id, data: dataTeste, hora: '10:00', status: 'CONFIRMADO' } })
+    const authorization = `Bearer ${signToken({ id: cliente.id, nivel: 'Cliente' })}`
+
+    await request(app).patch(`/api/agendamentos/${agendamento.id}/remarcar`).set('authorization', authorization).send({ data: dataTeste, hora: '11:00' }).expect(200)
+
+    expect((await prisma.agendamento.findUnique({ where: { id: agendamento.id } }))?.hora).toBe('11:00')
+    expect(await prisma.historicoAgendamento.findFirst({ where: { agendamentoId: agendamento.id, autorId: cliente.id, tipo: 'REMARCACAO' } })).toBeTruthy()
+  })
 })

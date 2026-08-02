@@ -43,6 +43,8 @@ Já entregue:
   prazo, incluindo a criação de histórico.
 - Integração real de permissão: cliente não consegue cancelar agendamento de
   outro cliente.
+- Integração real de remarcação do próprio cliente para um horário disponível,
+  incluindo o histórico da alteração.
 
 Próximos itens:
 - Cobrir autenticação, permissões, usuários, profissionais, serviços,
