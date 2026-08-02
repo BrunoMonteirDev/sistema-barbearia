@@ -126,4 +126,18 @@ describe('API - conflito real de agendamento', () => {
     expect((await prisma.agendamento.findUnique({ where: { id: agendamento.id } }))?.data).toBe('2020-01-01')
     expect(await prisma.historicoAgendamento.count()).toBe(0)
   })
+
+  it('bloqueia cancelamento do cliente fora da antecedencia configurada', async () => {
+    const cliente = await prisma.usuario.create({ data: { nome: 'Cliente cancelamento', email: 'cliente.cancelamento.prazo@teste.local', senhaHash: 'hash' } })
+    const profissional = await prisma.profissional.create({ data: { nome: 'Profissional de teste' } })
+    const servico = await prisma.servico.create({ data: { nome: 'Servico de teste', duracao: 30, preco: 30 } })
+    const agendamento = await prisma.agendamento.create({ data: { usuarioId: cliente.id, profissionalId: profissional.id, servicoId: servico.id, data: '2020-01-01', hora: '10:00', status: 'CONFIRMADO' } })
+    await prisma.configuracao.create({ data: { antecedenciaCancelamentoHoras: 24 } })
+    const authorization = `Bearer ${signToken({ id: cliente.id, nivel: 'Cliente' })}`
+
+    await request(app).patch(`/api/agendamentos/${agendamento.id}/cancelar`).set('authorization', authorization).expect(400)
+
+    expect((await prisma.agendamento.findUnique({ where: { id: agendamento.id } }))?.status).toBe('CONFIRMADO')
+    expect(await prisma.historicoAgendamento.count()).toBe(0)
+  })
 })

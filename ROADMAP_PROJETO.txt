@@ -50,6 +50,8 @@ Já entregue:
 - Integração real do status ATRASADO conforme a tolerância configurada.
 - Integração real do prazo de remarcação: cliente fora da antecedência não altera
   o atendimento nem produz histórico.
+- Integração real do prazo de cancelamento: cliente fora da antecedência mantém
+  o atendimento inalterado, enquanto a exceção administrativa segue coberta.
 
 Próximos itens:
 - Cobrir autenticação, permissões, usuários, profissionais, serviços,

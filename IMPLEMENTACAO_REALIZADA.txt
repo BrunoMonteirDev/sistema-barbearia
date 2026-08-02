@@ -82,6 +82,8 @@ Histórico
   para ATRASADO conforme a tolerância configurada.
 - Integração real bloqueia remarcação do cliente fora da antecedência e preserva
   os dados originais do agendamento.
+- Integração real bloqueia cancelamento do cliente fora da antecedência e mantém
+  o status original.
 - Cobertura é medida com limite global de 80%; o relatório atual aponta as
   lacunas restantes no cliente e servidor, impedindo aprovação enganosa.
 - Regressões de notificações automáticas cobrem o padrão desativado e o disparo
