@@ -148,6 +148,26 @@ describe('API - conflito real de agendamento', () => {
     expect(await prisma.agendamento.count()).toBe(1)
   })
 
+  it('avisa sobre outro agendamento ativo no mesmo dia, ignora cancelado e aceita confirmação', async () => {
+    const cliente = await prisma.usuario.create({ data: { nome: 'Cliente repetição', email: 'cliente.repeticao@teste.local', senhaHash: 'hash' } })
+    const profissional = await prisma.profissional.create({ data: { nome: 'Profissional repetição' } })
+    const [corte, barba] = await Promise.all([
+      prisma.servico.create({ data: { nome: 'Corte', duracao: 30, preco: 40 } }),
+      prisma.servico.create({ data: { nome: 'Barba', duracao: 30, preco: 30 } }),
+    ])
+    await prisma.disponibilidadeProfissional.createMany({ data: ['10:00', '10:30', '11:00'].map(hora => ({ profissionalId: profissional.id, diaSemana: 1, hora })) })
+    const authorization = `Bearer ${signToken({ id: cliente.id, nivel: 'Cliente' })}`
+
+    await request(app).post('/api/agendamentos').set('authorization', authorization).send({ profissionalId: profissional.id, servicoId: corte.id, data: dataTeste, hora: '10:00' }).expect(201)
+    const aviso = await request(app).post('/api/agendamentos').set('authorization', authorization).send({ profissionalId: profissional.id, servicoId: barba.id, data: dataTeste, hora: '11:00' }).expect(409)
+    expect(aviso.body).toMatchObject({ codigo: 'CONFIRMACAO_REPETICAO_NECESSARIA', agendamentosRelacionados: [expect.objectContaining({ hora: '10:00', servico: 'Corte', profissional: 'Profissional repetição' })] })
+
+    const segundo = await request(app).post('/api/agendamentos').set('authorization', authorization).send({ profissionalId: profissional.id, servicoId: barba.id, data: dataTeste, hora: '11:00', tokenConfirmacaoRepeticao: aviso.body.tokenConfirmacaoRepeticao }).expect(201)
+    await request(app).patch(`/api/agendamentos/${aviso.body.agendamentosRelacionados[0].id}/cancelar`).set('authorization', authorization).expect(200)
+    await request(app).patch(`/api/agendamentos/${segundo.body.id}/cancelar`).set('authorization', authorization).expect(200)
+    await request(app).post('/api/agendamentos').set('authorization', authorization).send({ profissionalId: profissional.id, servicoId: corte.id, data: dataTeste, hora: '10:00' }).expect(201)
+  })
+
   it('protege duas criações concorrentes com o mesmo horário inicial', async () => {
     const cliente = await prisma.usuario.create({ data: { nome: 'Cliente concorrente', email: 'cliente.concorrente.mesmo.inicio@teste.local', senhaHash: 'hash' } })
     const profissional = await prisma.profissional.create({ data: { nome: 'Profissional concorrente' } })

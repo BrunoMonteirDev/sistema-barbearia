@@ -65,9 +65,9 @@ export default function LoginPage() {
       <h1 className="text-2xl font-bold">{register ? 'Criar conta' : 'Entrar'}</h1>
       {!register && !autenticandoGoogle && <GoogleLoginButton onCredential={(token) => void entrarComGoogle(token)} />}
       {autenticandoGoogle && <p className="rounded-md bg-slate-100 p-3 text-center text-sm text-slate-700">Validando acesso Google...</p>}
-      {register && <input required className="input-field" placeholder="Nome completo" value={nome} onChange={event => setNome(event.target.value)} />}
-      <input required type="email" className="input-field" placeholder="E-mail" value={email} onChange={event => setEmail(event.target.value)} />
-      <input required minLength={6} type="password" className="input-field" placeholder="Senha" value={senha} onChange={event => setSenha(event.target.value)} />
+      {register && <label className="block text-sm font-medium text-slate-800" htmlFor="nome"><span>Nome completo</span><input id="nome" required className="input-field mt-1" value={nome} onChange={event => setNome(event.target.value)} /></label>}
+      <label className="block text-sm font-medium text-slate-800" htmlFor="email"><span>E-mail</span><input id="email" required type="email" className="input-field mt-1" value={email} onChange={event => setEmail(event.target.value)} /></label>
+      <label className="block text-sm font-medium text-slate-800" htmlFor="senha"><span>Senha</span><input id="senha" required minLength={6} type="password" className="input-field mt-1" value={senha} onChange={event => setSenha(event.target.value)} /></label>
       <button className="btn-primary w-full">{register ? 'Cadastrar' : 'Entrar'}</button>
       <button type="button" className="w-full text-primary-600" onClick={() => setRegister(!register)}>{register ? 'Já tenho uma conta' : 'Criar conta de cliente'}</button>
     </form>

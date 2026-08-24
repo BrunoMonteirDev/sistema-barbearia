@@ -354,10 +354,12 @@ export default function AgendarPage() {
                       Não há horários disponíveis nesta data.
                     </p>
                   ) : (
-                    <div className="space-y-3">{[['Manhã', horarios.filter(hora => hora < '12:00')], ['Tarde', horarios.filter(hora => hora >= '12:00' && hora < '18:00')], ['Noite', horarios.filter(hora => hora >= '18:00')]].map(([periodo, lista]) => (Array.isArray(lista) && lista.length > 0 && <div key={String(periodo)}><p className="mb-1.5 flex items-center gap-2 text-sm font-semibold text-slate-700"><Clock3 className="h-4 w-4 text-secondary-600" />{periodo}</p><div className="grid grid-cols-3 gap-1.5">{lista.map((hora) => (
+                    <div className="space-y-3">{[['Manhã', horarios.filter(hora => hora < '12:00')], ['Tarde', horarios.filter(hora => hora >= '12:00' && hora < '18:00')], ['Noite', horarios.filter(hora => hora >= '18:00')]].map(([periodo, lista]) => (Array.isArray(lista) && lista.length > 0 && <div key={String(periodo)}><p className="mb-1.5 flex items-center gap-2 text-sm font-semibold text-slate-700"><Clock3 className="h-4 w-4 text-secondary-600" />{periodo}</p><div className="grid grid-cols-4 gap-1.5">{lista.map((hora) => (
                         <button
                           key={hora}
                           type="button"
+                          aria-label={`Horário disponível: ${hora}`}
+                          aria-pressed={form.hora === hora}
                           onClick={() =>
                             setForm((current) => ({ ...current, hora }))
                           }
