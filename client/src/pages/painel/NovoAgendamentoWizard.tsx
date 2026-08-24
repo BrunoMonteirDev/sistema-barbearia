@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, CalendarDays, Check, Clock3, Scissors, UserRound, UsersRound } from "lucide-react";
 import toast from "react-hot-toast";
 import { Modal } from "@/components/ui/modal";
-import { api, type Profissional, type Servico, type Usuario } from "@/lib/api";
+import { ApiError, api, type AgendamentoRelacionado, type Profissional, type Servico, type Usuario } from "@/lib/api";
+import { ConfirmacaoAgendamentoRepetidoModal } from "@/components/ConfirmacaoAgendamentoRepetidoModal";
 import { arredondarDuracaoParaBloco } from "@/utils/horarios";
 import { formatarTelefoneBrasileiro } from "@/utils/telefone";
 
@@ -29,6 +30,7 @@ export function NovoAgendamentoWizard({ clientes, profissionais, servicos, onClo
   const [horarios, setHorarios] = useState<string[]>([]);
   const [carregandoHorarios, setCarregandoHorarios] = useState(false);
   const [salvando, setSalvando] = useState(false);
+  const [confirmacaoRepeticao, setConfirmacaoRepeticao] = useState<{ token: string; relacionados: AgendamentoRelacionado[]; snapshot: { usuarioId: string; profissionalId: string; servicoId: string; data: string; hora: string } } | null>(null);
 
   const clientesFiltrados = useMemo(() => clientes.filter((cliente) => `${cliente.nome} ${cliente.telefone ?? ""}`.toLowerCase().includes(busca.toLowerCase())), [busca, clientes]);
   const clienteSelecionado = clientes.find((cliente) => cliente.id === clienteId);
@@ -62,8 +64,8 @@ export function NovoAgendamentoWizard({ clientes, profissionais, servicos, onClo
   const confirmar = async () => {
     if (!horarios.includes(hora)) return toast.error("Selecione um hor\u00e1rio dispon\u00edvel.");
     setSalvando(true);
+    let usuarioId = clienteId;
     try {
-      let usuarioId = clienteId;
       if (criarCliente) {
         const cliente = await api.usuarios.create({ nome: novoCliente.nome.trim(), telefone: novoCliente.telefone || undefined, nivel: "Cliente", ativo: true });
         usuarioId = cliente.id;
@@ -72,6 +74,10 @@ export function NovoAgendamentoWizard({ clientes, profissionais, servicos, onClo
       toast.success("Agendamento criado.");
       onCreated();
     } catch (error) {
+      if (error instanceof ApiError && error.codigo === "CONFIRMACAO_REPETICAO_NECESSARIA" && error.tokenConfirmacaoRepeticao) {
+        setConfirmacaoRepeticao({ token: error.tokenConfirmacaoRepeticao, relacionados: error.agendamentosRelacionados ?? [], snapshot: { usuarioId, profissionalId, servicoId, data, hora } });
+        return;
+      }
       toast.error(error instanceof Error ? error.message : "N\u00e3o foi poss\u00edvel criar o agendamento.");
     } finally {
       setSalvando(false);
@@ -82,7 +88,7 @@ export function NovoAgendamentoWizard({ clientes, profissionais, servicos, onClo
     { titulo: "Cliente", icone: UsersRound }, { titulo: "Profissional", icone: UserRound }, { titulo: "Servi\u00e7o", icone: Scissors }, { titulo: "Hor\u00e1rio", icone: CalendarDays }, { titulo: "Revis\u00e3o", icone: Check },
   ];
 
-  return <Modal title="Novo agendamento" onClose={onClose} size="wide" footer={<div className="flex w-full items-center justify-between gap-3">
+  return <><Modal title="Novo agendamento" onClose={onClose} size="wide" footer={<div className="flex w-full items-center justify-between gap-3">
     {etapa === 1 ? <button type="button" onClick={onClose} className="rounded-md px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200">Cancelar</button> : <button type="button" onClick={() => setEtapa((atual) => atual - 1)} className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200"><ArrowLeft className="h-4 w-4" />Voltar</button>}
     {etapa < 5 ? <button type="button" onClick={avancar} className="btn-primary gap-2">{etapa === 4 ? "Revisar agendamento" : "Avan\u00e7ar"}<ArrowRight className="h-4 w-4" /></button> : <button type="button" onClick={() => void confirmar()} disabled={salvando} className="btn-primary gap-2">Confirmar agendamento<Check className="h-4 w-4" /></button>}
   </div>}>
@@ -96,7 +102,10 @@ export function NovoAgendamentoWizard({ clientes, profissionais, servicos, onClo
     {etapa === 3 && <section><h3 className="text-xl font-bold text-slate-950">Escolha o servi\u00e7o</h3><p className="mt-1 text-sm text-slate-600">Selecione o atendimento que ser\u00e1 realizado.</p><div className="mt-6 grid gap-3 sm:grid-cols-2">{servicos.filter((servico) => servico.ativo).map((servico) => <Choice key={servico.id} active={servicoId === servico.id} onClick={() => { setServicoId(servico.id); setHora(""); }} title={servico.nome} description={`${Number(servico.preco).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })} · ${arredondarDuracaoParaBloco(servico.duracao)} min`} />)}</div></section>}
     {etapa === 4 && <section><h3 className="text-xl font-bold text-slate-950">Escolha o hor\u00e1rio</h3><p className="mt-1 text-sm text-slate-600">Selecione uma data e um hor\u00e1rio dispon\u00edvel.</p><p className="mt-5 text-sm font-semibold text-slate-800">Selecione uma data</p><div className="mt-3 grid grid-cols-4 gap-2 sm:grid-cols-7">{proximosDias.map((dia) => <button key={dia.valor} type="button" onClick={() => setData(dia.valor)} className={`rounded-lg border px-2 py-3 text-center ${data === dia.valor ? "border-primary-700 bg-primary-700 text-white" : "border-slate-200 bg-white text-slate-700 hover:border-secondary-500"}`}><span className="block text-xs font-semibold uppercase">{dia.semana}</span><span className="mt-1 block text-lg font-bold">{dia.numero}</span></button>)}</div><label className="label mt-4">Ou escolha outra data<input min={hoje} className="input-field mt-1" type="date" value={data} onChange={(event) => setData(event.target.value)} /></label>{servicoSelecionado && <p className="mt-3 rounded-md bg-slate-50 p-3 text-sm text-slate-700">Dura\u00e7\u00e3o do servi\u00e7o: <strong>{arredondarDuracaoParaBloco(servicoSelecionado.duracao)} minutos</strong>.</p>}<div className="mt-5">{carregandoHorarios ? <p className="text-sm text-slate-600">Carregando hor\u00e1rios...</p> : !data ? <p className="text-sm text-slate-600">Escolha uma data para continuar.</p> : horarios.length === 0 ? <p className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">N\u00e3o h\u00e1 hor\u00e1rios dispon\u00edveis nesta data.</p> : <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">{horarios.map((item) => <button key={item} type="button" onClick={() => setHora(item)} className={`rounded-md border px-3 py-2.5 text-sm font-semibold ${hora === item ? "border-primary-700 bg-primary-700 text-white" : "border-slate-300 bg-white text-slate-800 hover:border-secondary-500"}`}><Clock3 className="mr-1 inline h-4 w-4" />{item}</button>)}</div>}</div></section>}
     {etapa === 5 && <section><h3 className="text-xl font-bold text-slate-950">Revise o agendamento</h3><p className="mt-1 text-sm text-slate-600">Confira os dados antes de confirmar a reserva.</p><dl className="mt-6 divide-y divide-slate-200 overflow-hidden rounded-lg border border-slate-200"><ResumoItem label="Cliente" valor={criarCliente ? novoCliente.nome : clienteSelecionado?.nome || "-"} /><ResumoItem label="Profissional" valor={profissionalSelecionado?.nome || "-"} /><ResumoItem label="Servi\u00e7o" valor={servicoSelecionado?.nome || "-"} /><ResumoItem label="Data" valor={data ? new Date(`${data}T12:00:00`).toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long", year: "numeric" }) : "-"} /><ResumoItem label="Hor\u00e1rio" valor={hora || "-"} /><ResumoItem label="Dura\u00e7\u00e3o" valor={servicoSelecionado ? `${arredondarDuracaoParaBloco(servicoSelecionado.duracao)} minutos` : "-"} /><ResumoItem label="Valor" valor={servicoSelecionado ? Number(servicoSelecionado.preco).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) : "-"} /></dl></section>}
-  </Modal>;
+  </Modal>{confirmacaoRepeticao && <ConfirmacaoAgendamentoRepetidoModal relacionados={confirmacaoRepeticao.relacionados} onClose={() => setConfirmacaoRepeticao(null)} onConfirm={async () => {
+    try { await api.agendamentos.create({ ...confirmacaoRepeticao.snapshot, tokenConfirmacaoRepeticao: confirmacaoRepeticao.token }); toast.success("Agendamento criado."); setConfirmacaoRepeticao(null); onCreated(); }
+    catch (error) { if (error instanceof ApiError && ["CONFIRMACAO_REPETICAO_EXPIRADA", "CONFIRMACAO_REPETICAO_INVALIDA"].includes(error.codigo ?? "")) setConfirmacaoRepeticao(null); toast.error(error instanceof Error ? error.message : "Não foi possível criar o agendamento."); }
+  }} />}</>;
 }
 
 function Choice({ active, onClick, title, description }: { active: boolean; onClick: () => void; title: string; description: string }) {

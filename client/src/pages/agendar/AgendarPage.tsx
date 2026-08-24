@@ -12,8 +12,10 @@ import {
 } from "lucide-react";
 import { useLocation } from "wouter";
 import toast from "react-hot-toast";
-import { api, type Profissional, type Servico } from "@/lib/api";
+import { ApiError, api, type AgendamentoRelacionado, type Profissional, type Servico } from "@/lib/api";
+import { ConfirmacaoAgendamentoRepetidoModal } from "@/components/ConfirmacaoAgendamentoRepetidoModal";
 import { useAuth } from "@/contexts/AuthContext";
+import { ResumoAgendamentosCliente } from "@/components/ResumoAgendamentosCliente";
 import { arredondarDuracaoParaBloco } from "@/utils/horarios";
 
 const SEM_PREFERENCIA = "sem-preferencia";
@@ -49,6 +51,7 @@ export default function AgendarPage() {
   const [horarios, setHorarios] = useState<string[]>([]);
   const [loadingHorarios, setLoadingHorarios] = useState(false);
   const [revisaoAceita, setRevisaoAceita] = useState(false);
+  const [confirmacaoRepeticao, setConfirmacaoRepeticao] = useState<{ token: string; relacionados: AgendamentoRelacionado[]; snapshot: { profissionalId: string; servicoId: string; data: string; hora: string } } | null>(null);
   const [mesExibido, setMesExibido] = useState(() => {
     const dataInicial = dadosDaRevisao?.data ? new Date(`${dadosDaRevisao.data}T12:00:00`) : new Date();
     return new Date(dataInicial.getFullYear(), dataInicial.getMonth(), 1);
@@ -144,6 +147,10 @@ export default function AgendarPage() {
       toast.success("Agendamento criado.");
       go("/minha-conta");
     } catch (error) {
+      if (error instanceof ApiError && error.codigo === "CONFIRMACAO_REPETICAO_NECESSARIA" && error.tokenConfirmacaoRepeticao) {
+        setConfirmacaoRepeticao({ token: error.tokenConfirmacaoRepeticao, relacionados: error.agendamentosRelacionados ?? [], snapshot: { ...form } });
+        return;
+      }
       toast.error(
         error instanceof Error ? error.message : "Não foi possível agendar.",
       );
@@ -158,7 +165,7 @@ export default function AgendarPage() {
   ];
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-8 sm:py-12">
-      <div className="mx-auto max-w-3xl">
+      <div className="mx-auto max-w-5xl">
         <header className="mb-8">
           <p className="text-sm font-semibold text-primary-700">
             Agendamento online
@@ -287,7 +294,8 @@ export default function AgendarPage() {
               </section>
             )}
             {etapa === 3 && (
-              <section>
+              <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(260px,1fr)] lg:items-start">
+              <section data-speech-text={`Escolha o horário.${servicoSelecionado ? ` Serviço selecionado: ${servicoSelecionado.nome}. Duração do serviço: ${arredondarDuracaoParaBloco(servicoSelecionado.duracao)} minutos.` : ""}${form.data ? ` Data selecionada: ${new Date(`${form.data}T12:00:00`).toLocaleDateString("pt-BR")}.` : ""}${horarios.length ? ` Horários disponíveis: ${horarios.join(", ")}.` : ""}`}>
                 <h2 className="text-xl font-bold text-slate-950">
                   Escolha o horário
                 </h2>
@@ -362,6 +370,8 @@ export default function AgendarPage() {
                 </div>
                 </div>
               </section>
+              <ResumoAgendamentosCliente />
+              </div>
             )}
             {etapa === 4 && (
               <section aria-labelledby="titulo-revisao">
@@ -406,6 +416,10 @@ export default function AgendarPage() {
           </footer>
         </form>
       </div>
+      {confirmacaoRepeticao && <ConfirmacaoAgendamentoRepetidoModal relacionados={confirmacaoRepeticao.relacionados} onClose={() => setConfirmacaoRepeticao(null)} onConfirm={async () => {
+        try { await api.agendamentos.create({ ...confirmacaoRepeticao.snapshot, tokenConfirmacaoRepeticao: confirmacaoRepeticao.token }); toast.success("Agendamento criado."); setConfirmacaoRepeticao(null); go("/minha-conta"); }
+        catch (error) { if (error instanceof ApiError && ["CONFIRMACAO_REPETICAO_EXPIRADA", "CONFIRMACAO_REPETICAO_INVALIDA"].includes(error.codigo ?? "")) setConfirmacaoRepeticao(null); toast.error(error instanceof Error ? error.message : "Não foi possível agendar."); }
+      }} />}
     </main>
   );
 }

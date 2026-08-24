@@ -21,7 +21,10 @@ app.get('/api/configuracoes-publicas', async (_req, res) => {
 app.use('/api/auth', authRoutes)
 app.use('/api/servicos', servicosRoutes)
 app.use('/api/profissionais', profissionaisRoutes)
-app.use('/api/agendamentos', authenticate, agendamentosRoutes)
+app.use('/api/agendamentos', (req, res, next) => {
+  if (req.method === 'GET' && req.path === '/disponibilidade') return next()
+  return authenticate(req, res, next)
+}, agendamentosRoutes)
 app.use('/api/configuracoes', authenticate, requireAdmin, configuracoesRoutes)
 app.use('/api/integracoes/evolution', authenticate, requireAdmin, evolutionRoutes)
 app.use('/api/usuarios', authenticate, usuariosRoutes)

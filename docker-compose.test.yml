@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: barbearia_test
       POSTGRES_PASSWORD: barbearia_test_local
     ports:
-      - "127.0.0.1:5433:5432"
+      - "127.0.0.1:5435:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U barbearia_test -d barbearia_test"]
       interval: 5s

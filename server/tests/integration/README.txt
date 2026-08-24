@@ -1,7 +1,7 @@
 TESTES DE INTEGRAÇÃO
 
 1. Inicie o banco exclusivo: docker compose -f docker-compose.test.yml up -d.
-2. Copie .env.test.example para .env.test. A URL padrão usa a porta 5433.
+2. Copie .env.test.example para .env.test. A URL padrão usa a porta 5435.
 3. Execute, na raiz: npm run test:integration. Antes da suíte, o comando aplica
    automaticamente as migrations no banco descartável indicado por
    DATABASE_URL_TEST.

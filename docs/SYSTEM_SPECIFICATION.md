@@ -463,6 +463,10 @@ Regra inicial:
 
 O cliente pode cancelar ou remarcar até 24 horas antes.
 
+Também existe uma antecedência mínima para novos agendamentos, em minutos, com padrão de 30 minutos. O administrador pode configurá-la; ela é aplicada à criação e ao horário de destino de remarcações e edições administrativas.
+
+Para evitar duplicidades acidentais, a criação detecta agendamentos ativos da mesma pessoa, para o mesmo serviço e data, dentro de uma janela de 180 minutos. A criação só prossegue após confirmação explícita com token temporário assinado, válido por 60 segundos; as validações e a disponibilidade são verificadas novamente antes de gravar.
+
 
 ---
 
@@ -546,6 +550,13 @@ Selecionar horário.
 
 Confirmar.
 
+### Resumo de agendamentos
+
+Na etapa de escolha de data e horário, clientes autenticados visualizam um
+resumo informativo dos próximos agendamentos e atendimentos recentes. A área
+reutiliza a listagem de agendamentos do cliente, não oferece ações de gestão e
+leva à página completa de agendamentos.
+
 
 ---
 
@@ -615,6 +626,13 @@ Implementar:
 - contraste adequado;
 - leitores de tela;
 - textos alternativos.
+
+### Leitura em voz alta
+
+Nas páginas públicas, o painel de acessibilidade oferece leitura em voz alta
+ativada manualmente. O recurso utiliza a Web Speech API (`SpeechSynthesis`) em
+`pt-BR` para sintetizar o conteúdo principal da página atual; não substitui um
+leitor de tela completo e não inicia áudio automaticamente.
 
 
 ---

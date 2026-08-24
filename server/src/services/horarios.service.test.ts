@@ -14,6 +14,7 @@ import {
   calcularBlocosDoServico,
   escolherPrimeiroProfissionalDisponivel,
   isValidBlock,
+  listarBlocosConfiguradosParaData,
   listarHorariosDisponiveis,
   temBlocosConsecutivos,
   temConflito,
@@ -75,5 +76,15 @@ describe("horarios.service", () => {
     prismaMocks.agendamento.findMany.mockResolvedValue([]);
 
     await expect(escolherPrimeiroProfissionalDisponivel("servico", "2026-08-03", "10:00")).resolves.toBe("p2");
+  });
+
+  it("lista os blocos realmente configurados para profissionais ativos", async () => {
+    prismaMocks.disponibilidadeProfissional.findMany.mockResolvedValue([{ hora: "14:00" }, { hora: "19:00" }]);
+
+    await expect(listarBlocosConfiguradosParaData("2026-08-03")).resolves.toEqual(["14:00", "19:00"]);
+    expect(prismaMocks.disponibilidadeProfissional.findMany).toHaveBeenCalledWith(expect.objectContaining({
+      where: expect.objectContaining({ diaSemana: 1, profissional: { ativo: true } }),
+      distinct: ["hora"],
+    }));
   });
 });

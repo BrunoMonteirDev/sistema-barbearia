@@ -5,11 +5,18 @@ export async function regrasAgendamento() {
   return {
     antecedenciaCancelamentoHoras: config?.antecedenciaCancelamentoHoras ?? 24,
     antecedenciaRemarcacaoHoras: config?.antecedenciaRemarcacaoHoras ?? 24,
+    antecedenciaAgendamentoMinutos: config?.antecedenciaAgendamentoMinutos ?? 30,
     toleranciaAtrasoMinutos: config?.toleranciaAtrasoMinutos ?? 0,
   }
 }
 
 export function inicioAtendimento(data: string, hora: string) { return new Date(`${data}T${hora}:00`) }
+export function horarioAgendamentoJaPassou(data: string, hora: string, agora = new Date()) {
+  return inicioAtendimento(data, hora).getTime() < agora.getTime()
+}
+export function respeitaAntecedenciaMinimaAgendamento(data: string, hora: string, antecedenciaMinutos: number, agora = new Date()) {
+  return inicioAtendimento(data, hora).getTime() - agora.getTime() >= antecedenciaMinutos * 60000
+}
 export function respeitaAntecedencia(data: string, hora: string, horas: number) { return inicioAtendimento(data, hora).getTime() - Date.now() >= horas * 3600000 }
 
 export async function atualizarAtrasados() {

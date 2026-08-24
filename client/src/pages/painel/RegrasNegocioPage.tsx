@@ -5,6 +5,7 @@ import { api, type RegrasAgendamento } from "@/lib/api";
 const padrao: RegrasAgendamento = {
   antecedenciaCancelamentoHoras: 24,
   antecedenciaRemarcacaoHoras: 24,
+  antecedenciaAgendamentoMinutos: 30,
   toleranciaAtrasoMinutos: 0,
 };
 
@@ -36,12 +37,13 @@ export default function RegrasNegocioPage() {
     label: string,
     ajuda: string,
   ) => (
-    <label className="block text-sm font-semibold text-slate-800">
+    <label htmlFor={nome} className="block text-sm font-semibold text-slate-800">
       {label}
       <input
+        id={nome}
         className="input-field mt-1"
         min="0"
-        max="720"
+        max={nome === "antecedenciaAgendamentoMinutos" ? undefined : 720}
         step="1"
         type="number"
         value={regras[nome]}
@@ -78,6 +80,11 @@ export default function RegrasNegocioPage() {
           "antecedenciaRemarcacaoHoras",
           "Antecedência para remarcar (horas)",
           "Clientes só poderão remarcar dentro desta antecedência. Administradores não possuem essa limitação.",
+        )}
+        {campo(
+          "antecedenciaAgendamentoMinutos",
+          "Antecedência mínima para novos agendamentos (minutos)",
+          "Tempo mínimo necessário entre o momento da reserva e o início do atendimento.",
         )}
         {campo(
           "toleranciaAtrasoMinutos",

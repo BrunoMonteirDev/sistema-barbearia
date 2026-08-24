@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { prisma } from '../lib/prisma'
 
 const router = Router()
-const camposRegras = ['antecedenciaCancelamentoHoras', 'antecedenciaRemarcacaoHoras', 'toleranciaAtrasoMinutos'] as const
+const camposRegras = ['antecedenciaCancelamentoHoras', 'antecedenciaRemarcacaoHoras', 'antecedenciaAgendamentoMinutos', 'toleranciaAtrasoMinutos'] as const
 
 function dadosContatoValidos(body: Record<string, unknown>) {
   const telefoneWhatsApp = typeof body.telefoneWhatsApp === 'string' ? body.telefoneWhatsApp.replace(/\D/g, '') : ''
@@ -58,8 +58,12 @@ router.get('/regras', async (_req, res) => {
 
 router.put('/regras', async (req, res) => {
   const dados = Object.fromEntries(camposRegras.map(campo => [campo, req.body[campo]])) as Record<string, unknown>
-  if (Object.values(dados).some(valor => !Number.isInteger(valor) || Number(valor) < 0 || Number(valor) > 720)) {
-    return res.status(400).json({ error: 'As regras devem ser números inteiros entre 0 e 720.' })
+  const camposEmHoras = ['antecedenciaCancelamentoHoras', 'antecedenciaRemarcacaoHoras', 'toleranciaAtrasoMinutos'] as const
+  if (
+    camposEmHoras.some(campo => !Number.isInteger(dados[campo]) || Number(dados[campo]) < 0 || Number(dados[campo]) > 720) ||
+    !Number.isInteger(dados.antecedenciaAgendamentoMinutos) || Number(dados.antecedenciaAgendamentoMinutos) < 0
+  ) {
+    return res.status(400).json({ error: 'As regras devem ser números inteiros não negativos; cancelamento, remarcação e atraso aceitam no máximo 720.' })
   }
   const config = await obterOuCriar()
   const atualizado = await prisma.configuracao.update({ where: { id: config.id }, data: dados })

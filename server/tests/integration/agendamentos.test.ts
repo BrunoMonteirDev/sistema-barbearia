@@ -4,8 +4,54 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { app } from '../../src/app'
 import { prisma } from '../../src/lib/prisma'
 import { signToken } from '../../src/middlewares/auth'
+import { temConflito } from '../../src/services/horarios.service'
 
 const dataTeste = '2030-08-05' // segunda-feira
+
+function dataLocal(data = new Date()) {
+  const ano = data.getFullYear()
+  const mes = String(data.getMonth() + 1).padStart(2, '0')
+  const dia = String(data.getDate()).padStart(2, '0')
+  return `${ano}-${mes}-${dia}`
+}
+
+function proximoBlocoFuturo(minutosAdicionais = 0) {
+  const data = new Date(Date.now() + minutosAdicionais * 60000)
+  data.setSeconds(0, 0)
+  data.setMinutes(data.getMinutes() < 30 ? 30 : 60)
+  return { data: dataLocal(data), hora: `${String(data.getHours()).padStart(2, '0')}:${String(data.getMinutes()).padStart(2, '0')}` }
+}
+
+function esperarUmSucessoEUmConflito(respostas: Array<{ status: number }>) {
+  expect(respostas.map(resposta => resposta.status).sort()).toEqual([201, 409])
+}
+
+function esperarUmaOperacaoBemSucedidaEUmConflito(respostas: Array<{ status: number }>) {
+  const status = respostas.map(resposta => resposta.status)
+  expect(status.filter(codigo => codigo === 409)).toHaveLength(1)
+  expect(status.filter(codigo => codigo === 200 || codigo === 201)).toHaveLength(1)
+}
+
+function obterRespostas(resultados: PromiseSettledResult<{ status: number }>[]) {
+  return resultados.map(resultado => {
+    expect(resultado.status).toBe('fulfilled')
+    if (resultado.status === 'rejected') throw resultado.reason
+    return resultado.value
+  })
+}
+
+async function esperarSemSobreposicao(profissionalId: string, data: string) {
+  const ativos = await prisma.agendamento.findMany({
+    where: { profissionalId, data, status: { not: 'CANCELADO' } },
+    include: { servico: true },
+  })
+  for (let indice = 0; indice < ativos.length; indice += 1) {
+    for (let outroIndice = indice + 1; outroIndice < ativos.length; outroIndice += 1) {
+      expect(temConflito(ativos[indice].hora, ativos[indice].servico.duracao, ativos[outroIndice].hora, ativos[outroIndice].servico.duracao)).toBe(false)
+    }
+  }
+  return ativos
+}
 
 describe('API - conflito real de agendamento', () => {
   beforeEach(async () => {
@@ -17,6 +63,70 @@ describe('API - conflito real de agendamento', () => {
     await prisma.servico.deleteMany()
     await prisma.usuario.deleteMany()
     await prisma.configuracao.deleteMany()
+  })
+
+  it('permite consultar disponibilidade sem login, mas exige login para criar', async () => {
+    const cliente = await prisma.usuario.create({ data: { nome: 'Cliente público', email: 'cliente.publico@teste.local', senhaHash: 'hash' } })
+    const profissional = await prisma.profissional.create({ data: { nome: 'Profissional público' } })
+    const servico = await prisma.servico.create({ data: { nome: 'Servico público', duracao: 30, preco: 30 } })
+    await prisma.disponibilidadeProfissional.create({ data: { profissionalId: profissional.id, diaSemana: 1, hora: '10:00' } })
+    const dados = { profissionalId: profissional.id, servicoId: servico.id, data: dataTeste, hora: '10:00' }
+
+    await request(app).get(`/api/agendamentos/disponibilidade?profissionalId=${profissional.id}&servicoId=${servico.id}&data=${dataTeste}`).expect(200, { horarios: ['10:00'] })
+    await request(app).post('/api/agendamentos').send(dados).expect(401)
+    await request(app).post('/api/agendamentos').set('authorization', `Bearer ${signToken({ id: cliente.id, nivel: 'Cliente' })}`).send(dados).expect(201)
+  })
+
+  it('lista e reserva horários configurados fora da faixa padrão sem preferência', async () => {
+    const cliente = await prisma.usuario.create({ data: { nome: 'Cliente sem preferência', email: 'cliente.sem.preferencia@teste.local', senhaHash: 'hash' } })
+    const profissionalManha = await prisma.profissional.create({ data: { nome: 'Profissional manhã' } })
+    const profissionalNoite = await prisma.profissional.create({ data: { nome: 'Profissional noite' } })
+    const servico = await prisma.servico.create({ data: { nome: 'Servico noturno', duracao: 60, preco: 50 } })
+    await prisma.disponibilidadeProfissional.createMany({ data: [
+      { profissionalId: profissionalManha.id, diaSemana: 1, hora: '08:00' },
+      { profissionalId: profissionalManha.id, diaSemana: 1, hora: '08:30' },
+      { profissionalId: profissionalNoite.id, diaSemana: 1, hora: '19:00' },
+      { profissionalId: profissionalNoite.id, diaSemana: 1, hora: '19:30' },
+    ] })
+    const token = `Bearer ${signToken({ id: cliente.id, nivel: 'Cliente' })}`
+    const disponibilidade = await request(app).get(`/api/agendamentos/disponibilidade?profissionalId=sem-preferencia&servicoId=${servico.id}&data=${dataTeste}`).expect(200)
+
+    expect(disponibilidade.body.horarios).toEqual(expect.arrayContaining(['08:00', '19:00']))
+    const criado = await request(app).post('/api/agendamentos').set('authorization', token).send({ profissionalId: 'sem-preferencia', servicoId: servico.id, data: dataTeste, hora: '19:00' }).expect(201)
+    expect(criado.body.profissionalId).toBe(profissionalNoite.id)
+  })
+
+  it('bloqueia horários passados, aceita futuro e não os lista na disponibilidade do dia', async () => {
+    const cliente = await prisma.usuario.create({ data: { nome: 'Cliente temporal', email: 'cliente.temporal@teste.local', senhaHash: 'hash' } })
+    const administrador = await prisma.usuario.create({ data: { nome: 'Admin temporal', email: 'admin.temporal@teste.local', senhaHash: 'hash', nivel: 'Administrador' } })
+    const profissional = await prisma.profissional.create({ data: { nome: 'Profissional temporal' } })
+    const servico = await prisma.servico.create({ data: { nome: 'Servico temporal', duracao: 30, preco: 30 } })
+    const proximoHorario = proximoBlocoFuturo()
+    const futuro = proximoBlocoFuturo(120)
+    const diaDoFuturo = new Date(`${futuro.data}T12:00:00`).getDay()
+    const diaDoProximoHorario = new Date(`${proximoHorario.data}T12:00:00`).getDay()
+    const hoje = dataLocal()
+    const diaDeHoje = new Date(`${hoje}T12:00:00`).getDay()
+    await prisma.disponibilidadeProfissional.createMany({ data: [
+      { profissionalId: profissional.id, diaSemana: diaDoFuturo, hora: futuro.hora },
+      { profissionalId: profissional.id, diaSemana: diaDoProximoHorario, hora: proximoHorario.hora },
+      { profissionalId: profissional.id, diaSemana: diaDeHoje, hora: '00:00' },
+    ] })
+    const tokenCliente = `Bearer ${signToken({ id: cliente.id, nivel: 'Cliente' })}`
+    const tokenAdmin = `Bearer ${signToken({ id: administrador.id, nivel: 'Administrador' })}`
+
+    const regrasIniciais = await request(app).get('/api/configuracoes/regras').set('authorization', tokenAdmin).expect(200)
+    expect(regrasIniciais.body.antecedenciaAgendamentoMinutos).toBe(30)
+    await request(app).put('/api/configuracoes/regras').set('authorization', tokenAdmin).send({ antecedenciaCancelamentoHoras: 24, antecedenciaRemarcacaoHoras: 24, antecedenciaAgendamentoMinutos: 45, toleranciaAtrasoMinutos: 0 }).expect(200)
+
+    await request(app).post('/api/agendamentos').set('authorization', tokenCliente).send({ profissionalId: profissional.id, servicoId: servico.id, data: '2020-01-01', hora: '10:00' }).expect(409)
+    await request(app).post('/api/agendamentos').set('authorization', tokenCliente).send({ profissionalId: profissional.id, servicoId: servico.id, ...proximoHorario }).expect(409)
+    const criado = await request(app).post('/api/agendamentos').set('authorization', tokenCliente).send({ profissionalId: profissional.id, servicoId: servico.id, ...futuro }).expect(201)
+    await request(app).patch(`/api/agendamentos/${criado.body.id}/remarcar`).set('authorization', tokenAdmin).send(proximoHorario).expect(409)
+
+    const disponibilidade = await request(app).get(`/api/agendamentos/disponibilidade?profissionalId=${profissional.id}&servicoId=${servico.id}&data=${hoje}`).set('authorization', tokenCliente).expect(200)
+    expect(disponibilidade.body.horarios).not.toContain('00:00')
+    if (proximoHorario.data === hoje) expect(disponibilidade.body.horarios).not.toContain(proximoHorario.hora)
   })
 
   it('recusa um segundo atendimento que ocupa o mesmo intervalo do profissional', async () => {
@@ -34,8 +144,134 @@ describe('API - conflito real de agendamento', () => {
     await request(app).post('/api/agendamentos').set('authorization', authorization).send(dados).expect(201)
     const resposta = await request(app).post('/api/agendamentos').set('authorization', authorization).send(dados).expect(409)
 
-    expect(resposta.body.error).toMatch(/n.o est.*dispon.vel/i)
+    expect(resposta.body.codigo).toBe('CONFIRMACAO_REPETICAO_NECESSARIA')
     expect(await prisma.agendamento.count()).toBe(1)
+  })
+
+  it('protege duas criações concorrentes com o mesmo horário inicial', async () => {
+    const cliente = await prisma.usuario.create({ data: { nome: 'Cliente concorrente', email: 'cliente.concorrente.mesmo.inicio@teste.local', senhaHash: 'hash' } })
+    const profissional = await prisma.profissional.create({ data: { nome: 'Profissional concorrente' } })
+    const servico = await prisma.servico.create({ data: { nome: 'Servico concorrente', duracao: 30, preco: 30 } })
+    await prisma.disponibilidadeProfissional.create({ data: { profissionalId: profissional.id, diaSemana: 1, hora: '10:00' } })
+    const authorization = `Bearer ${signToken({ id: cliente.id, nivel: 'Cliente' })}`
+    const dados = { profissionalId: profissional.id, servicoId: servico.id, data: dataTeste, hora: '10:00' }
+
+    const resultados = await Promise.allSettled([
+      request(app).post('/api/agendamentos').set('authorization', authorization).send(dados),
+      request(app).post('/api/agendamentos').set('authorization', authorization).send(dados),
+    ])
+    const respostas = obterRespostas(resultados)
+    esperarUmSucessoEUmConflito(respostas)
+    expect(await esperarSemSobreposicao(profissional.id, dataTeste)).toHaveLength(1)
+  })
+
+  it('protege duas criações concorrentes com horários sobrepostos', async () => {
+    const cliente = await prisma.usuario.create({ data: { nome: 'Cliente concorrente', email: 'cliente.concorrente.sobreposto@teste.local', senhaHash: 'hash' } })
+    const profissional = await prisma.profissional.create({ data: { nome: 'Profissional concorrente' } })
+    const sessentaMinutos = await prisma.servico.create({ data: { nome: 'Servico 60 concorrente', duracao: 60, preco: 60 } })
+    const trintaMinutos = await prisma.servico.create({ data: { nome: 'Servico 30 concorrente', duracao: 30, preco: 30 } })
+    await prisma.disponibilidadeProfissional.createMany({ data: ['10:00', '10:30', '11:00'].map(hora => ({ profissionalId: profissional.id, diaSemana: 1, hora })) })
+    const authorization = `Bearer ${signToken({ id: cliente.id, nivel: 'Cliente' })}`
+
+    const resultados = await Promise.allSettled([
+      request(app).post('/api/agendamentos').set('authorization', authorization).send({ profissionalId: profissional.id, servicoId: sessentaMinutos.id, data: dataTeste, hora: '10:00' }),
+      request(app).post('/api/agendamentos').set('authorization', authorization).send({ profissionalId: profissional.id, servicoId: trintaMinutos.id, data: dataTeste, hora: '10:30' }),
+    ])
+    const respostas = obterRespostas(resultados)
+    esperarUmSucessoEUmConflito(respostas)
+    expect(await esperarSemSobreposicao(profissional.id, dataTeste)).toHaveLength(1)
+  })
+
+  it('permite duas criações concorrentes em horários consecutivos', async () => {
+    const cliente = await prisma.usuario.create({ data: { nome: 'Cliente consecutivo', email: 'cliente.concorrente.consecutivo@teste.local', senhaHash: 'hash' } })
+    const profissional = await prisma.profissional.create({ data: { nome: 'Profissional consecutivo' } })
+    const servico = await prisma.servico.create({ data: { nome: 'Servico consecutivo', duracao: 30, preco: 30 } })
+    await prisma.disponibilidadeProfissional.createMany({ data: ['10:00', '10:30'].map(hora => ({ profissionalId: profissional.id, diaSemana: 1, hora })) })
+    const authorization = `Bearer ${signToken({ id: cliente.id, nivel: 'Cliente' })}`
+
+    const resultados = await Promise.allSettled([
+      request(app).post('/api/agendamentos').set('authorization', authorization).send({ profissionalId: profissional.id, servicoId: servico.id, data: dataTeste, hora: '10:00' }),
+      request(app).post('/api/agendamentos').set('authorization', authorization).send({ profissionalId: profissional.id, servicoId: servico.id, data: dataTeste, hora: '10:30' }),
+    ])
+    const respostas = obterRespostas(resultados)
+    expect(respostas.map(resposta => resposta.status).sort()).toEqual([201, 201])
+    expect(await esperarSemSobreposicao(profissional.id, dataTeste)).toHaveLength(2)
+  })
+
+  it('permite duas criações concorrentes para profissionais diferentes', async () => {
+    const cliente = await prisma.usuario.create({ data: { nome: 'Cliente profissionais', email: 'cliente.concorrente.profissionais@teste.local', senhaHash: 'hash' } })
+    const [carlos, joao] = await Promise.all(['Carlos', 'João'].map(nome => prisma.profissional.create({ data: { nome } })))
+    const servico = await prisma.servico.create({ data: { nome: 'Servico profissionais', duracao: 30, preco: 30 } })
+    await prisma.disponibilidadeProfissional.createMany({ data: [carlos.id, joao.id].map(profissionalId => ({ profissionalId, diaSemana: 1, hora: '10:00' })) })
+    const authorization = `Bearer ${signToken({ id: cliente.id, nivel: 'Cliente' })}`
+
+    const resultados = await Promise.allSettled([
+      request(app).post('/api/agendamentos').set('authorization', authorization).send({ profissionalId: carlos.id, servicoId: servico.id, data: dataTeste, hora: '10:00' }),
+      request(app).post('/api/agendamentos').set('authorization', authorization).send({ profissionalId: joao.id, servicoId: servico.id, data: dataTeste, hora: '10:00' }),
+    ])
+    const respostas = obterRespostas(resultados)
+    expect(respostas.map(resposta => resposta.status).sort()).toEqual([201, 201])
+    expect(await esperarSemSobreposicao(carlos.id, dataTeste)).toHaveLength(1)
+    expect(await esperarSemSobreposicao(joao.id, dataTeste)).toHaveLength(1)
+  })
+
+  it('permite duas criações concorrentes para o mesmo profissional em datas diferentes', async () => {
+    const cliente = await prisma.usuario.create({ data: { nome: 'Cliente datas', email: 'cliente.concorrente.datas@teste.local', senhaHash: 'hash' } })
+    const profissional = await prisma.profissional.create({ data: { nome: 'Profissional datas' } })
+    const servico = await prisma.servico.create({ data: { nome: 'Servico datas', duracao: 30, preco: 30 } })
+    const segundaData = '2030-08-06'
+    await prisma.disponibilidadeProfissional.createMany({ data: [
+      { profissionalId: profissional.id, diaSemana: 1, hora: '10:00' },
+      { profissionalId: profissional.id, diaSemana: 2, hora: '10:00' },
+    ] })
+    const authorization = `Bearer ${signToken({ id: cliente.id, nivel: 'Cliente' })}`
+
+    const resultados = await Promise.allSettled([
+      request(app).post('/api/agendamentos').set('authorization', authorization).send({ profissionalId: profissional.id, servicoId: servico.id, data: dataTeste, hora: '10:00' }),
+      request(app).post('/api/agendamentos').set('authorization', authorization).send({ profissionalId: profissional.id, servicoId: servico.id, data: segundaData, hora: '10:00' }),
+    ])
+    const respostas = obterRespostas(resultados)
+    expect(respostas.map(resposta => resposta.status).sort()).toEqual([201, 201])
+    expect(await esperarSemSobreposicao(profissional.id, dataTeste)).toHaveLength(1)
+    expect(await esperarSemSobreposicao(profissional.id, segundaData)).toHaveLength(1)
+  })
+
+  it('protege criação concorrente contra remarcação para um intervalo sobreposto', async () => {
+    const cliente = await prisma.usuario.create({ data: { nome: 'Cliente remarcação', email: 'cliente.concorrente.remarcacao@teste.local', senhaHash: 'hash' } })
+    const profissional = await prisma.profissional.create({ data: { nome: 'Profissional remarcação' } })
+    const sessentaMinutos = await prisma.servico.create({ data: { nome: 'Servico criação 60', duracao: 60, preco: 60 } })
+    const trintaMinutos = await prisma.servico.create({ data: { nome: 'Servico remarcação 30', duracao: 30, preco: 30 } })
+    await prisma.disponibilidadeProfissional.createMany({ data: ['10:00', '10:30', '11:00'].map(hora => ({ profissionalId: profissional.id, diaSemana: 1, hora })) })
+    const agendamento = await prisma.agendamento.create({ data: { usuarioId: cliente.id, profissionalId: profissional.id, servicoId: trintaMinutos.id, data: dataTeste, hora: '11:00' } })
+    const authorization = `Bearer ${signToken({ id: cliente.id, nivel: 'Cliente' })}`
+
+    const resultados = await Promise.allSettled([
+      request(app).post('/api/agendamentos').set('authorization', authorization).send({ profissionalId: profissional.id, servicoId: sessentaMinutos.id, data: dataTeste, hora: '10:00' }),
+      request(app).patch(`/api/agendamentos/${agendamento.id}/remarcar`).set('authorization', authorization).send({ data: dataTeste, hora: '10:30' }),
+    ])
+    const respostas = obterRespostas(resultados)
+    esperarUmaOperacaoBemSucedidaEUmConflito(respostas)
+    expect(await esperarSemSobreposicao(profissional.id, dataTeste)).toHaveLength(respostas.some(resposta => resposta.status === 201) ? 2 : 1)
+  })
+
+  it('protege criação concorrente contra atualização administrativa para um intervalo sobreposto', async () => {
+    const cliente = await prisma.usuario.create({ data: { nome: 'Cliente edição', email: 'cliente.concorrente.edicao@teste.local', senhaHash: 'hash' } })
+    const administrador = await prisma.usuario.create({ data: { nome: 'Admin edição', email: 'admin.concorrente.edicao@teste.local', senhaHash: 'hash', nivel: 'Administrador' } })
+    const profissional = await prisma.profissional.create({ data: { nome: 'Profissional edição' } })
+    const sessentaMinutos = await prisma.servico.create({ data: { nome: 'Servico criação admin 60', duracao: 60, preco: 60 } })
+    const trintaMinutos = await prisma.servico.create({ data: { nome: 'Servico edição admin 30', duracao: 30, preco: 30 } })
+    await prisma.disponibilidadeProfissional.createMany({ data: ['10:00', '10:30', '11:00'].map(hora => ({ profissionalId: profissional.id, diaSemana: 1, hora })) })
+    const agendamento = await prisma.agendamento.create({ data: { usuarioId: cliente.id, profissionalId: profissional.id, servicoId: trintaMinutos.id, data: dataTeste, hora: '11:00' } })
+    const tokenCliente = `Bearer ${signToken({ id: cliente.id, nivel: 'Cliente' })}`
+    const tokenAdmin = `Bearer ${signToken({ id: administrador.id, nivel: 'Administrador' })}`
+
+    const resultados = await Promise.allSettled([
+      request(app).post('/api/agendamentos').set('authorization', tokenCliente).send({ profissionalId: profissional.id, servicoId: sessentaMinutos.id, data: dataTeste, hora: '10:00' }),
+      request(app).put(`/api/agendamentos/${agendamento.id}`).set('authorization', tokenAdmin).send({ hora: '10:30' }),
+    ])
+    const respostas = obterRespostas(resultados)
+    esperarUmaOperacaoBemSucedidaEUmConflito(respostas)
+    expect(await esperarSemSobreposicao(profissional.id, dataTeste)).toHaveLength(respostas.some(resposta => resposta.status === 201) ? 2 : 1)
   })
 
   it('permite reservar novamente um horário cujo agendamento anterior foi cancelado', async () => {
@@ -192,13 +428,13 @@ describe('API - conflito real de agendamento', () => {
     await request(app)
       .put('/api/configuracoes/regras')
       .set('authorization', tokenAdmin)
-      .send({ antecedenciaCancelamentoHoras: 24, antecedenciaRemarcacaoHoras: 12, toleranciaAtrasoMinutos: 15 })
+      .send({ antecedenciaCancelamentoHoras: 24, antecedenciaRemarcacaoHoras: 12, antecedenciaAgendamentoMinutos: 30, toleranciaAtrasoMinutos: 15 })
       .expect(200)
 
     const publico = await request(app).get('/api/configuracoes-publicas').expect(200)
     expect(publico.body).toEqual({ telefoneWhatsApp: '44999999999', email: 'contato@teste.local', instagram: 'https://instagram.com/barbearia.teste' })
     const regras = await request(app).get('/api/configuracoes/regras').set('authorization', tokenAdmin).expect(200)
-    expect(regras.body).toEqual({ antecedenciaCancelamentoHoras: 24, antecedenciaRemarcacaoHoras: 12, toleranciaAtrasoMinutos: 15 })
+    expect(regras.body).toEqual({ antecedenciaCancelamentoHoras: 24, antecedenciaRemarcacaoHoras: 12, antecedenciaAgendamentoMinutos: 30, toleranciaAtrasoMinutos: 15 })
     await request(app)
       .put('/api/configuracoes')
       .set('authorization', tokenAdmin)

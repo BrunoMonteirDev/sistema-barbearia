@@ -16,27 +16,33 @@ describe("regras de negócio configuráveis", () => {
 
   it("cria a configuração ao consultar regras pela primeira vez", async () => {
     mocks.findFirst.mockResolvedValue(null);
-    mocks.create.mockResolvedValue({ id: "config-1", antecedenciaCancelamentoHoras: 24, antecedenciaRemarcacaoHoras: 24, toleranciaAtrasoMinutos: 0 });
+    mocks.create.mockResolvedValue({ id: "config-1", antecedenciaCancelamentoHoras: 24, antecedenciaRemarcacaoHoras: 24, antecedenciaAgendamentoMinutos: 30, toleranciaAtrasoMinutos: 0 });
 
     const response = await request(app).get("/configuracoes/regras");
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({ antecedenciaCancelamentoHoras: 24, antecedenciaRemarcacaoHoras: 24, toleranciaAtrasoMinutos: 0 });
+    expect(response.body).toEqual({ antecedenciaCancelamentoHoras: 24, antecedenciaRemarcacaoHoras: 24, antecedenciaAgendamentoMinutos: 30, toleranciaAtrasoMinutos: 0 });
     expect(mocks.create).toHaveBeenCalledWith({ data: {} });
   });
 
   it("rejeita regras negativas, fracionadas ou acima do limite", async () => {
-    const response = await request(app).put("/configuracoes/regras").send({ antecedenciaCancelamentoHoras: -1, antecedenciaRemarcacaoHoras: 24.5, toleranciaAtrasoMinutos: 721 });
+    const response = await request(app).put("/configuracoes/regras").send({ antecedenciaCancelamentoHoras: -1, antecedenciaRemarcacaoHoras: 24.5, antecedenciaAgendamentoMinutos: -1, toleranciaAtrasoMinutos: 721 });
     expect(response.status).toBe(400);
     expect(mocks.update).not.toHaveBeenCalled();
   });
 
   it("salva regras válidas e retorna somente os campos permitidos", async () => {
     mocks.findFirst.mockResolvedValue({ id: "config-1" });
-    mocks.update.mockResolvedValue({ id: "config-1", antecedenciaCancelamentoHoras: 48, antecedenciaRemarcacaoHoras: 36, toleranciaAtrasoMinutos: 15, telefoneWhatsApp: "44999999999" });
+    mocks.update.mockResolvedValue({ id: "config-1", antecedenciaCancelamentoHoras: 48, antecedenciaRemarcacaoHoras: 36, antecedenciaAgendamentoMinutos: 30, toleranciaAtrasoMinutos: 15, telefoneWhatsApp: "44999999999" });
 
-    const response = await request(app).put("/configuracoes/regras").send({ antecedenciaCancelamentoHoras: 48, antecedenciaRemarcacaoHoras: 36, toleranciaAtrasoMinutos: 15, telefoneWhatsApp: "não deve ser salvo aqui" });
+    const response = await request(app).put("/configuracoes/regras").send({ antecedenciaCancelamentoHoras: 48, antecedenciaRemarcacaoHoras: 36, antecedenciaAgendamentoMinutos: 30, toleranciaAtrasoMinutos: 15, telefoneWhatsApp: "não deve ser salvo aqui" });
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({ antecedenciaCancelamentoHoras: 48, antecedenciaRemarcacaoHoras: 36, toleranciaAtrasoMinutos: 15 });
-    expect(mocks.update).toHaveBeenCalledWith({ where: { id: "config-1" }, data: { antecedenciaCancelamentoHoras: 48, antecedenciaRemarcacaoHoras: 36, toleranciaAtrasoMinutos: 15 } });
+    expect(response.body).toEqual({ antecedenciaCancelamentoHoras: 48, antecedenciaRemarcacaoHoras: 36, antecedenciaAgendamentoMinutos: 30, toleranciaAtrasoMinutos: 15 });
+    expect(mocks.update).toHaveBeenCalledWith({ where: { id: "config-1" }, data: { antecedenciaCancelamentoHoras: 48, antecedenciaRemarcacaoHoras: 36, antecedenciaAgendamentoMinutos: 30, toleranciaAtrasoMinutos: 15 } });
+  });
+
+  it("aceita antecedência mínima zero", async () => {
+    mocks.findFirst.mockResolvedValue({ id: "config-1" });
+    mocks.update.mockResolvedValue({ id: "config-1", antecedenciaCancelamentoHoras: 24, antecedenciaRemarcacaoHoras: 24, antecedenciaAgendamentoMinutos: 0, toleranciaAtrasoMinutos: 0 });
+    await request(app).put("/configuracoes/regras").send({ antecedenciaCancelamentoHoras: 24, antecedenciaRemarcacaoHoras: 24, antecedenciaAgendamentoMinutos: 0, toleranciaAtrasoMinutos: 0 }).expect(200);
   });
 });

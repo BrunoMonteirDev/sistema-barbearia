@@ -139,6 +139,7 @@ model Configuracao {
   regrasEnvioAutomatico Json? @map("regras_envio_automatico")
   antecedenciaCancelamentoHoras Int @default(24) @map("antecedencia_cancelamento_horas")
   antecedenciaRemarcacaoHoras   Int @default(24) @map("antecedencia_remarcacao_horas")
+  antecedenciaAgendamentoMinutos Int @default(30) @map("antecedencia_agendamento_minutos")
   toleranciaAtrasoMinutos       Int @default(0) @map("tolerancia_atraso_minutos")
   createdAt         DateTime  @default(now()) @map("created_at")
   updatedAt         DateTime  @updatedAt @map("updated_at")

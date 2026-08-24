@@ -4,12 +4,14 @@ import { requireAdmin, requireStaff } from "../middlewares/auth";
 import {
   escolherPrimeiroProfissionalDisponivel,
   isValidBlock,
+  listarBlocosConfiguradosParaData,
   listarHorariosDisponiveis,
-  obterBlocos,
   validarDisponibilidade,
 } from "../services/horarios.service";
-import { atualizarAtrasados, regrasAgendamento, respeitaAntecedencia } from "../services/regras-agendamento.service";
+import { atualizarAtrasados, horarioAgendamentoJaPassou, regrasAgendamento, respeitaAntecedencia, respeitaAntecedenciaMinimaAgendamento } from "../services/regras-agendamento.service";
 import { notificacaoService } from '../services/notificacao.service';
+import { executarComLockAgenda, HorarioIndisponivelError } from '../services/agenda-lock.service';
+import { criarTokenConfirmacaoRepeticao, detectarPossivelRepeticaoAgendamento, validarTokenConfirmacaoRepeticao } from '../services/repeticao-agendamento.service';
 
 const router = Router();
 const appointmentStatuses = [
@@ -19,6 +21,16 @@ const appointmentStatuses = [
   "CANCELADO",
   "ATRASADO",
 ];
+const horarioPassadoError = "Não é possível criar ou alterar um agendamento para um horário que já passou.";
+function erroAntecedenciaMinima(antecedenciaMinutos: number) {
+  return `Este horário não está mais disponível. Novos agendamentos devem ser realizados com pelo menos ${antecedenciaMinutos} minutos de antecedência.`;
+}
+function conflitoDeAgenda(error: unknown) {
+  return typeof error === "object" && error !== null && "code" in error && error.code === "P2002";
+}
+function responderConflitoDeAgenda(res: import('express').Response) {
+  return res.status(409).json({ error: "O horário selecionado não está mais disponível." });
+}
 
 function isValidDate(value: unknown) {
   if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value))
@@ -74,7 +86,7 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const { servicoId, data, hora, observacao } = req.body;
+    const { servicoId, data, hora, observacao, tokenConfirmacaoRepeticao } = req.body;
     let { profissionalId } = req.body;
     if (
       (profissionalId !== "sem-preferencia" &&
@@ -89,6 +101,14 @@ router.post("/", async (req, res) => {
           error:
             "Profissional, serviço, data e hora em blocos de 30 minutos são obrigatórios.",
         });
+    }
+
+    if (horarioAgendamentoJaPassou(data, hora)) {
+      return res.status(409).json({ error: horarioPassadoError });
+    }
+    const regras = await regrasAgendamento();
+    if (!respeitaAntecedenciaMinimaAgendamento(data, hora, regras.antecedenciaAgendamentoMinutos)) {
+      return res.status(409).json({ error: erroAntecedenciaMinima(regras.antecedenciaAgendamentoMinutos) });
     }
 
     if (profissionalId === "sem-preferencia") {
@@ -122,6 +142,15 @@ router.post("/", async (req, res) => {
         error: "Conclua seu cadastro antes de realizar um agendamento.",
       });
 
+    const tentativa = { usuarioId, servicoId, profissionalId, data, hora };
+    const repeticao = await detectarPossivelRepeticaoAgendamento(tentativa);
+    if (repeticao.possuiPossivelRepeticao) {
+      const confirmacao = validarTokenConfirmacaoRepeticao(tokenConfirmacaoRepeticao, tentativa);
+      if (confirmacao === "EXPIRADO") return res.status(409).json({ codigo: "CONFIRMACAO_REPETICAO_EXPIRADA", error: "O tempo para confirmar este agendamento expirou. Faça uma nova tentativa." });
+      if (confirmacao === "INVALIDO") return res.status(409).json({ codigo: "CONFIRMACAO_REPETICAO_INVALIDA", error: "A confirmação não corresponde a este agendamento." });
+      if (confirmacao !== "VALIDO") return res.status(409).json({ codigo: "CONFIRMACAO_REPETICAO_NECESSARIA", possuiPossivelRepeticao: true, agendamentosRelacionados: repeticao.agendamentosRelacionados, tokenConfirmacaoRepeticao: criarTokenConfirmacaoRepeticao(tentativa) });
+    }
+
     const horarioDisponivel = await validarDisponibilidade(
       profissionalId,
       servicoId,
@@ -135,15 +164,17 @@ router.post("/", async (req, res) => {
           error: "Este horário não está disponível para a duração do serviço.",
         });
 
-    const agendamento = await prisma.agendamento.create({
-      data: { usuarioId, profissionalId, servicoId, data, hora, observacao },
+    const agendamento = await executarComLockAgenda(profissionalId, data, async tx => {
+      if (!(await validarDisponibilidade(profissionalId, servicoId, data, hora, undefined, tx))) throw new HorarioIndisponivelError();
+      return tx.agendamento.create({ data: { usuarioId, profissionalId, servicoId, data, hora, observacao } });
     });
     void notificacaoService.enviarSeAutomatico(agendamento.id, 'CRIACAO');
     return res.status(201).json(agendamento);
   } catch (error) {
-    if (typeof error === "object" && error && "code" in error && error.code === "P2002") {
-      return res.status(409).json({ error: "Este horário acabou de ser reservado. Escolha outro horário disponível." });
+    if (error instanceof HorarioIndisponivelError) {
+      return res.status(409).json({ error: error.message });
     }
+    if (conflitoDeAgenda(error)) return responderConflitoDeAgenda(res)
     console.error(error);
     return res.status(500).json({ error: "Erro ao criar agendamento." });
   }
@@ -162,9 +193,14 @@ router.get("/disponibilidade", async (req, res) => {
         error: "Profissional, serviço e data válidos são obrigatórios.",
       });
   const dataAgendamento = data as string;
+  const regras = await regrasAgendamento();
+  const horarioPermitido = (hora: string) =>
+    !horarioAgendamentoJaPassou(dataAgendamento, hora) &&
+    respeitaAntecedenciaMinimaAgendamento(dataAgendamento, hora, regras.antecedenciaAgendamentoMinutos);
   if (profissionalId === "sem-preferencia") {
     const horarios: string[] = [];
-    for (const hora of obterBlocos()) {
+    for (const hora of await listarBlocosConfiguradosParaData(dataAgendamento)) {
+      if (!horarioPermitido(hora)) continue;
       if (
         await escolherPrimeiroProfissionalDisponivel(
           servicoId,
@@ -178,6 +214,7 @@ router.get("/disponibilidade", async (req, res) => {
   }
   let agendamentoIgnorado: string | undefined;
   if (typeof ignorarAgendamentoId === "string") {
+    if (!req.auth) return res.status(401).json({ error: "Autenticação obrigatória para remarcar um agendamento." });
     const agendamento = await prisma.agendamento.findUnique({ where: { id: ignorarAgendamentoId } });
     if (!agendamento || (req.auth!.nivel !== "Administrador" && agendamento.usuarioId !== req.auth!.sub))
       return res.status(403).json({ error: "Sem permissão para remarcar este agendamento." });
@@ -189,7 +226,7 @@ router.get("/disponibilidade", async (req, res) => {
     dataAgendamento,
     agendamentoIgnorado,
   );
-  return res.json({ horarios });
+  return res.json({ horarios: horarios.filter(horarioPermitido) });
 });
 
 router.patch("/:id/cancelar", async (req, res) => {
@@ -209,6 +246,8 @@ router.patch("/:id/cancelar", async (req, res) => {
     const regras = await regrasAgendamento();
     if (!respeitaAntecedencia(agendamento.data, agendamento.hora, regras.antecedenciaCancelamentoHoras)) return res.status(400).json({ error: `Cancelamento permitido com pelo menos ${regras.antecedenciaCancelamentoHoras} horas de antecedência.` });
   }
+  // Cancelar só libera um horário; não reserva intervalo nem cria sobreposição.
+  // Por isso não exige advisory lock: a próxima reserva já revalida a agenda sob lock.
   const atualizado = await prisma.agendamento.update({ where: { id: agendamento.id }, data: { status: "CANCELADO" } });
   await prisma.historicoAgendamento.create({ data: { agendamentoId: agendamento.id, autorId: req.auth!.sub, tipo: "CANCELAMENTO", dadosAnteriores: { status: agendamento.status }, dadosNovos: { status: "CANCELADO" } } });
   void notificacaoService.enviarSeAutomatico(agendamento.id, 'CANCELAMENTO');
@@ -227,13 +266,25 @@ router.patch("/:id/remarcar", async (req, res) => {
   if (!agendamento) return res.status(404).json({ error: "Agendamento não encontrado." });
   const admin = req.auth!.nivel === "Administrador";
   if (!admin && agendamento.usuarioId !== req.auth!.sub) return res.status(403).json({ error: "Sem permissão." });
-  if (!admin) { const regras = await regrasAgendamento(); if (!respeitaAntecedencia(agendamento.data, agendamento.hora, regras.antecedenciaRemarcacaoHoras)) return res.status(400).json({ error: `Remarcação permitida com pelo menos ${regras.antecedenciaRemarcacaoHoras} horas de antecedência.` }); }
+  const regras = await regrasAgendamento();
+  if (!admin && !respeitaAntecedencia(agendamento.data, agendamento.hora, regras.antecedenciaRemarcacaoHoras)) return res.status(400).json({ error: `Remarcação permitida com pelo menos ${regras.antecedenciaRemarcacaoHoras} horas de antecedência.` });
   const { data, hora } = req.body;
   const profissionalId = typeof req.body.profissionalId === "string" ? req.body.profissionalId : agendamento.profissionalId;
   const servicoId = typeof req.body.servicoId === "string" ? req.body.servicoId : agendamento.servicoId;
   if (!isValidDate(data) || !isValidTime(hora) || !(await hasAvailableProfessionalAndService(profissionalId, servicoId))) return res.status(400).json({ error: "Dados da remarcação inválidos." });
-  if (!(await validarDisponibilidade(profissionalId, servicoId, data, hora, agendamento.id))) return res.status(409).json({ error: "Este horário não está disponível." });
-  const atualizado = await prisma.agendamento.update({ where: { id: agendamento.id }, data: { data, hora, profissionalId, servicoId } });
+  if (horarioAgendamentoJaPassou(data, hora)) return res.status(409).json({ error: horarioPassadoError });
+  if (!respeitaAntecedenciaMinimaAgendamento(data, hora, regras.antecedenciaAgendamentoMinutos)) return res.status(409).json({ error: erroAntecedenciaMinima(regras.antecedenciaAgendamentoMinutos) });
+  let atualizado;
+  try {
+    atualizado = await executarComLockAgenda(profissionalId, data, async tx => {
+      if (!(await validarDisponibilidade(profissionalId, servicoId, data, hora, agendamento.id, tx))) throw new HorarioIndisponivelError();
+      return tx.agendamento.update({ where: { id: agendamento.id }, data: { data, hora, profissionalId, servicoId } });
+    });
+  } catch (error) {
+    if (error instanceof HorarioIndisponivelError) return res.status(409).json({ error: error.message });
+    if (conflitoDeAgenda(error)) return responderConflitoDeAgenda(res)
+    throw error;
+  }
   await prisma.historicoAgendamento.create({ data: { agendamentoId: agendamento.id, autorId: req.auth!.sub, tipo: "REMARCACAO", dadosAnteriores: { data: agendamento.data, hora: agendamento.hora, profissionalId: agendamento.profissionalId, servicoId: agendamento.servicoId }, dadosNovos: { data, hora, profissionalId, servicoId } } });
   void notificacaoService.enviarSeAutomatico(agendamento.id, 'REMARCACAO');
   return res.json(atualizado);
@@ -293,19 +344,14 @@ router.put("/:id", requireAdmin, async (req, res) => {
       .json({ error: "Profissional ou serviço indisponível." });
   }
 
-  const horarioDisponivel = await validarDisponibilidade(
-    profissionalId,
-    servicoId,
-    data,
-    hora,
-    agendamento.id,
-  );
-  if (!horarioDisponivel)
-    return res
-      .status(409)
-      .json({
-        error: "Este horário não está disponível para a duração do serviço.",
-      });
+  const alteraHorario = ["data", "hora", "profissionalId", "servicoId"].some(campo => req.body[campo] !== undefined);
+  if (alteraHorario && horarioAgendamentoJaPassou(data, hora)) {
+    return res.status(409).json({ error: horarioPassadoError });
+  }
+  const regras = await regrasAgendamento();
+  if (alteraHorario && !respeitaAntecedenciaMinimaAgendamento(data, hora, regras.antecedenciaAgendamentoMinutos)) {
+    return res.status(409).json({ error: erroAntecedenciaMinima(regras.antecedenciaAgendamentoMinutos) });
+  }
 
   const dadosNovos = {
     profissionalId,
@@ -315,7 +361,17 @@ router.put("/:id", requireAdmin, async (req, res) => {
     status: req.body.status ?? agendamento.status,
     observacao: req.body.observacao ?? agendamento.observacao,
   };
-  const atualizado = await prisma.agendamento.update({ where: { id: agendamento.id }, data: dadosNovos });
+  let atualizado;
+  try {
+    atualizado = await executarComLockAgenda(profissionalId, data, async tx => {
+      if (!(await validarDisponibilidade(profissionalId, servicoId, data, hora, agendamento.id, tx))) throw new HorarioIndisponivelError();
+      return tx.agendamento.update({ where: { id: agendamento.id }, data: dadosNovos });
+    });
+  } catch (error) {
+    if (error instanceof HorarioIndisponivelError) return res.status(409).json({ error: error.message });
+    if (conflitoDeAgenda(error)) return responderConflitoDeAgenda(res)
+    throw error;
+  }
   await prisma.historicoAgendamento.create({ data: { agendamentoId: agendamento.id, autorId: req.auth!.sub, tipo: "ATUALIZACAO_ADMINISTRATIVA", dadosAnteriores: { profissionalId: agendamento.profissionalId, servicoId: agendamento.servicoId, data: agendamento.data, hora: agendamento.hora, status: agendamento.status, observacao: agendamento.observacao }, dadosNovos } });
   return res.json(atualizado);
 });
