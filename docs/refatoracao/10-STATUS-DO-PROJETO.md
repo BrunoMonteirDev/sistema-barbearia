@@ -4,7 +4,9 @@
 
 ## Estado atual
 
-Análise estática e auditoria Git concluídas. A primeira baseline automatizada do backend foi recuperada e está registrada em `docs/refatoracao/14-RESULTADO-RECUPERACAO-TESTES.md`: cinco arquivos, 33 testes aprovados e typecheck aprovado.
+Análise estática, auditoria Git e limpeza controlada do índice concluídas. A primeira baseline automatizada do backend permanece válida: cinco arquivos, 33 testes aprovados e typecheck aprovado.
+
+Dependências instaladas, artefatos gerados, metadados locais e arquivos `.env` reais deixaram de ser rastreados sem serem apagados do computador. Os exemplos de ambiente continuam versionáveis.
 
 A branch de segurança `baseline/estado-atual-2026-09-23` foi criada no mesmo HEAD de `main`, sem alterar o worktree.
 
@@ -14,23 +16,22 @@ Tailwind continua ativo e nenhuma classe foi migrada nesta etapa.
 
 ## Última etapa concluída
 
-Primeira baseline automatizada backend:
+Limpeza controlada do índice Git:
 
-- recuperados `horarios.service.test.ts`, `servicos.test.ts`, `middlewares/auth.test.ts`, `routes/auth.test.ts` e `routes/usuarios.test.ts`;
-- adicionada configuração Vitest mínima exclusiva do backend;
-- instalados somente Vitest, Supertest e tipos de Supertest no servidor;
-- cada arquivo passou isoladamente;
-- suíte conjunta aprovada: 5 arquivos e 33 testes;
-- `tsc --noEmit` aprovado;
-- nenhum código de produção foi alterado.
+- 7.620 caminhos de `client/node_modules/` deixaram de ser rastreados;
+- seis arquivos de `.local/`, dois `.tsbuildinfo`, `client/vite.config.js` e `client/vite.config.d.ts` deixaram de ser rastreados;
+- `client/.env` e `server/.env` deixaram de ser rastreados, mas permanecem locais;
+- `.gitignore` passou a permitir `.env.example` e `.env.*.example`;
+- nenhum código de produção, teste, manifesto, lockfile, migration ou banco foi alterado;
+- validações backend e frontend foram aprovadas após a limpeza.
 
 ## Etapa em andamento
 
-Revisão da primeira baseline automatizada e preparação do próximo incremento de testes. A refatoração MVC ainda não começou.
+Registro documental e backup remoto da limpeza do repositório. A refatoração MVC ainda não começou.
 
 ## Próxima etapa
 
-Decidir se a baseline será registrada como checkpoint e escolher o próximo incremento: senha, profissionais/disponibilidade ou services de criação/manutenção de agendamentos. Antes dos testes de agendamento, decidir a regra de antecedência. Não iniciar MVC ainda.
+Revisar e preservar em commits controlados as alterações funcionais que continuam no worktree. Em seguida, recuperar o próximo incremento da baseline de testes — preferencialmente profissionais/disponibilidade — e decidir a regra de antecedência antes dos testes de agendamento. Não iniciar MVC enquanto mudanças funcionais relevantes permanecerem não rastreadas.
 
 ## Pendências conhecidas
 
@@ -51,6 +52,7 @@ Decidir se a baseline será registrada como checkpoint e escolher o próximo inc
 - decidir se os componentes e utilitários de funcionários ainda fazem parte do grafo ativo;
 - analisar separadamente as seis vulnerabilidades reportadas pelo npm, sem correção automática;
 - adaptar os testes de agendamento ao novo nome da página, aos services extraídos e ao contrato de disponibilidade;
+- revisar e rotacionar credenciais reais, pois remover `.env` do índice não remove seus valores do histórico Git;
 
 ## Riscos
 
@@ -81,6 +83,14 @@ Decidir se a baseline será registrada como checkpoint e escolher o próximo inc
 - cinco testes backend executados individualmente: 33 casos aprovados no total;
 - suíte backend conjunta aprovada: 5 arquivos e 33 testes;
 - typecheck backend reaprovado depois da instalação da infraestrutura mínima.
+- limpeza do índice registrada nos commits `77625af885eea72785d7a282a480d4614911d112` e `805718fa57a41ef810fe1a974a2cd4d5131833bf`;
+- após a limpeza: 0 caminhos rastreados em `client/node_modules`, `.local`, `*.tsbuildinfo`, `client/vite.config.js` e `client/vite.config.d.ts`;
+- `client/.env` e `server/.env` continuam presentes localmente e não estão mais rastreados;
+- suíte backend reaprovada: 5 arquivos e 33 testes;
+- typecheck backend reaprovado;
+- typecheck frontend sem emissão aprovado;
+- lint frontend sem cache aprovado;
+- bundle frontend aprovado com saída em diretório temporário fora do repositório.
 
 Banco, Google real e Evolution real não foram executados. Os testes de Google usam mock. Testing Library e jsdom continuam ausentes porque o frontend permaneceu fora do escopo. O build frontend declarado não foi executado diretamente para evitar escrita em `dist` e `.tsbuildinfo`; seu typecheck e bundle foram validados anteriormente por comandos seguros equivalentes.
 
@@ -89,3 +99,5 @@ Banco, Google real e Evolution real não foram executados. Os testes de Google u
 - nenhum arquivo de produção deve ser alterado até a próxima etapa ser explicitamente iniciada;
 - os arquivos anteriores já existentes em `docs/refatoracao/` foram preservados;
 - todas as correções funcionais levantadas permanecem como “necessita validação” ou pendência separada.
+- a limpeza não apagou arquivos físicos e não reescreveu o histórico Git;
+- antes do registro documental restavam 98 entradas no status: 73 caminhos rastreados alterados e 25 não rastreados.
