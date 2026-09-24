@@ -4,8 +4,6 @@ import { requireAdmin, requireStaff } from "../middlewares/auth";
 import {
   escolherPrimeiroProfissionalDisponivel,
   isValidBlock,
-  listarBlocosConfiguradosParaData,
-  listarHorariosDisponiveis,
   validarDisponibilidade,
 } from "../services/horarios.service";
 import { atualizarAtrasados, horarioAgendamentoJaPassou, regrasAgendamento, respeitaAntecedencia, respeitaAntecedenciaMinimaAgendamento } from "../services/regras-agendamento.service";
@@ -13,7 +11,14 @@ import { notificacaoService } from '../services/notificacao.service';
 import { executarComLockAgenda, HorarioIndisponivelError } from '../services/agenda-lock.service';
 import { criarTokenConfirmacaoRepeticao, detectarPossivelRepeticaoAgendamento, validarTokenConfirmacaoRepeticao } from '../services/repeticao-agendamento.service';
 
+import { DisponibilidadeController } from '../controllers/disponibilidade.controller';
+import { DisponibilidadeRepository } from '../repositories/disponibilidade.repository';
+import { DisponibilidadeService } from '../services/disponibilidade.service';
+
 const router = Router();
+const disponibilidadeRepository = new DisponibilidadeRepository();
+const disponibilidadeService = new DisponibilidadeService(disponibilidadeRepository);
+const disponibilidadeController = new DisponibilidadeController(disponibilidadeService);
 const appointmentStatuses = [
   "PENDENTE",
   "CONFIRMADO",
@@ -180,54 +185,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/disponibilidade", async (req, res) => {
-  const { profissionalId, servicoId, data, ignorarAgendamentoId } = req.query;
-  if (
-    typeof profissionalId !== "string" ||
-    typeof servicoId !== "string" ||
-    !isValidDate(data)
-  )
-    return res
-      .status(400)
-      .json({
-        error: "Profissional, serviço e data válidos são obrigatórios.",
-      });
-  const dataAgendamento = data as string;
-  const regras = await regrasAgendamento();
-  const horarioPermitido = (hora: string) =>
-    !horarioAgendamentoJaPassou(dataAgendamento, hora) &&
-    respeitaAntecedenciaMinimaAgendamento(dataAgendamento, hora, regras.antecedenciaAgendamentoMinutos);
-  if (profissionalId === "sem-preferencia") {
-    const horarios: string[] = [];
-    for (const hora of await listarBlocosConfiguradosParaData(dataAgendamento)) {
-      if (!horarioPermitido(hora)) continue;
-      if (
-        await escolherPrimeiroProfissionalDisponivel(
-          servicoId,
-          dataAgendamento,
-          hora,
-        )
-      )
-        horarios.push(hora);
-    }
-    return res.json({ horarios });
-  }
-  let agendamentoIgnorado: string | undefined;
-  if (typeof ignorarAgendamentoId === "string") {
-    if (!req.auth) return res.status(401).json({ error: "Autenticação obrigatória para remarcar um agendamento." });
-    const agendamento = await prisma.agendamento.findUnique({ where: { id: ignorarAgendamentoId } });
-    if (!agendamento || (req.auth!.nivel !== "Administrador" && agendamento.usuarioId !== req.auth!.sub))
-      return res.status(403).json({ error: "Sem permissão para remarcar este agendamento." });
-    agendamentoIgnorado = agendamento.id;
-  }
-  const horarios = await listarHorariosDisponiveis(
-    profissionalId,
-    servicoId,
-    dataAgendamento,
-    agendamentoIgnorado,
-  );
-  return res.json({ horarios: horarios.filter(horarioPermitido) });
-});
+router.get("/disponibilidade", disponibilidadeController.consultar);
 
 router.patch("/:id/cancelar", async (req, res) => {
   const agendamento = await prisma.agendamento.findUnique({

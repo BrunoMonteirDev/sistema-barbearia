@@ -1,0 +1,220 @@
+.pagina-profissionais > * + * {
+  margin-top: 1.25rem;
+}
+
+.cabecalho-profissionais {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.titulo-profissionais {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+}
+
+.botao-principal-profissional {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 1rem;
+  border-radius: 0.375rem;
+  background: #a51f1d;
+  color: #fff;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 5%);
+  transition: background-color 150ms ease;
+}
+
+.botao-principal-profissional:hover { background: #8c1917; }
+.botao-principal-profissional:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #fca5a5;
+}
+.botao-principal-profissional:disabled {
+  background: #fca5a5;
+  cursor: not-allowed;
+}
+
+.lista-profissionais {
+  overflow-x: auto;
+  border-radius: 0.25rem;
+  background: #fff;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 10%), 0 1px 2px rgb(0 0 0 / 10%);
+}
+
+.tabela-profissionais { min-width: 100%; text-align: left; }
+.cabecalho-tabela-profissionais {
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+  color: #4b5563;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.corpo-tabela-profissionais > tr + tr { border-top: 1px solid #e5e7eb; }
+.celula-profissional { padding: 0.75rem 1rem; }
+.nome-profissional { font-weight: 500; }
+.mensagem-lista-profissionais { padding: 2rem 1rem; text-align: center; color: #6b7280; }
+.acoes-profissional { display: flex; gap: 0.75rem; }
+.botao-editar-profissional { color: #0e3746; }
+.botao-desativar-profissional { color: #dc2626; }
+.botao-editar-profissional:hover,
+.botao-desativar-profissional:hover { text-decoration: underline; }
+
+.formulario-profissional > * + *,
+.disponibilidade-profissional > * + * { margin-top: 1rem; }
+.abas-profissional { display: flex; gap: 0.5rem; border-bottom: 1px solid #e5e7eb; }
+.aba-profissional {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  color: #4b5563;
+}
+.aba-profissional-ativa { border-bottom: 2px solid #0e3746; color: #0c2f3c; }
+.rotulo-profissional { display: block; font-size: 0.875rem; line-height: 1.25rem; font-weight: 500; }
+.campo-profissional {
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.375rem;
+  background: #fff;
+  color: #020617;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 5%);
+  outline: none;
+  transition: border-color 150ms ease;
+}
+.campo-dados-profissional { margin-top: 0.25rem; }
+.campo-profissional::placeholder { color: #94a3b8; }
+.campo-profissional:focus { border-color: #0e3746; }
+.campo-profissional:disabled { background: #f1f5f9; color: #64748b; cursor: not-allowed; }
+.status-profissional {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+}
+
+.aviso-disponibilidade-profissional {
+  padding: 0.75rem;
+  border: 1px solid #dbeafe;
+  border-radius: 0.5rem;
+  background: #eff6ff;
+  color: #172554;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.selecao-dias-profissional { display: grid; gap: 0.75rem; }
+.rotulo-dia-profissional {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+}
+.titulo-dia-profissional { display: flex; min-height: 2.5rem; align-items: flex-end; }
+.orientacao-disponibilidade-profissional {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  background: #f9fafb;
+  color: #1f2937;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.acoes-disponibilidade-profissional { display: grid; gap: 0.5rem; }
+.botao-marcar-profissional,
+.botao-desmarcar-profissional,
+.botao-copiar-dia-profissional,
+.botao-copiar-semana-profissional {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+}
+.botao-marcar-profissional { background: #0a2732; color: #fff; }
+.botao-marcar-profissional:hover { background: #081f28; }
+.botao-desmarcar-profissional { border: 1px solid #9ca3af; background: #fff; color: #1f2937; }
+.botao-desmarcar-profissional:hover { background: #f3f4f6; }
+.botao-copiar-dia-profissional { border: 1px solid #be2623; background: #fff; color: #731311; }
+.botao-copiar-dia-profissional:hover { background: #fef2f2; }
+.botao-desmarcar-profissional:disabled,
+.botao-copiar-dia-profissional:disabled {
+  cursor: not-allowed;
+  border-color: #e5e7eb;
+  background: #f3f4f6;
+  color: #9ca3af;
+}
+.botao-copiar-semana-profissional { background: #8c1917; color: #fff; }
+.botao-copiar-semana-profissional:hover { background: #731311; }
+.botao-copiar-semana-profissional:disabled { cursor: not-allowed; background: #e5e7eb; color: #6b7280; }
+.icone-profissional { height: 1rem; width: 1rem; }
+.copiar-semana-profissional { padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; background: #fff; }
+.titulo-copiar-semana-profissional { margin-bottom: 0.5rem; font-size: 0.875rem; line-height: 1.25rem; font-weight: 600; color: #111827; }
+.acoes-copiar-semana-profissional { display: flex; flex-direction: column; gap: 0.5rem; }
+.campo-origem-profissional { min-width: 0; flex: 1 1 0%; }
+.grade-horarios-profissional {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border: 2px solid #d1d5db;
+  border-radius: 0.5rem;
+  background: #f9fafb;
+}
+.resumo-horarios-profissional { grid-column: 1 / -1; font-size: 0.75rem; line-height: 1rem; font-weight: 500; color: #374151; }
+.horario-profissional {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  background: #fff;
+  color: #111827;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.horario-profissional:hover { background: #fef2f2; }
+.acoes-formulario-profissional { display: flex; justify-content: flex-end; gap: 0.75rem; }
+.botao-cancelar-profissional { padding: 0.5rem 1rem; border-radius: 0.25rem; color: #374151; }
+.botao-cancelar-profissional:hover { background: #f3f4f6; }
+
+/* Mantém o modo de alto contraste sem depender dos nomes utilitários antigos. */
+html.acessibilidade-alto-contraste .pagina-profissionais :is(
+  .lista-profissionais, .cabecalho-tabela-profissionais,
+  .aviso-disponibilidade-profissional, .orientacao-disponibilidade-profissional,
+  .copiar-semana-profissional, .grade-horarios-profissional, .horario-profissional,
+  .campo-profissional, .botao-marcar-profissional, .botao-desmarcar-profissional,
+  .botao-copiar-dia-profissional, .botao-copiar-semana-profissional
+) { background: #000 !important; color: #fff !important; border-color: #fff; }
+html.acessibilidade-alto-contraste .pagina-profissionais :is(
+  .botao-editar-profissional, .botao-desativar-profissional,
+  .botao-cancelar-profissional, .aba-profissional
+) { color: #fff !important; }
+html.acessibilidade-alto-contraste .pagina-profissionais :is(
+  .abas-profissional, .aba-profissional-ativa, .corpo-tabela-profissionais > tr + tr
+) { border-color: #fff; }
+
+@media (min-width: 640px) {
+  .selecao-dias-profissional { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .acoes-disponibilidade-profissional { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .acoes-copiar-semana-profissional { flex-direction: row; }
+  .grade-horarios-profissional { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}

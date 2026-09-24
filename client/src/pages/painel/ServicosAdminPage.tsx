@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react'
 import toast from 'react-hot-toast'
 import { api, type Servico } from '@/lib/api'
 import { ConfirmDialog, Modal } from '@/components/ui/modal'
+import './ServicosAdminPage.css'
 
 type ServicoForm = { nome: string; descricao: string; preco: string; duracao: string; ativo: boolean }
 const emptyForm: ServicoForm = { nome: '', descricao: '', preco: '', duracao: '30', ativo: true }
@@ -21,5 +22,129 @@ export default function ServicosAdminPage() {
   const save = async (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); try { setSaving(true); const data = { nome: form.nome, descricao: form.descricao || null, preco: Number(form.preco), duracao: Number(form.duracao), ativo: form.ativo }; if (editing) await api.servicos.update(editing.id, data); else await api.servicos.create(data); toast.success(editing ? 'Serviço atualizado com sucesso.' : 'Serviço cadastrado com sucesso.'); closeForm(); load() } catch (error) { toast.error(error instanceof Error ? error.message : 'Não foi possível salvar o serviço.') } finally { setSaving(false) } }
   const deactivate = async () => { if (!deactivating) return; try { await api.servicos.remove(deactivating.id); toast.success('Serviço desativado com sucesso.'); setDeactivating(null); load() } catch (error) { toast.error(error instanceof Error ? error.message : 'Não foi possível desativar o serviço.') } }
 
-  return <section className="space-y-5"><div className="flex items-center justify-between gap-4"><h1 className="text-2xl font-bold">Serviços</h1><button type="button" onClick={() => { setEditing(null); setForm(emptyForm); setFormOpen(true) }} className="btn-primary">Adicionar serviço</button></div><div className="divide-y rounded bg-white shadow">{items.length === 0 ? <p className="p-4 text-gray-500">Nenhum serviço cadastrado.</p> : items.map(service => <div className="flex items-center justify-between gap-4 p-4" key={service.id}><span><strong>{service.nome}</strong><small className="block text-gray-500">R$ {Number(service.preco).toFixed(2)} · {service.duracao} min</small></span><div className="flex gap-3"><button type="button" onClick={() => openEdit(service)} className="text-secondary-500 hover:underline">Editar</button><button type="button" onClick={() => setDeactivating(service)} className="text-red-600 hover:underline">Desativar</button></div></div>)}</div>{formOpen && <Modal title={editing ? 'Editar serviço' : 'Adicionar serviço'} onClose={closeForm}><form onSubmit={save} className="space-y-4"><label className="block text-sm font-medium">Nome<input required className="input-field mt-1 w-full" value={form.nome} onChange={event => setForm(current => ({ ...current, nome: event.target.value }))} /></label><label className="block text-sm font-medium">Descrição<textarea className="input-field mt-1 w-full" value={form.descricao} onChange={event => setForm(current => ({ ...current, descricao: event.target.value }))} /></label><div className="grid gap-4 sm:grid-cols-2"><label className="block text-sm font-medium">Preço<input required type="number" min="0" step="0.01" className="input-field mt-1 w-full" value={form.preco} onChange={event => setForm(current => ({ ...current, preco: event.target.value }))} /></label><label className="block text-sm font-medium">Duração (minutos)<input required type="number" min="1" className="input-field mt-1 w-full" value={form.duracao} onChange={event => setForm(current => ({ ...current, duracao: event.target.value }))} /></label></div><label className="flex items-center gap-2 text-sm font-medium"><input type="checkbox" checked={form.ativo} onChange={event => setForm(current => ({ ...current, ativo: event.target.checked }))} />Serviço ativo</label><div className="flex justify-end gap-3"><button type="button" onClick={closeForm} className="rounded px-4 py-2 text-gray-700 hover:bg-gray-100">Cancelar</button><button disabled={saving} className="btn-primary">{saving ? 'Salvando...' : 'Salvar'}</button></div></form></Modal>}{deactivating && <ConfirmDialog title="Desativar serviço" message={`Deseja desativar o serviço ${deactivating.nome}?`} confirmLabel="Desativar" danger onConfirm={() => { void deactivate() }} onClose={() => setDeactivating(null)} />}</section>
+  return (
+    <section className="pagina-servicos">
+      <div className="cabecalho-servicos">
+        <h1 className="titulo-servicos">Serviços</h1>
+        <button
+          type="button"
+          onClick={() => { setEditing(null); setForm(emptyForm); setFormOpen(true) }}
+          className="botao-principal-servico"
+        >
+          Adicionar serviço
+        </button>
+      </div>
+
+      <div className="lista-servicos">
+        {items.length === 0
+          ? <p className="mensagem-lista-vazia">Nenhum serviço cadastrado.</p>
+          : items.map(service => (
+            <div className="cartao-servico" key={service.id}>
+              <span className="resumo-servico">
+                <strong>{service.nome}</strong>
+                <small className="detalhes-servico">
+                  R$ {Number(service.preco).toFixed(2)} · {service.duracao} min
+                </small>
+              </span>
+              <div className="acoes-servico">
+                <button
+                  type="button"
+                  onClick={() => openEdit(service)}
+                  className="botao-editar-servico"
+                >
+                  Editar
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDeactivating(service)}
+                  className="botao-desativar-servico"
+                >
+                  Desativar
+                </button>
+              </div>
+            </div>
+          ))}
+      </div>
+
+      {formOpen && (
+        <Modal title={editing ? 'Editar serviço' : 'Adicionar serviço'} onClose={closeForm}>
+          <form onSubmit={save} className="formulario-servico">
+            <label className="rotulo-campo-servico">
+              Nome
+              <input
+                required
+                className="campo-servico"
+                value={form.nome}
+                onChange={event => setForm(current => ({ ...current, nome: event.target.value }))}
+              />
+            </label>
+
+            <label className="rotulo-campo-servico">
+              Descrição
+              <textarea
+                className="campo-servico"
+                value={form.descricao}
+                onChange={event => setForm(current => ({ ...current, descricao: event.target.value }))}
+              />
+            </label>
+
+            <div className="campos-servico-em-linha">
+              <label className="rotulo-campo-servico">
+                Preço
+                <input
+                  required
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  className="campo-servico"
+                  value={form.preco}
+                  onChange={event => setForm(current => ({ ...current, preco: event.target.value }))}
+                />
+              </label>
+              <label className="rotulo-campo-servico">
+                Duração (minutos)
+                <input
+                  required
+                  type="number"
+                  min="1"
+                  className="campo-servico"
+                  value={form.duracao}
+                  onChange={event => setForm(current => ({ ...current, duracao: event.target.value }))}
+                />
+              </label>
+            </div>
+
+            <label className="opcao-status-servico">
+              <input
+                type="checkbox"
+                checked={form.ativo}
+                onChange={event => setForm(current => ({ ...current, ativo: event.target.checked }))}
+              />
+              Serviço ativo
+            </label>
+
+            <div className="acoes-formulario-servico">
+              <button type="button" onClick={closeForm} className="botao-cancelar-servico">
+                Cancelar
+              </button>
+              <button disabled={saving} className="botao-principal-servico">
+                {saving ? 'Salvando...' : 'Salvar'}
+              </button>
+            </div>
+          </form>
+        </Modal>
+      )}
+
+      {deactivating && (
+        <ConfirmDialog
+          title="Desativar serviço"
+          message={`Deseja desativar o serviço ${deactivating.nome}?`}
+          confirmLabel="Desativar"
+          danger
+          onConfirm={() => { void deactivate() }}
+          onClose={() => setDeactivating(null)}
+        />
+      )}
+    </section>
+  )
 }

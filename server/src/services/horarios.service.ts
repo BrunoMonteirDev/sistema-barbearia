@@ -1,7 +1,5 @@
 import { prisma } from '../lib/prisma'
-import type { Prisma } from '@prisma/client'
-
-type AgendaDbClient = Prisma.TransactionClient | typeof prisma
+import { DisponibilidadeRepository, type AgendaDbClient } from '../repositories/disponibilidade.repository'
 
 export const BLOCK_MINUTES = 30
 
@@ -68,25 +66,15 @@ export function temConflito(inicioA: string, duracaoA: number, inicioB: string, 
  * ser ignorado para não gerar conflito consigo mesmo.
  */
 export async function listarHorariosDisponiveis(profissionalId: string, servicoId: string, data: string, ignorarAgendamentoId?: string, db: AgendaDbClient = prisma) {
-  const servico = await db.servico.findFirst({ where: { id: servicoId, ativo: true } })
+  const repository = new DisponibilidadeRepository(db)
+  const servico = await repository.buscarServicoAtivo(servicoId)
   if (!servico) return []
 
   const diaSemana = getWeekday(data)
-  const disponibilidade = await db.disponibilidadeProfissional.findMany({
-    where: { profissionalId, diaSemana },
-    orderBy: { hora: 'asc' },
-  })
+  const disponibilidade = await repository.listarHorariosDoDia(profissionalId, diaSemana)
   const blocosConfigurados = disponibilidade.map(item => item.hora)
 
-  const agendamentos = await db.agendamento.findMany({
-    where: {
-      profissionalId,
-      data,
-      status: { not: 'CANCELADO' },
-      ...(ignorarAgendamentoId ? { id: { not: ignorarAgendamentoId } } : {}),
-    },
-    include: { servico: true },
-  })
+  const agendamentos = await repository.listarAgendamentosDoDia(profissionalId, data, ignorarAgendamentoId)
 
   return blocosConfigurados.filter(hora => {
     if (!temBlocosConsecutivos(blocosConfigurados, hora, servico.duracao)) return false
@@ -100,7 +88,8 @@ export async function validarDisponibilidade(profissionalId: string, servicoId: 
 }
 
 export async function escolherPrimeiroProfissionalDisponivel(servicoId: string, data: string, hora: string) {
-  const profissionais = await prisma.profissional.findMany({ where: { ativo: true }, orderBy: { nome: 'asc' } })
+  const repository = new DisponibilidadeRepository()
+  const profissionais = await repository.listarProfissionaisAtivos()
   for (const profissional of profissionais) {
     if (await validarDisponibilidade(profissional.id, servicoId, data, hora)) return profissional.id
   }
@@ -109,11 +98,7 @@ export async function escolherPrimeiroProfissionalDisponivel(servicoId: string, 
 
 /** Retorna somente os inícios de blocos configurados por profissionais ativos. */
 export async function listarBlocosConfiguradosParaData(data: string) {
-  const disponibilidade = await prisma.disponibilidadeProfissional.findMany({
-    where: { diaSemana: getWeekday(data), profissional: { ativo: true } },
-    select: { hora: true },
-    distinct: ['hora'],
-    orderBy: { hora: 'asc' },
-  })
+  const repository = new DisponibilidadeRepository()
+  const disponibilidade = await repository.listarBlocosConfigurados(getWeekday(data))
   return disponibilidade.map(item => item.hora)
 }

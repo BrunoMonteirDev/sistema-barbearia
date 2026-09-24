@@ -1,41 +1,17 @@
 import { Router } from 'express'
-import { prisma } from '../lib/prisma'
+import { ServicoController } from '../controllers/servico.controller'
 import { authenticate, requireAdmin } from '../middlewares/auth'
+import { ServicoRepository } from '../repositories/servico.repository'
+import { ServicoService } from '../services/servico.service'
 
 const router = Router()
+const servicoRepository = new ServicoRepository()
+const servicoService = new ServicoService(servicoRepository)
+const servicoController = new ServicoController(servicoService)
 
-router.get('/', async (_req, res) => {
-  try {
-    const servicos = await prisma.servico.findMany({
-      where: { ativo: true },
-      orderBy: { nome: 'asc' }
-    })
-
-    return res.json(servicos)
-  } catch (error) {
-    console.error(error)
-    return res.status(500).json({ error: 'Erro ao listar serviços.' })
-  }
-})
-
-router.post('/', authenticate, requireAdmin, async (req, res) => {
-  try {
-    const servico = await prisma.servico.create({ data: req.body })
-    return res.status(201).json(servico)
-  } catch (error) {
-    console.error(error)
-    return res.status(500).json({ error: 'Erro ao criar serviço.' })
-  }
-})
-
-router.put('/:id', authenticate, requireAdmin, async (req, res) => {
-  const servico = await prisma.servico.update({ where: { id: String(req.params.id) }, data: req.body })
-  return res.json(servico)
-})
-
-router.delete('/:id', authenticate, requireAdmin, async (req, res) => {
-  const servico = await prisma.servico.update({ where: { id: String(req.params.id) }, data: { ativo: false } })
-  return res.json(servico)
-})
+router.get('/', servicoController.listar)
+router.post('/', authenticate, requireAdmin, servicoController.criar)
+router.put('/:id', authenticate, requireAdmin, servicoController.atualizar)
+router.delete('/:id', authenticate, requireAdmin, servicoController.desativar)
 
 export default router
