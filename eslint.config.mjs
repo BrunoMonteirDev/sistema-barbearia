@@ -1,16 +1,15 @@
-import tseslint from 'typescript-eslint'
-
 export default [
-  { ignores: ['dist', 'coverage', 'node_modules'] },
+  { ignores: ["dist", "coverage", "node_modules"] },
   {
-    files: ['src/frontend/**/*.{ts,tsx}'],
-    languageOptions: { parser: tseslint.parser },
-    plugins: { '@typescript-eslint': tseslint.plugin },
+    files: ["src/frontend/**/*.{js,jsx}"],
+    languageOptions: { parserOptions: { ecmaFeatures: { jsx: true } } },
     rules: {
-      '@typescript-eslint/no-explicit-any': 'error',
-      '@typescript-eslint/no-unused-vars': 'error',
-      'no-irregular-whitespace': 'error',
-      'prefer-const': 'error',
+      "no-unused-vars": [
+        "error",
+        { varsIgnorePattern: "^_", argsIgnorePattern: "^_" },
+      ],
+      "no-irregular-whitespace": "error",
+      "prefer-const": "error",
     },
   },
-]
+];

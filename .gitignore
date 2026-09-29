@@ -19,7 +19,6 @@ coverage
 client/dist
 client/.vite
 *.tsbuildinfo
-vite.config.js
 vite.config.d.ts
 
 # logs
