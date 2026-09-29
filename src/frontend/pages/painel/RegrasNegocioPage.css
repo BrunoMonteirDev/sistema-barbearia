@@ -1,0 +1,97 @@
+.pagina-regras-negocio {
+  margin-inline: auto;
+  max-width: 36rem;
+}
+
+.titulo-regras-negocio {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  color: #020617;
+}
+
+.descricao-regras-negocio { margin-top: .25rem; color: #475569; }
+
+.formulario-regras-negocio {
+  margin-top: 1.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: .5rem;
+  background: #fff;
+  padding: 1.5rem;
+  box-shadow: 0 1px 2px rgb(0 0 0 / .05);
+}
+.formulario-regras-negocio > * + * { margin-top: 1.25rem; }
+
+.rotulo-regras-negocio {
+  display: block;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.campo-regras-negocio {
+  margin-top: .25rem;
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: .375rem;
+  background: #fff;
+  padding: .625rem .75rem;
+  color: #020617;
+  box-shadow: 0 1px 2px rgb(0 0 0 / .05);
+  outline: none;
+  transition: color .15s, background-color .15s, border-color .15s;
+}
+.campo-regras-negocio::placeholder { color: #94a3b8; }
+.campo-regras-negocio:focus { border-color: #0e3746; box-shadow: none; }
+.campo-regras-negocio:disabled {
+  cursor: not-allowed;
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.ajuda-regras-negocio {
+  margin-top: .25rem;
+  display: block;
+  font-size: .75rem;
+  line-height: 1rem;
+  font-weight: 400;
+  color: #475569;
+}
+
+.botao-salvar-regras-negocio {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: .375rem;
+  background: #a51f1d;
+  padding: .625rem 1rem;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / .05);
+  transition: color .15s, background-color .15s;
+}
+.botao-salvar-regras-negocio:hover { background: #8c1917; }
+.botao-salvar-regras-negocio:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #fca5a5;
+}
+.botao-salvar-regras-negocio:disabled { cursor: not-allowed; background: #fca5a5; }
+
+/* Mantém o alto contraste após a remoção das classes utilitárias. */
+html.acessibilidade-alto-contraste .formulario-regras-negocio,
+html.acessibilidade-alto-contraste .campo-regras-negocio,
+html.acessibilidade-alto-contraste .botao-salvar-regras-negocio {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+html.acessibilidade-alto-contraste .formulario-regras-negocio { border-color: #fff !important; }
+
+.identificacao-regras-negocio {
+  font-size: .875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: #8c1917;
+}

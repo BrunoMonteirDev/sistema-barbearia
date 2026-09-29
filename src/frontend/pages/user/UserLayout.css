@@ -1,0 +1,18 @@
+.layout-usuario {
+  min-height: 100vh;
+  background: #f3f4f6;
+}
+
+.conteudo-layout-usuario {
+  min-width: 0;
+  flex: 1 1 0%;
+  padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .layout-usuario { display: flex; }
+}
+
+html.acessibilidade-alto-contraste .layout-usuario {
+  background-color: #000 !important;
+}

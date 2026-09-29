@@ -1,0 +1,53 @@
+.repeticao-mensagem { font-size: .875rem; line-height: 1.25rem; color: #334155; }
+.repeticao-agendamentos { margin-top: 1rem; }
+.repeticao-agendamentos > * + * { margin-top: .5rem; }
+.repeticao-agendamento {
+  border: 1px solid #e2e8f0;
+  border-radius: .25rem;
+  padding: .75rem;
+  font-size: .875rem;
+  line-height: 1.25rem;
+}
+.repeticao-status { color: #475569; }
+.repeticao-prazo {
+  margin-top: 1.25rem;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+.repeticao-botao-voltar,
+.repeticao-botao-confirmar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: .375rem;
+  padding: .625rem 1rem;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / .05);
+  transition: color .15s, background-color .15s;
+}
+.repeticao-botao-voltar { background: #0c2f3c; }
+.repeticao-botao-voltar:hover { background: #0a2732; }
+.repeticao-botao-voltar:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #bae6fd;
+}
+.repeticao-botao-voltar:disabled { cursor: not-allowed; background: #7dd3fc; }
+.repeticao-botao-confirmar { background: #a51f1d; }
+.repeticao-botao-confirmar:hover { background: #8c1917; }
+.repeticao-botao-confirmar:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #fca5a5;
+}
+.repeticao-botao-confirmar:disabled { cursor: not-allowed; background: #fca5a5; }
+
+html.acessibilidade-alto-contraste .repeticao-agendamento { border-color: #fff !important; }
+html.acessibilidade-alto-contraste .repeticao-botao-voltar,
+html.acessibilidade-alto-contraste .repeticao-botao-confirmar {
+  background-color: #000 !important;
+  color: #fff !important;
+}

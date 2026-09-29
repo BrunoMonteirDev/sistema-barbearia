@@ -1,0 +1,113 @@
+.pagina-concluir-cadastro {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: #f1f5f9;
+}
+
+.formulario-concluir-cadastro {
+  width: 100%;
+  max-width: 28rem;
+  padding: 1.75rem;
+  border-radius: 0.75rem;
+  background: #fff;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 10%), 0 1px 2px rgb(0 0 0 / 10%);
+}
+
+.formulario-concluir-cadastro > * + * {
+  margin-top: 1.25rem;
+}
+
+.etapa-concluir-cadastro {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: #8c1917;
+}
+
+.titulo-concluir-cadastro {
+  margin-top: 0.25rem;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  color: #020617;
+}
+
+.descricao-concluir-cadastro {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: #475569;
+}
+
+.rotulo-concluir-cadastro {
+  display: block;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.campo-concluir-cadastro {
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.375rem;
+  outline: none;
+  background: #fff;
+  color: #020617;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 5%);
+  transition: border-color 150ms ease;
+}
+
+.campo-concluir-cadastro::placeholder {
+  color: #94a3b8;
+}
+
+.campo-concluir-cadastro:focus {
+  border-color: #0e3746;
+}
+
+.campo-concluir-cadastro:disabled {
+  cursor: not-allowed;
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.botao-concluir-cadastro {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.625rem 1rem;
+  border-radius: 0.375rem;
+  background: #a51f1d;
+  color: #fff;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 5%);
+  transition: background-color 150ms ease;
+}
+
+.botao-concluir-cadastro:hover {
+  background: #8c1917;
+}
+
+.botao-concluir-cadastro:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #fca5a5;
+}
+
+.botao-concluir-cadastro:disabled {
+  cursor: not-allowed;
+  background: #fca5a5;
+}
+
+html.acessibilidade-alto-contraste .formulario-concluir-cadastro {
+  background: #000 !important;
+  color: #fff !important;
+}

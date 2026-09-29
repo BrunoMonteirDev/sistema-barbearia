@@ -1,0 +1,287 @@
+.pagina-evolution {
+  margin-inline:auto;
+  max-width:48rem;
+}
+
+.identificacao-evolution {
+  font-size:.875rem;
+  line-height:1.25rem;
+  font-weight:600;
+  color:#8c1917;
+}
+
+.titulo-evolution {
+  margin-top:.25rem;
+  font-size:1.5rem;
+  line-height:2rem;
+  font-weight:700;
+  color:#020617;
+}
+
+.introducao-evolution {
+  margin-top:.5rem;
+  color:#475569;
+}
+
+.cartao-evolution {
+  margin-top:1.5rem;
+  border:1px solid #e2e8f0;
+  border-radius:.75rem;
+  background:#fff;
+  padding:1.5rem;
+  box-shadow:0 1px 2px rgb(0 0 0 / .05);
+}
+
+.rotulo-nome-evolution {
+  margin-bottom:1.25rem;
+  display:block;
+  font-size:.875rem;
+  line-height:1.25rem;
+  font-weight:600;
+  color:#1e293b;
+}
+
+.formulario-nome-evolution {
+  margin-top:.25rem;
+  display:flex;
+  gap:.5rem;
+}
+
+.campo-evolution {
+  width:100%;
+  border:1px solid #cbd5e1;
+  border-radius:.375rem;
+  background:#fff;
+  padding:.625rem .75rem;
+  color:#020617;
+  box-shadow:0 1px 2px rgb(0 0 0 / .05);
+  outline:none;
+  transition:color .15s, background-color .15s, border-color .15s;
+}
+
+.ajuda-nome-evolution {
+  margin-top:.25rem;
+  display:block;
+  font-size:.75rem;
+  line-height:1rem;
+  font-weight:400;
+  color:#64748b;
+}
+
+.cabecalho-status-evolution {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+}
+
+.dados-status-evolution {
+  display:flex;
+  align-items:center;
+  gap:.75rem;
+}
+
+.titulo-status-evolution {
+  font-weight:700;
+  color:#0f172a;
+}
+
+.descricao-status-evolution {
+  font-size:.875rem;
+  line-height:1.25rem;
+  color:#475569;
+}
+
+.icone-evolution {
+  width:1rem;
+  height:1rem;
+}
+
+.aviso-configuracao-evolution {
+  margin-top:1.25rem;
+  border-radius:.5rem;
+  background:#fffbeb;
+  padding:1rem;
+  font-size:.875rem;
+  line-height:1.25rem;
+  color:#78350f;
+}
+
+.acoes-conexao-evolution {
+  margin-top:1.5rem;
+  display:flex;
+  flex-wrap:wrap;
+  gap:.75rem;
+}
+
+.botao-desconectar-evolution {
+  display:inline-flex;
+  align-items:center;
+  gap:.5rem;
+  border-radius:.5rem;
+  background:#dc2626;
+  padding:.5rem 1rem;
+  font-weight:600;
+  color:#fff;
+}
+
+.botao-excluir-evolution {
+  display:inline-flex;
+  align-items:center;
+  gap:.5rem;
+  border:1px solid #fca5a5;
+  border-radius:.5rem;
+  padding:.5rem 1rem;
+  font-weight:600;
+  color:#b91c1c;
+}
+
+.painel-qrcode-evolution {
+  margin-top:1.5rem;
+  border:1px solid #e2e8f0;
+  border-radius:.5rem;
+  background:#f8fafc;
+  padding:1.25rem;
+  text-align:center;
+}
+
+.descricao-secao-evolution {
+  margin-top:.25rem;
+  font-size:.875rem;
+  line-height:1.25rem;
+  color:#475569;
+}
+
+.qrcode-evolution {
+  margin-inline:auto;
+  margin-top:1rem;
+  height:16rem;
+  width:16rem;
+  border-radius:.25rem;
+  background:#fff;
+  padding:.5rem;
+}
+
+.prazo-qrcode-evolution {
+  margin-top:.75rem;
+  font-size:.875rem;
+  line-height:1.25rem;
+  font-weight:600;
+  color:#92400e;
+}
+
+.titulo-secao-evolution {
+  font-size:1.125rem;
+  line-height:1.75rem;
+  font-weight:700;
+  color:#0f172a;
+}
+
+.ativacao-envio-evolution {
+  margin-top:.75rem;
+  display:inline-flex;
+  align-items:center;
+  gap:.5rem;
+  font-size:.875rem;
+  line-height:1.25rem;
+  font-weight:600;
+  color:#1e293b;
+}
+
+.grade-regras-evolution {
+  margin-top:1rem;
+  display:grid;
+  gap:.5rem;
+}
+
+.opcao-envio-evolution {
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  border:1px solid #e2e8f0;
+  border-radius:.25rem;
+  padding:.75rem;
+  font-size:.875rem;
+  line-height:1.25rem;
+  font-weight:500;
+}
+
+.modelos-mensagens-evolution {
+  margin-top:1.25rem;
+  display:grid;
+  gap:1rem;
+}
+
+.rotulo-evolution {
+  margin-bottom:.375rem;
+  display:block;
+  font-size:.875rem;
+  line-height:1.25rem;
+  font-weight:500;
+  color:#334155;
+}
+
+.status-evolution { border-radius: 9999px; padding: .75rem; }
+.status-evolution-conectado { background: #d1fae5; color: #047857; }
+.status-evolution-desconectado { background: #f1f5f9; color: #475569; }
+
+.botao-principal-evolution,
+.botao-secundario-evolution {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: .375rem;
+  padding: .625rem 1rem;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / .05);
+  transition: color .15s, background-color .15s;
+}
+.botao-principal-evolution { background: #a51f1d; }
+.botao-principal-evolution:hover { background: #8c1917; }
+.botao-principal-evolution:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #fca5a5;
+}
+.botao-principal-evolution:disabled { cursor: not-allowed; background: #fca5a5; }
+.botao-secundario-evolution { background: #0c2f3c; }
+.botao-secundario-evolution:hover { background: #0a2732; }
+.botao-secundario-evolution:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #bae6fd;
+}
+.botao-secundario-evolution:disabled { cursor: not-allowed; background: #7dd3fc; }
+.botao-nome-evolution { flex-shrink: 0; }
+.botao-com-icone-evolution { gap: .5rem; }
+.botao-salvar-evolution { margin-top: 1.25rem; }
+.botao-desconectar-evolution:hover { background: #b91c1c; }
+.botao-excluir-evolution:hover { background: #fef2f2; }
+
+.campo-evolution::placeholder { color: #94a3b8; }
+.campo-evolution:focus { border-color: #0e3746; box-shadow: none; }
+.campo-evolution:disabled { cursor: not-allowed; background: #f1f5f9; color: #64748b; }
+.rotulo-lembrete-evolution { margin-top: 1rem; }
+.campo-lembrete-evolution { margin-top: .25rem; max-width: 20rem; }
+.campo-mensagem-evolution { margin-top: .25rem; min-height: 6rem; }
+.carregando-evolution { animation: girar-evolution 1s linear infinite; }
+@keyframes girar-evolution { to { transform: rotate(360deg); } }
+@media (min-width: 640px) {
+  .grade-regras-evolution { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Preserva o alto contraste antes associado aos nomes Tailwind. */
+html.acessibilidade-alto-contraste .pagina-evolution :is(
+  .cartao-evolution, .campo-evolution, .status-evolution,
+  .aviso-configuracao-evolution, .painel-qrcode-evolution, .qrcode-evolution,
+  .botao-principal-evolution, .botao-secundario-evolution, .botao-desconectar-evolution
+) { background-color: #000 !important; }
+html.acessibilidade-alto-contraste .pagina-evolution :is(
+  .campo-evolution, .status-evolution, .botao-principal-evolution,
+  .botao-secundario-evolution, .botao-desconectar-evolution, .botao-excluir-evolution
+) { color: #fff !important; }
+html.acessibilidade-alto-contraste .pagina-evolution :is(
+  .cartao-evolution, .painel-qrcode-evolution, .opcao-envio-evolution
+) { border-color: #fff !important; }

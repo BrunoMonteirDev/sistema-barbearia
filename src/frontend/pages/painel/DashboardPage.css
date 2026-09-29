@@ -1,0 +1,411 @@
+.pagina-dashboard {
+  margin-inline:auto;
+  max-width:80rem;
+}
+
+.cabecalho-dashboard {
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:1rem;
+  border-bottom:1px solid #e2e8f0;
+  padding-bottom:1.25rem;
+}
+
+.identificacao-dashboard {
+  margin-bottom:.25rem;
+  font-size:.875rem;
+  line-height:1.25rem;
+  font-weight:500;
+  color:#8c1917;
+}
+
+.titulo-dashboard {
+  font-size:1.875rem;
+  line-height:2.25rem;
+  font-weight:700;
+  letter-spacing:-.025em;
+  color:#0f172a;
+}
+
+.descricao-dashboard {
+  margin-top:.25rem;
+  font-size:.875rem;
+  line-height:1.25rem;
+  color:#475569;
+}
+
+.acoes-dashboard {
+  display:flex;
+  flex-wrap:wrap;
+  gap:.5rem;
+}
+
+.botao-agenda-dashboard {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.5rem;
+  border:1px solid #7dd3fc;
+  border-radius:.375rem;
+  background:#fff;
+  padding:.625rem 1rem;
+  font-size:.875rem;
+  line-height:1.25rem;
+  font-weight:600;
+  color:#081f28;
+  box-shadow:0 1px 2px rgb(0 0 0 / .05);
+  transition:color .15s, background-color .15s, border-color .15s;
+}
+
+.botao-novo-dashboard {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.5rem;
+  border-radius:.375rem;
+  background:#a51f1d;
+  padding:.625rem 1rem;
+  font-size:.875rem;
+  line-height:1.25rem;
+  font-weight:600;
+  color:#fff;
+  box-shadow:0 1px 2px rgb(0 0 0 / .05);
+  transition:color .15s, background-color .15s;
+}
+
+.icone-link-dashboard {
+  width:1rem;
+  height:1rem;
+}
+
+.grade-metricas-dashboard {
+  display:grid;
+  gap:1rem;
+}
+
+.cartao-dashboard {
+  border:1px solid #e2e8f0;
+  border-radius:.5rem;
+  background:#fff;
+  padding:1.25rem;
+  box-shadow:0 1px 2px rgb(0 0 0 / .05);
+}
+
+.cabecalho-cartao-dashboard {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:.75rem;
+}
+
+.titulo-metrica-dashboard {
+  font-size:.875rem;
+  line-height:1.25rem;
+  font-weight:500;
+  color:#475569;
+}
+
+.valor-metrica-dashboard {
+  margin-top:.5rem;
+  font-size:1.5rem;
+  line-height:2rem;
+  font-weight:700;
+  letter-spacing:-.025em;
+  color:#020617;
+}
+
+.detalhe-metrica-dashboard {
+  margin-top:.25rem;
+  font-size:.75rem;
+  line-height:1rem;
+  color:#64748b;
+}
+
+.icone-cartao-dashboard {
+  width:1.25rem;
+  height:1.25rem;
+}
+
+.grade-resumos-dashboard {
+  display:grid;
+  gap:1.5rem;
+}
+
+.atendimentos-dashboard {
+  border:1px solid #e2e8f0;
+  border-radius:.5rem;
+  background:#fff;
+  box-shadow:0 1px 2px rgb(0 0 0 / .05);
+}
+
+.cabecalho-atendimentos-dashboard {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid #e2e8f0;
+  padding:1rem 1.25rem;
+}
+
+.titulo-secao-dashboard {
+  font-weight:600;
+  color:#0f172a;
+}
+
+.periodo-atendimentos-dashboard {
+  font-size:.875rem;
+  line-height:1.25rem;
+  color:#64748b;
+}
+
+.link-agenda-dashboard {
+  display:inline-flex;
+  align-items:center;
+  gap:.25rem;
+  font-size:.875rem;
+  line-height:1.25rem;
+  font-weight:600;
+  color:#0a2732;
+}
+
+.carregando-agenda-dashboard {
+  padding:2rem;
+  text-align:center;
+  font-size:.875rem;
+  line-height:1.25rem;
+  color:#64748b;
+}
+
+.agenda-vazia-dashboard {
+  padding:2.5rem;
+  text-align:center;
+}
+
+.icone-agenda-vazia-dashboard {
+  margin-inline:auto;
+  margin-bottom:.75rem;
+  width:2rem;
+  height:2rem;
+  color:#94a3b8;
+}
+
+.mensagem-agenda-vazia-dashboard {
+  font-weight:500;
+  color:#334155;
+}
+
+.orientacao-agenda-dashboard {
+  margin-top:.25rem;
+  font-size:.875rem;
+  line-height:1.25rem;
+  color:#64748b;
+}
+
+.atendimento-dashboard {
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  padding:1rem 1.25rem;
+}
+
+.data-atendimento-dashboard {
+  width:3.5rem;
+  flex-shrink:0;
+  border:1px solid #e2e8f0;
+  border-radius:.375rem;
+  background:#f8fafc;
+  padding-block:.375rem;
+  text-align:center;
+}
+
+.hora-atendimento-dashboard {
+  font-size:.875rem;
+  line-height:1.25rem;
+  font-weight:700;
+  color:#0f172a;
+}
+
+.dia-atendimento-dashboard {
+  font-size:11px;
+  font-weight:500;
+  text-transform:uppercase;
+  color:#64748b;
+}
+
+.dados-atendimento-dashboard {
+  min-width:0;
+  flex:1 1 0%;
+}
+
+.cliente-atendimento-dashboard {
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-weight:600;
+  color:#0f172a;
+}
+
+.servico-atendimento-dashboard {
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:.875rem;
+  line-height:1.25rem;
+  color:#475569;
+}
+
+.situacao-whatsapp-dashboard {
+  margin-top:1rem;
+  font-weight:600;
+  color:#0f172a;
+}
+
+.link-whatsapp-dashboard {
+  margin-top:1rem;
+  display:inline-flex;
+  align-items:center;
+  gap:.25rem;
+  font-size:.875rem;
+  line-height:1.25rem;
+  font-weight:600;
+  color:#8c1917;
+}
+
+.equipe-dashboard {
+  margin-top:1.25rem;
+  display:flex;
+  align-items:center;
+  gap:.75rem;
+}
+
+.emblema-equipe-dashboard {
+  display:grid;
+  width:2.75rem;
+  height:2.75rem;
+  place-items:center;
+  border-radius:.375rem;
+  background:#f0f9ff;
+  color:#0a2732;
+}
+
+.titulo-equipe-dashboard {
+  font-size:.875rem;
+  line-height:1.25rem;
+  font-weight:500;
+  color:#1e293b;
+}
+
+.link-profissionais-dashboard {
+  font-size:.875rem;
+  line-height:1.25rem;
+  font-weight:600;
+  color:#8c1917;
+}
+
+.resumo-hoje-dashboard {
+  border:1px solid #e2e8f0;
+  border-radius:.5rem;
+  background:#0f172a;
+  padding:1.25rem;
+  color:#fff;
+  box-shadow:0 1px 2px rgb(0 0 0 / .05);
+}
+
+.icone-resumo-hoje-dashboard {
+  width:1.5rem;
+  height:1.5rem;
+  color:#6ee7b7;
+}
+
+.titulo-resumo-hoje-dashboard {
+  margin-top:1rem;
+  font-weight:600;
+}
+
+.descricao-resumo-hoje-dashboard {
+  margin-top:.25rem;
+  font-size:.875rem;
+  line-height:1.25rem;
+  color:#cbd5e1;
+}
+
+.link-resumo-hoje-dashboard {
+  margin-top:1rem;
+  display:inline-flex;
+  align-items:center;
+  gap:.25rem;
+  font-size:.875rem;
+  line-height:1.25rem;
+  font-weight:600;
+  color:#fff;
+  text-decoration:underline;
+  text-underline-offset:4px;
+}
+
+.pagina-dashboard > * + *,
+.resumos-laterais-dashboard > * + * { margin-top: 1.5rem; }
+.lista-atendimentos-dashboard > * + * { border-top: 1px solid #f1f5f9; }
+.emblema-dashboard {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  border-radius: .375rem;
+}
+.status-dashboard {
+  flex-shrink: 0;
+  border-radius: 9999px;
+  padding: .25rem .625rem;
+  font-size: .75rem;
+  line-height: 1rem;
+  font-weight: 600;
+}
+.dashboard-status-pendente { background: #fef3c7; color: #78350f; }
+.dashboard-status-confirmado { background: #dbeafe; color: #1e3a8a; }
+.dashboard-status-concluido { background: #d1fae5; color: #064e3b; }
+.dashboard-status-cancelado { background: #e2e8f0; color: #1e293b; }
+.dashboard-status-atrasado { background: #fee2e2; color: #7f1d1d; }
+.dashboard-conexao-verificando { background: #f1f5f9; color: #475569; }
+.dashboard-conexao-alerta { background: #fef3c7; color: #92400e; }
+.dashboard-conexao-indisponivel { background: #fee2e2; color: #991b1b; }
+.dashboard-estado-neutro { background: #f1f5f9; color: #334155; }
+.dashboard-conexao-conectada { background: #d1fae5; color: #065f46; }
+.dashboard-metrica-agenda { background: #eff6ff; color: #1e40af; }
+.dashboard-metrica-pendentes { background: #fffbeb; color: #78350f; }
+.dashboard-metrica-clientes { background: #f5f3ff; color: #4c1d95; }
+.dashboard-metrica-faturamento { background: #ecfdf5; color: #064e3b; }
+
+.botao-agenda-dashboard:hover { background: #f0f9ff; }
+.botao-novo-dashboard:hover { background: #8c1917; }
+.botao-novo-dashboard:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #fca5a5;
+}
+.botao-novo-dashboard:disabled { cursor: not-allowed; background: #fca5a5; }
+.link-agenda-dashboard:hover { color: #06171e; }
+.link-whatsapp-dashboard:hover,
+.link-profissionais-dashboard:hover { color: #5a0d0b; }
+.link-resumo-hoje-dashboard:hover { color: #e2e8f0; }
+
+@media (min-width: 640px) {
+  .cabecalho-dashboard { flex-direction: row; align-items: flex-end; }
+  .grade-metricas-dashboard { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  .grade-resumos-dashboard { grid-template-columns: 1.65fr 1fr; }
+}
+@media (min-width: 1280px) {
+  .grade-metricas-dashboard { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* Mantém o alto contraste após remover os nomes utilitários do Tailwind. */
+html.acessibilidade-alto-contraste .pagina-dashboard :is(
+  .cartao-dashboard, .atendimentos-dashboard, .resumo-hoje-dashboard,
+  .emblema-dashboard, .emblema-equipe-dashboard, .status-dashboard,
+  .data-atendimento-dashboard, .botao-agenda-dashboard, .botao-novo-dashboard
+) { background-color: #000 !important; color: #fff !important; }
+html.acessibilidade-alto-contraste .pagina-dashboard :is(
+  .cabecalho-dashboard, .cartao-dashboard, .atendimentos-dashboard,
+  .cabecalho-atendimentos-dashboard, .atendimento-dashboard,
+  .data-atendimento-dashboard, .resumo-hoje-dashboard, .botao-agenda-dashboard
+) { border-color: #fff !important; }

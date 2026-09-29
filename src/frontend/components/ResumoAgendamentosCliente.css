@@ -1,0 +1,139 @@
+.cartao-resumo-cliente {
+  border: 1px solid #e2e8f0;
+  border-radius: .5rem;
+  background: #f8fafc;
+  padding: .75rem;
+}
+
+.servico-resumo-cliente {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.descricao-resumo-cliente {
+  margin-top: .25rem;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  color: #475569;
+}
+
+.profissional-resumo-cliente {
+  margin-top: .125rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  color: #475569;
+}
+
+.status-resumo-cliente {
+  margin-top: .5rem;
+  display: inline-flex;
+  border-radius: 9999px;
+  background: #e2e8f0;
+  padding: .125rem .5rem;
+  font-size: .75rem;
+  line-height: 1rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.resumo-agendamentos-cliente {
+  border: 1px solid #e2e8f0;
+  border-radius: .75rem;
+  background: #fff;
+  padding: 1.25rem;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / .05);
+}
+
+.titulo-resumo-cliente {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+  color: #020617;
+}
+
+.mensagem-resumo-cliente {
+  margin-top: 1.25rem;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  color: #475569;
+}
+
+.carregamento-resumo-cliente {
+  margin-top: 1.25rem;
+}
+
+.subtitulo-resumo-cliente {
+  font-size: .875rem;
+  line-height: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.esqueleto-resumo-cliente {
+  margin-top: .5rem;
+  height: 5rem;
+  border-radius: .5rem;
+  background: #f1f5f9;
+  animation: pulso-resumo-cliente 2s cubic-bezier(.4, 0, .6, 1) infinite;
+}
+
+.secoes-resumo-cliente {
+  margin-top: 1.25rem;
+}
+
+.lista-resumo-cliente {
+  margin-top: .5rem;
+}
+
+.mensagem-futuros-resumo-cliente {
+  margin-top: .5rem;
+  font-size: .875rem;
+  line-height: 1.5rem;
+  color: #475569;
+}
+
+.mensagem-recentes-resumo-cliente {
+  margin-top: .5rem;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  color: #475569;
+}
+
+.link-resumo-cliente {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: #8c1917;
+}
+
+.icone-resumo-cliente {
+  height: 1rem;
+  width: 1rem;
+}
+
+.carregamento-resumo-cliente > * + * { margin-top: 1rem; }
+.secoes-resumo-cliente > * + * { margin-top: 1.25rem; }
+.lista-resumo-cliente > * + * { margin-top: .5rem; }
+.link-resumo-cliente:hover { color: #5a0d0b; }
+@keyframes pulso-resumo-cliente { 50% { opacity: .5; } }
+html.acessibilidade-alto-contraste .resumo-agendamentos-cliente,
+html.acessibilidade-alto-contraste .cartao-resumo-cliente {
+  border-color: #fff !important;
+}
+html.acessibilidade-alto-contraste .resumo-agendamentos-cliente :where(
+  .status-resumo-cliente, .esqueleto-resumo-cliente
+) { background-color: #000 !important; color: #fff !important; }
+html.acessibilidade-alto-contraste .resumo-agendamentos-cliente .link-resumo-cliente {
+  color: #fff !important;
+}

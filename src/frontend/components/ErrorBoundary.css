@@ -1,0 +1,52 @@
+.pagina-falha {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  background-color: rgb(241 245 249);
+  padding: 1.5rem;
+}
+.cartao-falha {
+  width: 100%;
+  max-width: 28rem;
+  border-radius: 0.75rem;
+  border-width: 1px;
+  border-color: rgb(226 232 240);
+  background-color: rgb(255 255 255);
+  padding: 1.75rem;
+  text-align: center;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+.titulo-falha {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+  color: rgb(2 6 23);
+}
+.mensagem-falha {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: rgb(71 85 105);
+}
+.acoes-falha {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+html.acessibilidade-alto-contraste .pagina-falha,
+html.acessibilidade-alto-contraste .cartao-falha {
+  background-color: #000 !important;
+  background-image: none !important;
+}
+
+html.acessibilidade-alto-contraste .cartao-falha,
+html.acessibilidade-alto-contraste .titulo-falha,
+html.acessibilidade-alto-contraste .mensagem-falha {
+  color: #fff !important;
+}
+
+html.acessibilidade-alto-contraste .cartao-falha {
+  border-color: #fff !important;
+}

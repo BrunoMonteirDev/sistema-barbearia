@@ -1,0 +1,51 @@
+.acoes-novo-agendamento {
+  display:flex;
+  width:100%;
+  justify-content:space-between;
+}
+
+.icone-voltar-novo-agendamento {
+  margin-right:.25rem;
+  display:inline;
+  height:1rem;
+  width:1rem;
+}
+
+.icone-avancar-novo-agendamento {
+  margin-left:.25rem;
+  display:inline;
+  height:1rem;
+  width:1rem;
+}
+
+.progresso-novo-agendamento {
+  margin-bottom:1.5rem;
+}
+
+.trilho-novo-agendamento {
+  margin-top:.5rem;
+  height:.5rem;
+  background:#e2e8f0;
+}
+
+.barra-novo-agendamento {
+  height:100%;
+  background:#a51f1d;
+}
+
+.etapas-novo-agendamento {
+  margin-top:.75rem;
+  display:flex;
+  justify-content:space-between;
+  font-size:.75rem;
+  line-height:1rem;
+}
+
+.etapa-novo-agendamento { color: #94a3b8; }
+.etapa-novo-agendamento.ativa { font-weight: 700; color: #8c1917; }
+.opcao-novo-agendamento.selecionada { border-color: #a51f1d; }
+html.acessibilidade-alto-contraste :is(.trilho-novo-agendamento, .barra-novo-agendamento) {
+  background-color: #000 !important;
+}
+html.acessibilidade-alto-contraste .etapa-novo-agendamento { color: #fff !important; }
+html.acessibilidade-alto-contraste .opcao-novo-agendamento.selecionada { border-color: #fff !important; }

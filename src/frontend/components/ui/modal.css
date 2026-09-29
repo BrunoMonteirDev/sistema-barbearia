@@ -1,0 +1,83 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(0 0 0 / .4);
+  padding: 1rem;
+}
+
+.modal-conteudo {
+  display: flex;
+  max-height: 90vh;
+  width: 100%;
+  flex-direction: column;
+  border-radius: .75rem;
+  background: #fff;
+  padding: 1.5rem;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / .1), 0 8px 10px -6px rgb(0 0 0 / .1);
+}
+.modal-padrao { max-width: 36rem; }
+.modal-amplo { max-width: 48rem; }
+
+.modal-cabecalho {
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.modal-titulo {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+  color: #0e3746;
+}
+.modal-botao-fechar { border-radius: .25rem; padding: .5rem; color: #6b7280; }
+.modal-botao-fechar:hover,
+.dialog-botao-cancelar:hover { background: #f3f4f6; }
+.modal-corpo { min-height: 0; overflow-y: auto; padding-right: .25rem; }
+.modal-acoes { margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: .75rem; }
+
+.dialog-confirmacao-mensagem { color: #4b5563; }
+.dialog-botao-cancelar { border-radius: .25rem; padding: .5rem 1rem; color: #374151; }
+.dialog-botao-perigo {
+  border-radius: .25rem;
+  background: #dc2626;
+  padding: .5rem 1rem;
+  font-weight: 500;
+  color: #fff;
+}
+.dialog-botao-perigo:hover { background: #b91c1c; }
+.dialog-botao-confirmar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: .375rem;
+  background: #a51f1d;
+  padding: .625rem 1rem;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / .05);
+  transition: color .15s, background-color .15s;
+}
+.dialog-botao-confirmar:hover { background: #8c1917; }
+.dialog-botao-confirmar:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #fca5a5;
+}
+.dialog-botao-confirmar:disabled { cursor: not-allowed; background: #fca5a5; }
+
+/* Preserva o contraste global antes associado aos nomes Tailwind. */
+html.acessibilidade-alto-contraste .modal-overlay,
+html.acessibilidade-alto-contraste .modal-conteudo,
+html.acessibilidade-alto-contraste .dialog-botao-confirmar,
+html.acessibilidade-alto-contraste .dialog-botao-perigo { background-color: #000 !important; }
+html.acessibilidade-alto-contraste .modal-botao-fechar,
+html.acessibilidade-alto-contraste .dialog-botao-cancelar,
+html.acessibilidade-alto-contraste .dialog-botao-confirmar,
+html.acessibilidade-alto-contraste .dialog-botao-perigo { color: #fff !important; }

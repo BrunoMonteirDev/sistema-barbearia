@@ -4,27 +4,25 @@ Sistema acadêmico de agendamento para uma única barbearia, desenvolvido como T
 
 ## Tecnologias
 
-- Cliente: React, TypeScript, Vite e Tailwind CSS.
+- Cliente: React, TypeScript e Vite.
 - API: Node.js, Express e JWT.
 - Dados: PostgreSQL e Prisma.
-- Qualidade: Vitest, React Testing Library e Supertest.
+- Qualidade: Vitest e Supertest.
 
 ## Execução local
 
-1. Configure `client/.env` e `server/.env` a partir dos exemplos disponíveis, sem versionar credenciais.
-2. Instale dependências com `npm install`, `npm --prefix client install` e `npm --prefix server install`.
-3. Execute migrations: `npm --prefix server run prisma:deploy`.
-4. Inicie cliente e servidor, em terminais separados: `npm run dev:client` e `npm run dev:server`.
+1. Configure `.env` a partir de `.env.example`, sem versionar credenciais.
+2. Instale as dependências com `npm install` e gere o cliente Prisma com `npm run prisma:generate`.
+3. Aplique as migrations existentes com `npm run prisma:deploy`.
+4. Execute frontend e backend com `npm run dev`, ou separadamente com `npm run dev:frontend` e `npm run dev:backend`.
 
 ## Verificação
 
-`npm --prefix client run lint` · `npm run build` · `npm test` · `npm run test:integration`
-
-Os testes de integração exigem PostgreSQL exclusivo configurado em `DATABASE_URL_TEST`; o comando aplica as migrations automaticamente e recusa usar a URL de desenvolvimento.
+`npm run typecheck` · `npm run lint` · `npm run build` · `npm test`
 
 ## Estrutura
 
-`client/src` contém interface e componentes; `server/src/routes` recebe HTTP; `server/src/services` concentra regras; `server/prisma` define dados e migrations. Consulte [docs/14-guia-do-codigo.md](docs/14-guia-do-codigo.md) e [docs/15-mapa-de-fluxos.md](docs/15-mapa-de-fluxos.md) para apresentação.
+`src/frontend` contém a interface; `src/backend` organiza rotas, controllers, services e repositories por domínio; `prisma` contém o schema e as migrations. A API mantém as rotas em `/api`.
 
 ## Limitações conhecidas
 

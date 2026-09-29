@@ -1,0 +1,18 @@
+.layout-painel {
+  min-height: 100vh;
+  background: #f3f4f6;
+}
+
+.conteudo-layout-painel {
+  min-width: 0;
+  flex: 1 1 0%;
+  padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .layout-painel { display: flex; }
+}
+
+html.acessibilidade-alto-contraste .layout-painel {
+  background-color: #000 !important;
+}

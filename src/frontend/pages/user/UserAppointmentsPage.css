@@ -1,0 +1,271 @@
+.pagina-agendamentos-cliente {
+  margin-inline:auto;
+  max-width:48rem;
+}
+
+.cabecalho-agendamentos-cliente {
+  margin-bottom:1.5rem;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:.75rem;
+}
+
+.identificacao-agendamentos-cliente {
+  font-size:.875rem;
+  line-height:1.25rem;
+  font-weight:600;
+  color:#8c1917;
+}
+
+.titulo-agendamentos-cliente {
+  font-size:1.875rem;
+  line-height:2.25rem;
+  font-weight:700;
+  color:#020617;
+}
+
+.icone-agendamentos-cliente {
+  height:1rem;
+  width:1rem;
+}
+
+.lista-agendamentos-cliente {
+  border:1px solid #e2e8f0;
+  border-radius:.5rem;
+  background:#fff;
+  box-shadow:0 1px 2px rgb(0 0 0 / .05);
+}
+
+.mensagem-sem-agendamentos-cliente {
+  padding:2rem;
+  text-align:center;
+  color:#475569;
+}
+
+.cartao-agendamento-cliente {
+  display:flex;
+  flex-direction:column;
+  gap:.75rem;
+  padding:1rem;
+}
+
+.titulo-item-agendamentos-cliente {
+  font-weight:600;
+  color:#0f172a;
+}
+
+.descricao-agendamentos-cliente {
+  font-size:.875rem;
+  line-height:1.25rem;
+  color:#475569;
+}
+
+.acoes-agendamento-cliente {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:.5rem;
+}
+
+.status-agendamento-cliente {
+  border-radius:9999px;
+  background:#f1f5f9;
+  padding:.25rem .75rem;
+  font-size:.75rem;
+  line-height:1rem;
+  font-weight:600;
+  color:#334155;
+}
+
+.botao-historico-agendamento-cliente {
+  border:1px solid #cbd5e1;
+  border-radius:.375rem;
+  padding:.5rem;
+  color:#334155;
+}
+
+.botao-remarcar-agendamento-cliente {
+  display:inline-flex;
+  align-items:center;
+  gap:.25rem;
+  border:1px solid #fca5a5;
+  border-radius:.375rem;
+  padding:.5rem .75rem;
+  font-size:.75rem;
+  line-height:1rem;
+  font-weight:600;
+  color:#731311;
+}
+
+.icone-remarcacao-cliente {
+  height:.875rem;
+  width:.875rem;
+}
+
+.botao-cancelar-agendamento-cliente {
+  border:1px solid #fca5a5;
+  border-radius:.375rem;
+  padding:.5rem .75rem;
+  font-size:.75rem;
+  line-height:1rem;
+  font-weight:600;
+  color:#b91c1c;
+}
+
+.rotulo-data-remarcacao-cliente {
+  margin-top:1.25rem;
+  display:block;
+  font-size:.875rem;
+  line-height:1.25rem;
+  font-weight:600;
+  color:#1e293b;
+}
+
+.campo-data-remarcacao-cliente {
+  margin-top:.25rem;
+  width:100%;
+  border:1px solid #cbd5e1;
+  border-radius:.375rem;
+  background:#fff;
+  padding:.625rem .75rem;
+  color:#020617;
+  box-shadow:0 1px 2px rgb(0 0 0 / .05);
+  outline:none;
+  transition:color .15s, background-color .15s, border-color .15s;
+}
+
+.horarios-remarcacao-cliente {
+  margin-top:1.25rem;
+}
+
+.titulo-horarios-remarcacao-cliente {
+  font-size:.875rem;
+  line-height:1.25rem;
+  font-weight:600;
+  color:#1e293b;
+}
+
+.mensagem-horarios-remarcacao-cliente {
+  margin-top:.5rem;
+  font-size:.875rem;
+  line-height:1.25rem;
+  color:#475569;
+}
+
+.lista-horarios-remarcacao-cliente {
+  margin-top:.5rem;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:.5rem;
+}
+
+.acoes-remarcacao-cliente {
+  margin-top:1.5rem;
+  display:flex;
+  justify-content:flex-end;
+  gap:.75rem;
+}
+
+.historico-agendamento-cliente {
+  margin-top:1.25rem;
+}
+
+.evento-historico-agendamento-cliente {
+  border:1px solid #e2e8f0;
+  border-radius:.375rem;
+  padding:.75rem;
+}
+
+.data-historico-agendamento-cliente {
+  margin-top:.25rem;
+  font-size:.875rem;
+  line-height:1.25rem;
+  color:#475569;
+}
+
+.lista-agendamentos-cliente > * + * { border-top: 1px solid #e5e7eb; }
+.historico-agendamento-cliente > * + * { margin-top: .75rem; }
+.novo-agendamento-cliente { gap: .5rem; }
+.botao-historico-agendamento-cliente:hover { background: #f8fafc; }
+.botao-remarcar-agendamento-cliente:hover,
+.botao-cancelar-agendamento-cliente:hover { background: #fef2f2; }
+
+/* Mantém os estados dos botões antes definidos por btn-primary/btn-secondary. */
+.botao-principal-agendamentos-cliente,
+.botao-voltar-remarcacao-cliente {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: .375rem;
+  padding: .625rem 1rem;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / .05);
+  transition: color .15s, background-color .15s;
+}
+.botao-principal-agendamentos-cliente { background: #a51f1d; }
+.botao-principal-agendamentos-cliente:hover { background: #8c1917; }
+.botao-principal-agendamentos-cliente:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #fca5a5;
+}
+.botao-principal-agendamentos-cliente:disabled { cursor: not-allowed; background: #fca5a5; }
+.botao-voltar-remarcacao-cliente { background: #0c2f3c; }
+.botao-voltar-remarcacao-cliente:hover { background: #0a2732; }
+.botao-voltar-remarcacao-cliente:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #bae6fd;
+}
+.botao-voltar-remarcacao-cliente:disabled { cursor: not-allowed; background: #7dd3fc; }
+
+.campo-data-remarcacao-cliente::placeholder { color: #94a3b8; }
+.campo-data-remarcacao-cliente:focus { border-color: #0e3746; box-shadow: none; }
+.campo-data-remarcacao-cliente:disabled {
+  cursor: not-allowed;
+  background: #f1f5f9;
+  color: #64748b;
+}
+.botao-horario-remarcacao-cliente {
+  border: 1px solid #cbd5e1;
+  border-radius: .375rem;
+  padding: .5rem .75rem;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+.botao-horario-remarcacao-cliente:not(.selecionado):hover { background: #f8fafc; }
+.botao-horario-remarcacao-cliente.selecionado {
+  border-color: #8c1917;
+  background: #8c1917;
+  color: #fff;
+}
+
+@media (min-width: 640px) {
+  .cabecalho-agendamentos-cliente { flex-direction: row; align-items: flex-end; }
+  .cartao-agendamento-cliente {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .acoes-agendamento-cliente { justify-content: flex-end; }
+}
+
+/* O contraste global reconhecia os nomes utilitários substituídos nesta página. */
+html.acessibilidade-alto-contraste :is(
+  .lista-agendamentos-cliente, .status-agendamento-cliente,
+  .campo-data-remarcacao-cliente, .botao-principal-agendamentos-cliente,
+  .botao-voltar-remarcacao-cliente, .botao-horario-remarcacao-cliente.selecionado
+) { background-color: #000 !important; color: #fff !important; }
+html.acessibilidade-alto-contraste :is(
+  .botao-historico-agendamento-cliente, .botao-remarcar-agendamento-cliente,
+  .botao-cancelar-agendamento-cliente, .botao-horario-remarcacao-cliente,
+  .descricao-agendamentos-cliente
+) { color: #fff !important; }
+html.acessibilidade-alto-contraste :is(
+  .lista-agendamentos-cliente, .lista-agendamentos-cliente > *,
+  .evento-historico-agendamento-cliente
+) { border-color: #fff !important; }

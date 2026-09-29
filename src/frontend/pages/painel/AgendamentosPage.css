@@ -1,0 +1,540 @@
+.cabecalho-agendamentos {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.titulo-agendamentos {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  color: #0e3746;
+}
+
+.descricao-agendamentos {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: #6b7280;
+}
+
+.icone-grande-agenda {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.filtros-agendamentos {
+  display: grid;
+  gap: 1rem;
+  border-radius: 0.75rem;
+  background: #fff;
+  padding: 1rem;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+}
+
+.rotulo-filtro-agenda {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.campo-filtro-agenda {
+  margin-top: 0.25rem;
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.barra-visualizacao-agenda {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.modos-visualizacao-agenda {
+  display: inline-flex;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  background: #fff;
+  padding: 0.25rem;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+}
+
+.icone-agenda {
+  width: 1rem;
+  height: 1rem;
+}
+
+.navegacao-periodo-agenda {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.botao-periodo-agenda {
+  border-radius: 0.375rem;
+  padding: 0.5rem;
+  color: #334155;
+}
+
+.rotulo-periodo-agenda {
+  min-width: 12rem;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  text-transform: capitalize;
+  color: #1e293b;
+}
+
+.lista-agendamentos {
+  overflow-x: auto;
+  border-radius: 0.75rem;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+}
+
+.tabela-agendamentos {
+  min-width: 100%;
+  text-align: left;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.cabecalho-tabela-agenda {
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+.titulo-coluna-agenda {
+  white-space: nowrap;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+}
+
+.celula-agenda {
+  padding: 0.75rem 1rem;
+}
+
+.acoes-agendamento-admin {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.botao-confirmar-agenda {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 0.375rem;
+  background: #047857;
+  padding: 0.5rem 0.625rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.botao-concluir-agenda {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 0.375rem;
+  background: #0a2732;
+  padding: 0.5rem 0.625rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.mensagem-lista-vazia-agenda {
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.botao-fechar-agenda {
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  color: #374151;
+}
+
+.botao-principal-agenda {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  background: #a51f1d;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+  transition:
+    color 0.15s,
+    background-color 0.15s;
+}
+
+.detalhes-agendamento-admin {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.formulario-agendamento-admin {
+  display: grid;
+  gap: 1rem;
+}
+
+.botao-acao-agenda {
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  color: #0e3746;
+}
+
+.valor-detalhe-agenda {
+  font-weight: 500;
+}
+
+.mensagem-agenda-vazia {
+  border: 1px dashed #cbd5e1;
+  border-radius: 0.75rem;
+  background: #fff;
+  padding: 2.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: #475569;
+}
+
+.agenda-diaria-admin {
+  overflow-x: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+}
+
+.cabecalho-grade-agenda {
+  display: grid;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.titulo-horario-grade-agenda {
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  color: #64748b;
+}
+
+.profissional-grade-agenda {
+  border-left: 1px solid #e2e8f0;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.linha-grade-agenda {
+  display: grid;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.horario-grade-agenda {
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.celula-grade-agenda {
+  border-left: 1px solid #f1f5f9;
+  padding: 0.375rem;
+}
+
+.titulo-cartao-agenda {
+  font-weight: 700;
+}
+
+.descricao-cartao-agenda {
+  margin-top: 0.125rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rotulo-status-cartao-agenda {
+  margin-top: 0.25rem;
+  font-weight: 600;
+}
+
+.botao-confirmar-cartao-agenda {
+  margin-top: 0.5rem;
+  border-radius: 0.25rem;
+  background: rgb(255 255 255 / 0.8);
+  padding: 0.25rem 0.5rem;
+  font-weight: 700;
+  color: #065f46;
+}
+
+.botao-concluir-cartao-agenda {
+  margin-top: 0.5rem;
+  border-radius: 0.25rem;
+  background: rgb(255 255 255 / 0.8);
+  padding: 0.25rem 0.5rem;
+  font-weight: 700;
+  color: #081f28;
+}
+
+.agenda-semanal-admin {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.dia-semana-agenda {
+  min-height: 11rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  background: #fff;
+  padding: 0.75rem;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+}
+
+.titulo-dia-semana-agenda {
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  color: #0f172a;
+}
+
+.lista-dia-semana-agenda {
+  margin-top: 0.75rem;
+}
+
+.mensagem-dia-vazio-agenda {
+  padding-top: 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: #94a3b8;
+}
+
+/* Espaçamento, estados e ações da lista e dos formulários. */
+.pagina-agendamentos > * + * {
+  margin-top: 1.5rem;
+}
+.lista-dia-semana-agenda > * + * {
+  margin-top: 0.5rem;
+}
+.corpo-tabela-agenda > tr + tr {
+  border-top: 1px solid #e5e7eb;
+}
+.linha-tabela-agenda:hover {
+  background: #f9fafb;
+}
+.cliente-agendamento {
+  font-weight: 500;
+}
+.botao-novo-agendamento {
+  gap: 0.5rem;
+}
+.selecao-filtro-agenda {
+  background: #fff;
+}
+.botao-periodo-agenda:hover {
+  background: #f1f5f9;
+}
+.botao-fechar-agenda:hover,
+.botao-acao-agenda:hover {
+  background: #f3f4f6;
+}
+.botao-acao-agenda:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+.botao-confirmar-agenda:hover {
+  background: #065f46;
+}
+.botao-concluir-agenda:hover {
+  background: #081f28;
+}
+.botao-confirmar-cartao-agenda:hover,
+.botao-concluir-cartao-agenda:hover {
+  background: #fff;
+}
+.botao-principal-agenda:hover {
+  background: #8c1917;
+}
+.botao-principal-agenda:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 2px #fff,
+    0 0 0 4px #fca5a5;
+}
+.botao-principal-agenda:disabled {
+  cursor: not-allowed;
+  background: #fca5a5;
+}
+
+/* A regra de seleção continua no TSX; aqui ficam apenas as cores. */
+.botao-visualizacao-agenda {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: #475569;
+}
+.botao-visualizacao-agenda:not(.selecionado):hover {
+  background: #f1f5f9;
+}
+.botao-visualizacao-agenda.selecionado {
+  background: #081f28;
+  color: #fff;
+}
+.status-agendamento-admin {
+  border-radius: 9999px;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+}
+.cartao-agendamento-admin {
+  cursor: pointer;
+  border-radius: 0.375rem;
+  padding: 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+  transition:
+    color 0.15s,
+    background-color 0.15s,
+    border-color 0.15s,
+    box-shadow 0.15s,
+    opacity 0.15s,
+    transform 0.15s;
+}
+.cartao-agendamento-admin:hover {
+  box-shadow: 0 0 0 2px #7dd3fc;
+}
+.status-agenda-pendente {
+  background: #fef3c7;
+  color: #92400e;
+}
+.status-agenda-confirmado {
+  background: #dbeafe;
+  color: #1e40af;
+}
+.status-agenda-concluido {
+  background: #dcfce7;
+  color: #166534;
+}
+.status-agenda-cancelado,
+.status-agenda-atrasado {
+  background: #fee2e2;
+  color: #991b1b;
+}
+.status-agenda-desconhecido {
+  background: #f3f4f6;
+  color: #374151;
+}
+.status-cartao-desconhecido {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+/* Colunas da agenda diária continuam definidas pelo número de profissionais. */
+@media (min-width: 640px) {
+  .cabecalho-agendamentos {
+    flex-direction: row;
+    align-items: center;
+  }
+  .filtros-agendamentos,
+  .detalhes-agendamento-admin,
+  .formulario-agendamento-admin,
+  .agenda-semanal-admin {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .filtros-agendamentos {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1280px) {
+  .agenda-semanal-admin {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+}
+
+/* Preserva o modo de contraste, antes associado aos utilitários Tailwind. */
+html.acessibilidade-alto-contraste
+  :is(
+    .filtros-agendamentos,
+    .modos-visualizacao-agenda,
+    .lista-agendamentos,
+    .cabecalho-tabela-agenda,
+    .agenda-diaria-admin,
+    .cabecalho-grade-agenda,
+    .dia-semana-agenda,
+    .cartao-agendamento-admin,
+    .status-agendamento-admin,
+    .botao-principal-agenda,
+    .botao-confirmar-agenda,
+    .botao-concluir-agenda,
+    .botao-confirmar-cartao-agenda,
+    .botao-concluir-cartao-agenda,
+    .selecao-filtro-agenda,
+    .botao-visualizacao-agenda.selecionado
+  ) {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+html.acessibilidade-alto-contraste
+  :is(
+    .rotulo-periodo-agenda,
+    .botao-periodo-agenda,
+    .botao-visualizacao-agenda,
+    .botao-acao-agenda,
+    .botao-fechar-agenda,
+    .titulo-coluna-agenda,
+    .titulo-horario-grade-agenda,
+    .profissional-grade-agenda,
+    .horario-grade-agenda,
+    .mensagem-agenda-vazia
+  ) {
+  color: #fff !important;
+}
+html.acessibilidade-alto-contraste
+  :is(
+    .modos-visualizacao-agenda,
+    .cabecalho-tabela-agenda,
+    .corpo-tabela-agenda > tr,
+    .mensagem-agenda-vazia,
+    .agenda-diaria-admin,
+    .cabecalho-grade-agenda,
+    .profissional-grade-agenda,
+    .linha-grade-agenda,
+    .celula-grade-agenda,
+    .dia-semana-agenda,
+    .titulo-dia-semana-agenda
+  ) {
+  border-color: #fff !important;
+}
