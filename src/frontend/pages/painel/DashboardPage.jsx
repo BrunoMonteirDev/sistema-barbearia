@@ -8,11 +8,8 @@ import {
   CircleDollarSign,
   Clock3,
   ListTodo,
-  MessageCircle,
   Scissors,
   UsersRound,
-  Wifi,
-  WifiOff,
 } from "lucide-react";
 import { Link } from "wouter";
 import toast from "react-hot-toast";
@@ -39,56 +36,12 @@ function hoje() {
 function moeda(valor) {
   return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
-export function estadoWhatsApp(status) {
-  if (!status)
-    return {
-      titulo: "Verificando WhatsApp",
-      detalhe: "Consultando a integracao.",
-      conectado: false,
-      classe: "dashboard-conexao-verificando",
-    };
-  if (!status.configurada)
-    return {
-      titulo: "WhatsApp nao configurado",
-      detalhe: "Configure a integracao para usar notificacoes.",
-      conectado: false,
-      classe: "dashboard-conexao-alerta",
-    };
-  if (!status.disponivel)
-    return {
-      titulo: "WhatsApp indisponivel",
-      detalhe: status.mensagem ?? "A Evolution API nao respondeu.",
-      conectado: false,
-      classe: "dashboard-conexao-indisponivel",
-    };
-  if (!status.instanciaCriada)
-    return {
-      titulo: "Instancia nao criada",
-      detalhe: "Crie a instancia para conectar o WhatsApp.",
-      conectado: false,
-      classe: "dashboard-estado-neutro",
-    };
-  if (status.conectada)
-    return {
-      titulo: "WhatsApp conectado",
-      detalhe: status.nomeExibicao ?? "Pronto para notificacoes.",
-      conectado: true,
-      classe: "dashboard-conexao-conectada",
-    };
-  return {
-    titulo: "WhatsApp desconectado",
-    detalhe: "Reconecte o numero para enviar notificacoes.",
-    conectado: false,
-    classe: "dashboard-conexao-alerta",
-  };
-}
 export default function DashboardPage() {
   const [data, setData] = useState({
     agendamentos: [],
     clientes: [],
     profissionais: [],
   });
-  const [whatsApp, setWhatsApp] = useState(null);
   const [loading, setLoading] = useState(true);
   const dataHoje = hoje();
   useEffect(() => {
@@ -112,21 +65,6 @@ export default function DashboardPage() {
         ),
       )
       .finally(() => setLoading(false));
-    void api.evolution
-      .status()
-      .then(setWhatsApp)
-      .catch(() =>
-        setWhatsApp({
-          configurada: true,
-          disponivel: false,
-          instanciaCriada: false,
-          conectada: false,
-          instancia: null,
-          nomeExibicao: null,
-          estado: null,
-          mensagem: "Nao foi possivel consultar a Evolution.",
-        }),
-      );
   }, []);
   const resumo = useMemo(() => {
     const ativosHoje = data.agendamentos.filter(
@@ -184,7 +122,6 @@ export default function DashboardPage() {
       color: "dashboard-metrica-faturamento",
     },
   ];
-  const conexaoWhatsApp = estadoWhatsApp(whatsApp);
   return (
     <section className="pagina-dashboard">
       <header className="cabecalho-dashboard">
@@ -286,32 +223,6 @@ export default function DashboardPage() {
         </article>
 
         <aside className="resumos-laterais-dashboard">
-          <article className="cartao-dashboard">
-            <div className="cabecalho-cartao-dashboard">
-              <div>
-                <h2 className="titulo-secao-dashboard">WhatsApp</h2>
-                <p className="descricao-dashboard">Canal de notificacoes</p>
-              </div>
-              <span className={`emblema-dashboard ${conexaoWhatsApp.classe}`}>
-                {conexaoWhatsApp.conectado ? (
-                  <Wifi className="icone-cartao-dashboard" aria-hidden="true" />
-                ) : (
-                  <WifiOff
-                    className="icone-cartao-dashboard"
-                    aria-hidden="true"
-                  />
-                )}
-              </span>
-            </div>
-            <p className="situacao-whatsapp-dashboard" aria-live="polite">
-              {conexaoWhatsApp.titulo}
-            </p>
-            <p className="descricao-dashboard">{conexaoWhatsApp.detalhe}</p>
-            <Link href="/painel/whatsapp" className="link-whatsapp-dashboard">
-              <MessageCircle className="icone-link-dashboard" />
-              Gerenciar WhatsApp
-            </Link>
-          </article>
           <article className="cartao-dashboard">
             <h2 className="titulo-secao-dashboard">Equipe</h2>
             <p className="descricao-dashboard">

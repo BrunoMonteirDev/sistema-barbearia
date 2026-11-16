@@ -9,6 +9,4 @@ const configuracaoController = new ConfiguracaoController(configuracaoService);
 // authenticate e requireAdmin continuam aplicados em app.js.
 router.get("/", configuracaoController.buscar);
 router.put("/", configuracaoController.salvarContato);
-router.get("/regras", configuracaoController.buscarRegras);
-router.put("/regras", configuracaoController.salvarRegras);
 export default router;

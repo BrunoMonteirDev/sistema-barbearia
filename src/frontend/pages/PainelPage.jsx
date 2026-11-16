@@ -7,9 +7,8 @@ import ServicosAdminPage from "./painel/ServicosAdminPage";
 import FuncionariosPage from "./painel/FuncionariosPage";
 import AgendamentosPage from "./painel/AgendamentosPage";
 import DashboardPage from "./painel/DashboardPage";
-import WhatsAppConfigPage from "./painel/WhatsAppConfigPage";
-import RegrasNegocioPage from "./painel/RegrasNegocioPage";
-import EvolutionPage from "./painel/EvolutionPage";
+import ContatoConfigPage from "./painel/ContatoConfigPage";
+import BloqueiosDataPage from "./painel/BloqueiosDataPage";
 const sidebarItems = [
   { href: "/painel", label: "Dashboard", exact: true },
   { href: "/painel/agendamentos", label: "Agendamentos" },
@@ -17,8 +16,7 @@ const sidebarItems = [
   { href: "/painel/servicos", label: "Serviços" },
   { href: "/painel/profissionais", label: "Profissionais" },
   { href: "/painel/configuracoes", label: "Configurações" },
-  { href: "/painel/regras-negocio", label: "Regras de negócio" },
-  { href: "/painel/whatsapp", label: "WhatsApp" },
+  { href: "/painel/bloqueios", label: "Dias bloqueados" },
 ];
 export default function PainelPage() {
   const { signOut } = useAuth();
@@ -37,9 +35,8 @@ export default function PainelPage() {
           <Route path="/painel/servicos" component={ServicosAdminPage} />
           <Route path="/painel/profissionais" component={FuncionariosPage} />
           <Route path="/painel/agendamentos" component={AgendamentosPage} />
-          <Route path="/painel/configuracoes" component={WhatsAppConfigPage} />
-          <Route path="/painel/regras-negocio" component={RegrasNegocioPage} />
-          <Route path="/painel/whatsapp" component={EvolutionPage} />
+          <Route path="/painel/configuracoes" component={ContatoConfigPage} />
+          <Route path="/painel/bloqueios" component={BloqueiosDataPage} />
         </Switch>
       </main>
     </div>

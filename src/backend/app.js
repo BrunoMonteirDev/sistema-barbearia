@@ -6,7 +6,7 @@ import profissionaisRoutes from "./profissionais/profissional.routes.js";
 import agendamentosRoutes from "./agendamentos/agendamento.routes.js";
 import configuracoesRoutes from "./configuracoes/configuracao.routes.js";
 import usuariosRoutes from "./usuarios/usuario.routes.js";
-import evolutionRoutes from "./evolution/evolution.routes.js";
+import bloqueioDataRoutes from "./agendamentos/bloqueio-data.routes.js";
 import { authenticate, requireAdmin } from "./middlewares/auth.js";
 import { prisma } from "./lib/prisma.js";
 export const app = express();
@@ -37,10 +37,5 @@ app.use(
   agendamentosRoutes,
 );
 app.use("/api/configuracoes", authenticate, requireAdmin, configuracoesRoutes);
-app.use(
-  "/api/integracoes/evolution",
-  authenticate,
-  requireAdmin,
-  evolutionRoutes,
-);
+app.use("/api/bloqueios-data", authenticate, requireAdmin, bloqueioDataRoutes);
 app.use("/api/usuarios", authenticate, usuariosRoutes);

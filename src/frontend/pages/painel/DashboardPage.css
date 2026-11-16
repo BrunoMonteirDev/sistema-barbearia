@@ -254,23 +254,6 @@
   color:#475569;
 }
 
-.situacao-whatsapp-dashboard {
-  margin-top:1rem;
-  font-weight:600;
-  color:#0f172a;
-}
-
-.link-whatsapp-dashboard {
-  margin-top:1rem;
-  display:inline-flex;
-  align-items:center;
-  gap:.25rem;
-  font-size:.875rem;
-  line-height:1.25rem;
-  font-weight:600;
-  color:#8c1917;
-}
-
 .equipe-dashboard {
   margin-top:1.25rem;
   display:flex;
@@ -383,7 +366,6 @@
 }
 .botao-novo-dashboard:disabled { cursor: not-allowed; background: #fca5a5; }
 .link-agenda-dashboard:hover { color: #06171e; }
-.link-whatsapp-dashboard:hover,
 .link-profissionais-dashboard:hover { color: #5a0d0b; }
 .link-resumo-hoje-dashboard:hover { color: #e2e8f0; }
 

@@ -135,3 +135,8 @@ html.acessibilidade-alto-contraste .botao-voltar-login,
 html.acessibilidade-alto-contraste .botao-alternar-cadastro {
   color: #fff !important;
 }
+.campo-senha-login { position: relative; width: 100%; }
+.campo-senha-login .input-login { padding-right: 3rem; }
+.botao-visibilidade-senha { position: absolute; right: .35rem; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border: 0; border-radius: .375rem; background: transparent; color: #475569; cursor: pointer; }
+.botao-visibilidade-senha svg { width: 1.2rem; height: 1.2rem; }
+.botao-visibilidade-senha:focus-visible { outline: 2px solid #0e3746; outline-offset: 1px; }

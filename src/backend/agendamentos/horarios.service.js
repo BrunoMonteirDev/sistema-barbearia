@@ -45,19 +45,15 @@ export function temConflito(inicioA, duracaoA, inicioB, duracaoB) {
   const bFim = bInicio + arredondarDuracaoParaBloco(duracaoB);
   return aInicio < bFim && bInicio < aFim;
 }
-/**
- * Calcula os horários em que um serviço cabe integralmente na jornada do profissional.
- * Reservas canceladas não bloqueiam o horário; na remarcação, o próprio agendamento pode
- * ser ignorado para não gerar conflito consigo mesmo.
- */
+/** Calcula os in?cios dispon?veis considerando a dura??o do servi?o e os agendamentos ativos. */
 export async function listarHorariosDisponiveis(
   profissionalId,
   servicoId,
   data,
-  ignorarAgendamentoId,
   db = prisma,
 ) {
   const repository = new DisponibilidadeRepository(db);
+  if (await repository.buscarBloqueioData(data)) return [];
   const servico = await repository.buscarServicoAtivo(servicoId);
   if (!servico) return [];
   const diaSemana = obterDiaDaSemana(data);
@@ -69,7 +65,6 @@ export async function listarHorariosDisponiveis(
   const agendamentos = await repository.listarAgendamentosDoDia(
     profissionalId,
     data,
-    ignorarAgendamentoId,
   );
   return blocosConfigurados.filter((hora) => {
     if (!temBlocosConsecutivos(blocosConfigurados, hora, servico.duracao))
@@ -89,14 +84,12 @@ export async function validarDisponibilidade(
   servicoId,
   data,
   hora,
-  ignorarAgendamentoId,
   db = prisma,
 ) {
   const horarios = await listarHorariosDisponiveis(
     profissionalId,
     servicoId,
     data,
-    ignorarAgendamentoId,
     db,
   );
   return horarios.includes(hora);

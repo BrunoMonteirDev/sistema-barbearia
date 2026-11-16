@@ -9,9 +9,10 @@ export default defineConfig({
     host: "0.0.0.0",
     port: 5000,
     allowedHosts: true,
+    watch: { usePolling: true, interval: 300 },
     proxy: {
       "/api": {
-        target: "http://localhost:3002",
+        target: "http://localhost:3001",
         changeOrigin: true,
       },
     },

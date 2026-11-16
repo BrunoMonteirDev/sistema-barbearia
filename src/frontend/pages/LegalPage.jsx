@@ -40,7 +40,7 @@ const paginas = {
       {
         titulo: "Agendamentos",
         texto:
-          "A disponibilidade, duração do serviço, confirmação, remarcação e cancelamento obedecem às regras informadas no sistema. A barbearia pode atualizar a agenda quando necessário, preservando o histórico das alterações.",
+          "Os agendamentos seguem as regras de disponibilidade informadas no sistema. Para mudar a data ou o horário, é necessário cancelar a reserva dentro do prazo permitido e criar um novo agendamento. A barbearia pode atualizar a agenda quando necessário, preservando o histórico das alterações.",
       },
       {
         titulo: "Condutas proibidas",

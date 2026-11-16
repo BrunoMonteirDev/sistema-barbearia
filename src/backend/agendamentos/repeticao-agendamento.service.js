@@ -8,16 +8,12 @@ const segredo = () => {
     throw new Error("JWT_SECRET não foi configurado.");
   return process.env.JWT_SECRET;
 };
-export async function detectarPossivelRepeticaoAgendamento(
-  tentativa,
-  ignorarAgendamentoId,
-) {
+export async function detectarPossivelRepeticaoAgendamento(tentativa) {
   const encontrados = await prisma.agendamento.findMany({
     where: {
       usuarioId: tentativa.usuarioId,
       data: tentativa.data,
       status: { in: statusAtivos },
-      ...(ignorarAgendamentoId ? { id: { not: ignorarAgendamentoId } } : {}),
     },
     include: {
       servico: { select: { nome: true } },

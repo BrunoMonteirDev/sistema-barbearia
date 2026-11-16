@@ -4,7 +4,7 @@ import { servicos } from "../services/servicos.api";
 import { profissionais } from "../services/profissionais.api";
 import { agendamentos } from "../services/agendamentos.api";
 import { configuracoes } from "../services/configuracoes.api";
-import { evolution } from "../services/evolution.api";
+import { bloqueios } from "../services/bloqueios.api";
 export { ApiError, authStorage } from "./http";
 export const api = {
   auth,
@@ -13,5 +13,5 @@ export const api = {
   profissionais,
   agendamentos,
   configuracoes,
-  evolution,
+  bloqueios,
 };

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="900" viewBox="0 0 1500 900">
+ <style>
+  .title{font:700 30px Arial;fill:#142e3d}.subtitle{font:16px Arial;fill:#526879}
+  .box{fill:#fff;stroke:#c9d6df;stroke-width:2}.head{fill:#103e51}.name{font:700 17px Arial;fill:white}
+  .field{font:15px Arial;fill:#213747}.small{font:13px Arial;fill:#637887}.key{font:700 13px Arial;fill:#b25317}
+  .link{fill:none;stroke:#536e7c;stroke-width:2.3}.card{font:700 15px Arial;fill:#173d4c}.relation{font:14px Arial;fill:#526879}
+ </style>
+ <rect width="1500" height="900" fill="#f7fafc"/>
+ <text x="65" y="54" class="title">Relacionamentos do sistema de agendamento</text>
+ <text x="65" y="82" class="subtitle">Modelo lógico simplificado · chaves e vínculos conforme o schema Prisma</text>
+ <!-- conexões: cada rótulo representa a cardinalidade na ponta correspondente -->
+ <path class="link" d="M330 235 H405 V350 H480"/>
+ <text class="card" x="340" y="227">1</text><text class="card" x="444" y="342">0..N</text>
+ <path class="link" d="M330 420 H480"/>
+ <text class="card" x="340" y="410">1</text><text class="card" x="441" y="410">0..N</text>
+ <path class="link" d="M330 620 H405 V490 H480"/>
+ <text class="card" x="340" y="612">1</text><text class="card" x="442" y="482">0..N</text>
+ <path class="link" d="M750 420 H940"/>
+ <text class="card" x="762" y="409">1</text><text class="card" x="896" y="409">0..N</text>
+ <path class="link" d="M205 505 V733 H480"/>
+ <text class="card" x="215" y="525">1</text><text class="card" x="438" y="725">0..N</text>
+ <!-- entidades -->
+ <g transform="translate(65 165)"><rect class="box" width="265" height="140" rx="9"/><path class="head" d="M9 0 H256 Q265 0 265 9 V42 H0 V9 Q0 0 9 0"/><text class="name" x="17" y="27">USUÁRIOS</text><text class="key" x="17" y="69">PK</text><text class="field" x="54" y="69">id</text><text class="field" x="17" y="95">nome, e-mail, telefone</text><text class="field" x="17" y="120">nível, autenticação</text></g>
+ <g transform="translate(65 350)"><rect class="box" width="265" height="155" rx="9"/><path class="head" d="M9 0 H256 Q265 0 265 9 V42 H0 V9 Q0 0 9 0"/><text class="name" x="17" y="27">PROFISSIONAIS</text><text class="key" x="17" y="69">PK</text><text class="field" x="54" y="69">id</text><text class="field" x="17" y="95">nome, telefone, e-mail</text><text class="field" x="17" y="120">especialidade, ativo</text></g>
+ <g transform="translate(65 565)"><rect class="box" width="265" height="135" rx="9"/><path class="head" d="M9 0 H256 Q265 0 265 9 V42 H0 V9 Q0 0 9 0"/><text class="name" x="17" y="27">SERVIÇOS</text><text class="key" x="17" y="69">PK</text><text class="field" x="54" y="69">id</text><text class="field" x="17" y="95">nome, duração, preço</text><text class="field" x="17" y="120">descrição, ativo</text></g>
+ <g transform="translate(480 300)"><rect class="box" width="270" height="240" rx="9"/><path class="head" d="M9 0 H261 Q270 0 270 9 V42 H0 V9 Q0 0 9 0"/><text class="name" x="17" y="27">AGENDAMENTOS</text><text class="key" x="17" y="69">PK</text><text class="field" x="57" y="69">id</text><text class="key" x="17" y="96">FK</text><text class="field" x="57" y="96">usuario_id</text><text class="key" x="17" y="123">FK</text><text class="field" x="57" y="123">profissional_id</text><text class="key" x="17" y="150">FK</text><text class="field" x="57" y="150">servico_id</text><text class="field" x="17" y="180">data, hora, status</text><text class="field" x="17" y="207">observação</text></g>
+ <g transform="translate(940 350)"><rect class="box" width="305" height="150" rx="9"/><path class="head" d="M9 0 H296 Q305 0 305 9 V42 H0 V9 Q0 0 9 0"/><text class="name" x="17" y="27">HISTÓRICO DE AGENDAMENTOS</text><text class="key" x="17" y="69">PK</text><text class="field" x="57" y="69">id</text><text class="key" x="17" y="96">FK</text><text class="field" x="57" y="96">agendamento_id</text><text class="field" x="17" y="123">autor_id, tipo, alterações</text></g>
+ <g transform="translate(480 665)"><rect class="box" width="320" height="140" rx="9"/><path class="head" d="M9 0 H311 Q320 0 320 9 V42 H0 V9 Q0 0 9 0"/><text class="name" x="17" y="27">DISPONIBILIDADE PROFISSIONAL</text><text class="key" x="17" y="69">PK</text><text class="field" x="57" y="69">id</text><text class="key" x="17" y="96">FK</text><text class="field" x="57" y="96">profissional_id</text><text class="field" x="17" y="123">dia da semana, hora</text></g>
+ <g transform="translate(940 565)"><rect class="box" width="305" height="115" rx="9"/><path class="head" d="M9 0 H296 Q305 0 305 9 V42 H0 V9 Q0 0 9 0"/><text class="name" x="17" y="27">BLOQUEIOS DE DATA</text><text class="key" x="17" y="69">PK</text><text class="field" x="57" y="69">id</text><text class="field" x="17" y="96">data única, motivo</text></g>
+ <g transform="translate(940 715)"><rect class="box" width="305" height="105" rx="9"/><path class="head" d="M9 0 H296 Q305 0 305 9 V42 H0 V9 Q0 0 9 0"/><text class="name" x="17" y="27">CONFIGURAÇÃO</text><text class="key" x="17" y="69">PK</text><text class="field" x="57" y="69">id</text><text class="field" x="17" y="94">dados gerais e contatos</text></g>
+ <text class="small" x="65" y="858">PK = chave primária · FK = chave estrangeira · 0..N = zero ou muitos · 1 = exatamente um</text>
+ <text class="small" x="65" y="880">Bloqueios e configuração não possuem chaves estrangeiras. Campos exibidos resumem o esquema.</text>
+</svg>

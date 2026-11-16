@@ -3,7 +3,7 @@ function CartaoAgendamento({
   agendamento,
   titulo,
   descricao,
-  onEdit,
+  onView,
   onConfirm,
   onConclude,
 }) {
@@ -17,7 +17,6 @@ function CartaoAgendamento({
   }
   return (
     <article
-      onClick={() => onEdit(agendamento)}
       className={`cartao-agendamento-admin ${statusStyle[agendamento.status] ?? "status-cartao-desconhecido"}`}
     >
       <p className="titulo-cartao-agenda">{titulo}</p>
@@ -25,6 +24,7 @@ function CartaoAgendamento({
       <p className="rotulo-status-cartao-agenda">
         {statusLabels[agendamento.status] ?? agendamento.status}
       </p>
+      <button type="button" onClick={() => onView(agendamento)} className="botao-confirmar-cartao-agenda">Detalhes</button>
       {agendamento.status === "PENDENTE" && (
         <button
           type="button"

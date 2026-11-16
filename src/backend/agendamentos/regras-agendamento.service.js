@@ -1,12 +1,9 @@
 import { prisma } from "../lib/prisma.js";
 export async function regrasAgendamento() {
-  const config = await prisma.configuracao.findFirst();
   return {
-    antecedenciaCancelamentoHoras: config?.antecedenciaCancelamentoHoras ?? 24,
-    antecedenciaRemarcacaoHoras: config?.antecedenciaRemarcacaoHoras ?? 24,
-    antecedenciaAgendamentoMinutos:
-      config?.antecedenciaAgendamentoMinutos ?? 30,
-    toleranciaAtrasoMinutos: config?.toleranciaAtrasoMinutos ?? 0,
+    antecedenciaCancelamentoHoras: 24,
+    antecedenciaAgendamentoMinutos: 30,
+    toleranciaAtrasoMinutos: 0,
   };
 }
 export function inicioAtendimento(data, hora) {

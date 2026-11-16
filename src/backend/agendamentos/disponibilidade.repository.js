@@ -13,13 +13,12 @@ export class DisponibilidadeRepository {
       orderBy: { hora: "asc" },
     });
   }
-  listarAgendamentosDoDia(profissionalId, data, ignorarAgendamentoId) {
+  listarAgendamentosDoDia(profissionalId, data) {
     return this.db.agendamento.findMany({
       where: {
         profissionalId,
         data,
         status: { not: "CANCELADO" },
-        ...(ignorarAgendamentoId ? { id: { not: ignorarAgendamentoId } } : {}),
       },
       include: { servico: true },
     });
@@ -38,7 +37,7 @@ export class DisponibilidadeRepository {
       orderBy: { hora: "asc" },
     });
   }
-  buscarAgendamentoPorId(id) {
-    return this.db.agendamento.findUnique({ where: { id } });
+  buscarBloqueioData(data) {
+    return this.db.bloqueioData.findUnique({ where: { data } });
   }
 }

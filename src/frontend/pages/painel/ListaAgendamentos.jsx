@@ -1,4 +1,4 @@
-import { CheckCircle2, Eye, Pencil, Trash2, XCircle } from "lucide-react";
+import { CheckCircle2, Eye, XCircle } from "lucide-react";
 import { statusLabels, statusStyle } from "./agendaVisualizacao";
 function Acao({ titulo, executar, disabled, children }) {
   return (
@@ -19,9 +19,7 @@ export function ListaAgendamentos({
   confirmar,
   concluir,
   visualizar,
-  editar,
   cancelar,
-  excluir,
 }) {
   const colunas = [
     "Cliente",
@@ -106,18 +104,12 @@ export function ListaAgendamentos({
                   >
                     <Eye className="icone-agenda" />
                   </Acao>
-                  <Acao titulo="Editar" executar={() => editar(agendamento)}>
-                    <Pencil className="icone-agenda" />
-                  </Acao>
                   <Acao
                     titulo="Cancelar"
                     executar={() => cancelar(agendamento)}
                     disabled={agendamento.status === "CANCELADO"}
                   >
                     <XCircle className="icone-agenda" />
-                  </Acao>
-                  <Acao titulo="Excluir" executar={() => excluir(agendamento)}>
-                    <Trash2 className="icone-agenda" />
                   </Acao>
                 </div>
               </td>

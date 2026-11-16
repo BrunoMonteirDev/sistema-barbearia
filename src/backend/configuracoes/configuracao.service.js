@@ -1,10 +1,4 @@
 export class DadosConfiguracaoInvalidosError extends Error {}
-const camposRegras = [
-  "antecedenciaCancelamentoHoras",
-  "antecedenciaRemarcacaoHoras",
-  "antecedenciaAgendamentoMinutos",
-  "toleranciaAtrasoMinutos",
-];
 function dadosContatoValidos(body) {
   const telefoneWhatsApp =
     typeof body.telefoneWhatsApp === "string"
@@ -31,11 +25,7 @@ function dadosContatoValidos(body) {
   }
   return { dados: { telefoneWhatsApp, email, instagram: instagram || null } };
 }
-function selecionarRegras(config) {
-  return Object.fromEntries(
-    camposRegras.map((campo) => [campo, config[campo]]),
-  );
-}
+
 export class ConfiguracaoService {
   configuracaoRepository;
   constructor(configuracaoRepository) {
@@ -53,45 +43,5 @@ export class ConfiguracaoService {
     return atual
       ? this.configuracaoRepository.atualizar(atual.id, resultado.dados)
       : this.configuracaoRepository.criar(resultado.dados);
-  }
-  async obterOuCriar() {
-    return (
-      (await this.configuracaoRepository.buscar()) ??
-      this.configuracaoRepository.criar({})
-    );
-  }
-  async buscarRegras() {
-    const config = await this.obterOuCriar();
-    return selecionarRegras(config);
-  }
-  async salvarRegras(body) {
-    const dados = Object.fromEntries(
-      camposRegras.map((campo) => [campo, body[campo]]),
-    );
-    const camposComLimite = [
-      "antecedenciaCancelamentoHoras",
-      "antecedenciaRemarcacaoHoras",
-      "toleranciaAtrasoMinutos",
-    ];
-    if (
-      camposComLimite.some(
-        (campo) =>
-          !Number.isInteger(dados[campo]) ||
-          Number(dados[campo]) < 0 ||
-          Number(dados[campo]) > 720,
-      ) ||
-      !Number.isInteger(dados.antecedenciaAgendamentoMinutos) ||
-      Number(dados.antecedenciaAgendamentoMinutos) < 0
-    ) {
-      throw new DadosConfiguracaoInvalidosError(
-        "As regras devem ser números inteiros não negativos; cancelamento, remarcação e atraso aceitam no máximo 720.",
-      );
-    }
-    const config = await this.obterOuCriar();
-    const atualizado = await this.configuracaoRepository.atualizar(
-      config.id,
-      dados,
-    );
-    return selecionarRegras(atualizado);
   }
 }

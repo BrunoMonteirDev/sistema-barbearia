@@ -1,5 +1,6 @@
 import "./LoginPage.css";
 import { useEffect, useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { useLocation } from "wouter";
 import toast from "react-hot-toast";
 import { useAuth } from "@/contexts/AuthContext";
@@ -20,6 +21,7 @@ export default function LoginPage() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [senhaVisivel, setSenhaVisivel] = useState(false);
   const [autenticandoGoogle, setAutenticandoGoogle] = useState(false);
   const [destinoGoogle, setDestinoGoogle] = useState(null);
   useEffect(() => {
@@ -104,18 +106,23 @@ export default function LoginPage() {
             onChange={(event) => setEmail(event.target.value)}
           />
         </label>
-        <label className="rotulo-login" htmlFor="senha">
-          <span>Senha</span>
-          <input
+        <div className="rotulo-login">
+          <label htmlFor="senha">Senha</label>
+          <div className="campo-senha-login">
+            <input
             id="senha"
             required
             minLength={6}
-            type="password"
+            type={senhaVisivel ? "text" : "password"}
             className="input-login"
             value={senha}
             onChange={(event) => setSenha(event.target.value)}
-          />
-        </label>
+            />
+            <button type="button" className="botao-visibilidade-senha" onClick={() => setSenhaVisivel((visivel) => !visivel)} aria-label={senhaVisivel ? "Ocultar senha" : "Mostrar senha"} aria-pressed={senhaVisivel}>
+              {senhaVisivel ? <EyeOff aria-hidden="true" /> : <Eye aria-hidden="true" />}
+            </button>
+          </div>
+        </div>
         <button className="botao-principal-login">
           {register ? "Cadastrar" : "Entrar"}
         </button>

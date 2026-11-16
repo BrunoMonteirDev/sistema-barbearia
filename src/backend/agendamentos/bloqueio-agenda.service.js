@@ -12,6 +12,9 @@ export class HorarioIndisponivelError extends Error {
 export async function executarComLockAgenda(profissionalId, data, operacao) {
   return prisma.$transaction(async (tx) => {
     await tx.$executeRaw`
+      SELECT pg_advisory_xact_lock(hashtextextended(${`data:${data}`}, 0))
+    `;
+    await tx.$executeRaw`
       SELECT pg_advisory_xact_lock(hashtextextended(${`${profissionalId}:${data}`}, 0))
     `;
     return operacao(tx);

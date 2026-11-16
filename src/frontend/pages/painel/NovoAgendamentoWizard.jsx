@@ -207,6 +207,8 @@ function Horario({ fluxo }) {
       </label>
       {fluxo.carregandoHorarios ? (
         <p>Carregando horários...</p>
+      ) : fluxo.data && fluxo.horarios.length === 0 ? (
+        <p>N&atilde;o h&aacute; hor&aacute;rios dispon&iacute;veis nesta data. Escolha outra data.</p>
       ) : (
         fluxo.horarios.map((item) => (
           <button type="button" key={item} onClick={() => fluxo.setHora(item)}>

@@ -29,9 +29,6 @@ export class AgendamentoRepository {
   atualizar(id, data) {
     return this.banco.agendamento.update({ where: { id }, data });
   }
-  remover(id) {
-    return this.banco.agendamento.delete({ where: { id } });
-  }
   registrarHistorico(data) {
     return this.banco.historicoAgendamento.create({ data });
   }

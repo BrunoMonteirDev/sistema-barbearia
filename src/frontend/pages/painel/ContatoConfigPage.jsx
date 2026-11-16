@@ -1,9 +1,9 @@
-import "./WhatsAppConfigPage.css";
+import "./ContatoConfigPage.css";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { api } from "@/lib/api";
 import { formatarTelefoneBrasileiro } from "@/utils/telefone";
-export default function WhatsAppConfigPage() {
+export default function ContatoConfigPage() {
   const [form, setForm] = useState({
     telefoneWhatsApp: "",
     email: "",
@@ -42,7 +42,7 @@ export default function WhatsAppConfigPage() {
       </p>
       <form onSubmit={save} className="formulario-contatos-configuracao">
         <label className="rotulo-contatos-configuracao">
-          WhatsApp da barbearia
+          Telefone de contato da barbearia
           <input
             required
             inputMode="tel"

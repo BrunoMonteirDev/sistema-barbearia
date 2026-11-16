@@ -1,0 +1,13 @@
+.formulario-bloqueio-data{display:grid;gap:1rem;max-width:56rem;margin:1.5rem 0;padding:1.25rem;border:1px solid #e5e7eb;border-radius:.75rem;background:#fff}
+.formulario-bloqueio-data label{display:grid;gap:.45rem;color:#1f2937;font-size:.9rem;font-weight:600}
+.formulario-bloqueio-data input{min-height:2.75rem;padding:.6rem .75rem;border:1px solid #cbd5e1;border-radius:.5rem;font:inherit}
+.formulario-bloqueio-data button{justify-self:start;min-height:2.75rem;padding:.65rem 1rem}
+.lista-bloqueios-data{display:grid;gap:.75rem;max-width:56rem}
+.cartao-bloqueio-data{display:flex;align-items:center;gap:1rem;padding:1rem;border:1px solid #e5e7eb;border-radius:.75rem;background:#fff}
+.cartao-bloqueio-data strong{text-transform:capitalize;color:#0e3746}
+.cartao-bloqueio-data p{margin:.25rem 0 0;color:#6b7280}
+.icone-bloqueio-data{color:#b45309}
+.cartao-bloqueio-data>button{margin-left:auto;padding:.6rem;border:0;border-radius:.5rem;background:#fff1f2;color:#be123c;cursor:pointer}
+@media(min-width:640px){.formulario-bloqueio-data{grid-template-columns:1fr 2fr auto;align-items:end}}
+html.acessibilidade-alto-contraste .formulario-bloqueio-data,html.acessibilidade-alto-contraste .cartao-bloqueio-data{border-color:#fff;background:#000;color:#fff}
+html.acessibilidade-alto-contraste .cartao-bloqueio-data strong,html.acessibilidade-alto-contraste .cartao-bloqueio-data p{color:#fff}

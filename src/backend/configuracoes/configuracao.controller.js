@@ -27,20 +27,4 @@ export class ConfiguracaoController {
       return res.status(500).json({ error: "Erro ao salvar configuração." });
     }
   };
-  buscarRegras = async (_req, res) => {
-    const regras = await this.configuracaoService.buscarRegras();
-    return res.json(regras);
-  };
-  salvarRegras = async (req, res) => {
-    try {
-      const regras = await this.configuracaoService.salvarRegras(req.body);
-      return res.json(regras);
-    } catch (error) {
-      if (error instanceof DadosConfiguracaoInvalidosError) {
-        return res.status(400).json({ error: error.message });
-      }
-      // Erros inesperados continuam sendo encaminhados ao Express.
-      throw error;
-    }
-  };
 }

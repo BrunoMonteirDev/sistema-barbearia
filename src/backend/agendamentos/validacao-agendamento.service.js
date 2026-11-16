@@ -4,7 +4,6 @@ const appointmentStatuses = [
   "PENDENTE",
   "CONFIRMADO",
   "CONCLUIDO",
-  "CANCELADO",
   "ATRASADO",
 ];
 const horarioPassadoError =

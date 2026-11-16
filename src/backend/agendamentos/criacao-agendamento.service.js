@@ -96,7 +96,6 @@ export async function criarAgendamento(dados) {
         dados.servicoId,
         dados.data,
         dados.hora,
-        undefined,
         transacao,
       );
       if (!continuaDisponivel) throw new HorarioIndisponivelError();
