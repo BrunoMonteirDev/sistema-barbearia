@@ -66,7 +66,7 @@ export default function HomePage() {
             <Scissors className="icone-inicial" />
             Barbearia
           </Link>
-          <nav className="navegacao-inicial">
+          <nav aria-label="Navegação principal" className="navegacao-inicial">
             <a href="#inicio" className="link-inicio-inicial">
               Início
             </a>

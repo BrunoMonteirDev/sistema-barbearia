@@ -1,5 +1,6 @@
 .pagina-inicial {
   min-height: 100vh;
+  overflow-wrap: anywhere;
   background-color: rgb(241 245 249);
   color: rgb(2 6 23);
 }
@@ -13,62 +14,70 @@
   margin-left: auto;
   margin-right: auto;
   display: flex;
-  height: 72px;
-  max-width: 72rem;
+  min-height: 90px;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  max-width: 90rem;
   align-items: center;
   justify-content: space-between;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
+  padding-inline: clamp(1.25rem, 2vw, 1.5rem);
+  padding-block: 0.75rem;
 }
 
 .marca-inicial {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 1.125rem;
-  line-height: 1.75rem;
+  font-size: clamp(1.25rem, 1rem + 0.4vw, 1.5rem);
+  line-height: 1.4;
   font-weight: 700;
 }
 
 .icone-inicial {
+  flex-shrink: 0;
   height: 1.25rem;
   width: 1.25rem;
 }
 
+.marca-inicial .icone-inicial {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
 .navegacao-inicial {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 1.25rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  font-size: clamp(1rem, 0.9rem + 0.2vw, 1.125rem);
+  line-height: 1.5;
   font-weight: 600;
 }
 
-@media (max-width: 480px) {
-  .cabecalho-inicial-conteudo {
-    height: auto;
-    min-height: 72px;
-    flex-wrap: wrap;
-    gap: 0.5rem 0.75rem;
-    padding: 0.75rem;
-  }
+/* Os links podem quebrar de linha com zoom sem cortar a navegação (WCAG 1.4.10). */
+.navegacao-inicial > a,
+.navegacao-inicial > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+}
 
-  .marca-inicial {
-    font-size: 1rem;
+@media (max-width: 600px) {
+  .cabecalho-inicial-conteudo {
+    justify-content: center;
   }
 
   .navegacao-inicial {
-    gap: 0.75rem;
-  }
-
-  .botao-area-inicial {
-    padding-inline: 0.75rem;
+    width: 100%;
+    justify-content: center;
+    gap: 0.5rem 1rem;
   }
 }
 
 @media (min-width: 640px) {
   .navegacao-inicial {
-    gap: 1.75rem;
+    gap: 2.25rem;
   }
 }
 
@@ -87,10 +96,7 @@
 .botao-area-inicial {
   border-radius: 9999px;
   background-color: rgb(165 31 29);
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding: 0.875rem 1.25rem;
   color: rgb(255 255 255);
 }
 
@@ -99,7 +105,6 @@
 }
 
 .botao-sair-inicial {
-  display: none;
   color: rgb(226 232 240);
 }
 
@@ -107,24 +112,15 @@
   color: rgb(255 255 255);
 }
 
-@media (min-width: 640px) {
-  .botao-sair-inicial {
-    display: block;
-  }
-}
-
 .hero-inicial {
   position: relative;
   isolation: isolate;
-  min-height: 360px;
+  display: flex;
+  /* Altura mínima preserva o conteúdo com zoom ou texto ampliado (WCAG 1.4.4). */
+  min-height: 100vh;
+  min-height: 100svh;
   overflow: hidden;
   background-color: rgb(30 41 59);
-}
-
-@media (min-width: 640px) {
-  .hero-inicial {
-    min-height: 460px;
-  }
 }
 
 .hero-inicial-imagem {
@@ -145,38 +141,25 @@
   margin-left: auto;
   margin-right: auto;
   display: flex;
-  min-height: 360px;
-  max-width: 72rem;
+  width: 100%;
+  max-width: 90rem;
   align-items: center;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
+  padding-inline: clamp(1.25rem, 2vw, 1.5rem);
   padding-top: 3rem;
   padding-bottom: 3rem;
 }
 
-@media (min-width: 640px) {
-  .hero-inicial-conteudo {
-    min-height: 460px;
-  }
-}
-
 .hero-inicial-texto {
-  max-width: 36rem;
+  min-width: 0;
+  max-width: 60rem;
   color: rgb(255 255 255);
 }
 
 .hero-inicial-titulo {
-  font-size: 2.25rem;
+  font-size: clamp(2.5rem, 1.25rem + 3.2vw, 5rem);
   font-weight: 800;
-  line-height: 0.95;
+  line-height: 1.08;
   letter-spacing: -0.025em;
-}
-
-@media (min-width: 640px) {
-  .hero-inicial-titulo {
-    font-size: 3rem;
-    line-height: 1;
-  }
 }
 
 .hero-inicial-destaque {
@@ -184,39 +167,35 @@
 }
 
 .hero-inicial-descricao {
-  margin-top: 1rem;
-  max-width: 32rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  margin-top: clamp(1.5rem, 2vw, 2rem);
+  max-width: 50rem;
+  font-size: clamp(1.125rem, 0.9rem + 0.55vw, 1.5625rem);
+  line-height: 1.6;
   color: rgb(241 245 249);
 }
 
-@media (min-width: 640px) {
-  .hero-inicial-descricao {
-    font-size: 1rem;
-    line-height: 1.5rem;
-  }
-}
-
 .hero-inicial-acoes {
-  margin-top: 1.5rem;
+  margin-top: clamp(2rem, 2.5vw, 2.5rem);
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 1rem;
+}
+
+.hero-inicial-acoes .icone-acao-inicial {
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .botao-agendar-inicial {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.625rem;
   border-radius: 9999px;
   background-color: rgb(165 31 29);
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  padding-inline: clamp(1.5rem, 1rem + 0.85vw, 2rem);
+  padding-block: clamp(1rem, 0.75rem + 0.42vw, 1.25rem);
+  font-size: clamp(1rem, 0.875rem + 0.32vw, 1.25rem);
+  line-height: 1.5;
   font-weight: 700;
   color: rgb(255 255 255);
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
@@ -229,6 +208,7 @@
 }
 
 .icone-acao-inicial {
+  flex-shrink: 0;
   height: 1rem;
   width: 1rem;
 }
@@ -236,15 +216,13 @@
 .botao-whatsapp-inicial {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.625rem;
   border-radius: 9999px;
   background-color: rgb(29 78 216);
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  padding-inline: clamp(1.5rem, 1rem + 0.85vw, 2rem);
+  padding-block: clamp(1rem, 0.75rem + 0.42vw, 1.25rem);
+  font-size: clamp(1rem, 0.875rem + 0.32vw, 1.25rem);
+  line-height: 1.5;
   font-weight: 700;
   color: rgb(255 255 255);
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
@@ -259,15 +237,13 @@
 .whatsapp-indisponivel-inicial {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.625rem;
   border-radius: 9999px;
   background-color: rgb(100 116 139);
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  padding-inline: clamp(1.5rem, 1rem + 0.85vw, 2rem);
+  padding-block: clamp(1rem, 0.75rem + 0.42vw, 1.25rem);
+  font-size: clamp(1rem, 0.875rem + 0.32vw, 1.25rem);
+  line-height: 1.5;
   font-weight: 700;
   color: rgb(255 255 255);
 }
@@ -278,15 +254,7 @@
   max-width: 72rem;
   padding-left: 1.25rem;
   padding-right: 1.25rem;
-  padding-top: 2.5rem;
-  padding-bottom: 2.5rem;
-}
-
-@media (min-width: 640px) {
-  .diferenciais-inicial {
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-  }
+  padding-block: clamp(3rem, 6vw, 5rem);
 }
 
 .diferenciais-inicial-cabecalho {
@@ -294,26 +262,27 @@
 }
 
 .diferenciais-inicial-titulo {
-  font-size: 1.25rem;
-  line-height: 1.75rem;
+  font-size: clamp(1.75rem, 1.25rem + 1vw, 2.25rem);
+  line-height: 1.25;
   font-weight: 700;
   color: rgb(10 39 50);
 }
 
 .diferenciais-inicial-descricao {
-  margin-top: 0.25rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
+  margin-top: 0.75rem;
+  font-size: clamp(1rem, 0.9rem + 0.3vw, 1.125rem);
+  line-height: 1.6;
   color: rgb(71 85 105);
 }
 
 .diferenciais-inicial-grade {
-  margin-top: 1.5rem;
+  margin-top: 2.5rem;
   display: grid;
-  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 900px) {
   .diferenciais-inicial-grade {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -324,7 +293,7 @@
   border: 1px solid;
   border-color: rgb(226 232 240);
   background-color: rgb(255 255 255);
-  padding: 1.25rem;
+  padding: clamp(1.5rem, 2.5vw, 2rem);
   text-align: center;
   box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
 }
@@ -333,8 +302,8 @@
   margin-left: auto;
   margin-right: auto;
   display: grid;
-  height: 2.5rem;
-  width: 2.5rem;
+  height: 3.5rem;
+  width: 3.5rem;
   place-items: center;
   border-radius: 9999px;
   background-color: rgb(254 242 242);
@@ -342,16 +311,16 @@
 }
 
 .diferencial-inicial-titulo {
-  margin-top: 1rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  margin-top: 1.25rem;
+  font-size: 1.25rem;
+  line-height: 1.4;
   font-weight: 700;
   color: rgb(10 39 50);
 }
 
 .diferencial-inicial-texto {
-  margin-top: 0.5rem;
-  font-size: 0.75rem;
+  margin-top: 0.75rem;
+  font-size: 1rem;
   line-height: 1.625;
   color: rgb(71 85 105);
 }
@@ -366,8 +335,9 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  min-height: 2.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
   font-weight: 600;
   color: rgb(10 39 50);
 }
@@ -380,8 +350,8 @@
   background-color: rgb(12 47 60);
   padding-left: 1.25rem;
   padding-right: 1.25rem;
-  padding-top: 2.5rem;
-  padding-bottom: 2.5rem;
+  padding-top: clamp(3rem, 5vw, 4.5rem);
+  padding-bottom: 5rem;
   color: rgb(226 232 240);
 }
 
@@ -389,8 +359,9 @@
   margin-left: auto;
   margin-right: auto;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   max-width: 72rem;
-  gap: 2.25rem;
+  gap: 2.5rem;
 }
 
 @media (min-width: 640px) {
@@ -399,7 +370,7 @@
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1200px) {
   .rodape-inicial-grade {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
@@ -409,21 +380,23 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 1.125rem;
+  font-size: 1.375rem;
   line-height: 1.75rem;
   font-weight: 700;
   color: rgb(255 255 255);
 }
 
 .rodape-inicial-descricao {
-  margin-top: 0.75rem;
+  margin-top: 1rem;
   max-width: 20rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  font-size: 1rem;
+  line-height: 1.7;
   color: rgb(203 213 225);
 }
 
 .rodape-inicial-titulo {
+  font-size: 1.25rem;
+  line-height: 1.4;
   font-weight: 700;
   color: rgb(255 255 255);
 }
@@ -433,9 +406,15 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  gap: 0.25rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.rodape-inicial-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
 }
 
 .rodape-inicial-link:hover {
@@ -453,12 +432,13 @@
 }
 
 .rodape-inicial-contatos {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
 .rodape-inicial-contato-link {
   display: flex;
+  min-height: 2.75rem;
   align-items: center;
   gap: 0.5rem;
 }
@@ -468,8 +448,9 @@
 }
 
 .rodape-inicial-icone-contato {
-  height: 1rem;
-  width: 1rem;
+  flex-shrink: 0;
+  height: 1.25rem;
+  width: 1.25rem;
   color: rgb(248 113 113);
 }
 
@@ -487,8 +468,8 @@
 
 .rodape-inicial-instagram {
   display: inline-grid;
-  height: 2.25rem;
-  width: 2.25rem;
+  height: 3rem;
+  width: 3rem;
   place-items: center;
   border-radius: 9999px;
   background-color: rgb(165 31 29);
@@ -506,8 +487,8 @@
 
 .rodape-inicial-whatsapp {
   display: inline-grid;
-  height: 2.25rem;
-  width: 2.25rem;
+  height: 3rem;
+  width: 3rem;
   place-items: center;
   border-radius: 9999px;
   background-color: rgb(5 150 105);
@@ -525,23 +506,40 @@
 
 .rodape-inicial-sem-redes {
   margin-top: 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  font-size: 1rem;
+  line-height: 1.6;
   color: rgb(148 163 184);
 }
 
 .rodape-inicial-direitos {
   margin-left: auto;
   margin-right: auto;
-  margin-top: 2rem;
+  margin-top: 3rem;
   max-width: 72rem;
   border-top: 1px solid;
   border-color: rgb(56 189 248);
-  padding-top: 1.25rem;
+  padding-top: 1.75rem;
   text-align: center;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  font-size: 1rem;
+  line-height: 1.6;
   color: rgb(203 213 225);
+}
+
+.diferencial-inicial-icone .icone-inicial {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.rodape-inicial-grade > section {
+  min-width: 0;
+}
+
+@media (max-width: 480px) {
+  .hero-inicial-acoes > * {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
 }
 
 html.acessibilidade-alto-contraste .pagina-inicial,
