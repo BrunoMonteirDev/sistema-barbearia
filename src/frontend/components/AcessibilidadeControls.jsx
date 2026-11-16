@@ -6,12 +6,17 @@ import { useSpeechSynthesis } from "./useSpeechSynthesis";
 const chave = "barbearia.acessibilidade";
 const padrao = {
   altoContraste: false,
-  fonteGrande: false,
+  zoom: 1,
   reduzirAnimacoes: false,
 };
 function carregar() {
   try {
-    return { ...padrao, ...JSON.parse(localStorage.getItem(chave) ?? "{}") };
+    const salvo = JSON.parse(localStorage.getItem(chave) ?? "{}");
+    return {
+      ...padrao,
+      ...salvo,
+      zoom: [1, 2, 3].includes(salvo.zoom) ? salvo.zoom : salvo.fonteGrande ? 2 : 1,
+    };
   } catch {
     return padrao;
   }
@@ -35,10 +40,7 @@ export function AcessibilidadeControls() {
       "acessibilidade-alto-contraste",
       preferencias.altoContraste,
     );
-    raiz.classList.toggle(
-      "acessibilidade-fonte-grande",
-      preferencias.fonteGrande,
-    );
+    raiz.dataset.zoomAcessibilidade = String(preferencias.zoom);
     raiz.classList.toggle(
       "acessibilidade-reduzir-animacoes",
       preferencias.reduzirAnimacoes,
@@ -178,13 +180,20 @@ export function AcessibilidadeControls() {
               titulo="Alto contraste"
               descricao="Aumenta a diferença entre textos e fundos."
             />
-            <Opcao
-              ativa={preferencias.fonteGrande}
-              aoAlternar={() => alternar("fonteGrande")}
-              icone={<Type className="icone-acessibilidade" />}
-              titulo="Texto maior"
-              descricao="Aumenta o tamanho da fonte da página."
-            />
+            <div className="controle-zoom-acessibilidade" aria-label="Nível de zoom do texto">
+              <span className="titulo-opcao-acessibilidade"><Type className="icone-acessibilidade" /> Zoom do texto</span>
+              <div className="opcoes-zoom-acessibilidade" role="group" aria-label="Escolha o nível de zoom">
+                {[1, 2, 3].map((zoom) => (
+                  <button
+                    key={zoom}
+                    type="button"
+                    aria-pressed={preferencias.zoom === zoom}
+                    onClick={() => setPreferencias((atual) => ({ ...atual, zoom }))}
+                    className="botao-zoom-acessibilidade"
+                  >{zoom}x</button>
+                ))}
+              </div>
+            </div>
             <Opcao
               ativa={preferencias.reduzirAnimacoes}
               aoAlternar={() => alternar("reduzirAnimacoes")}

@@ -77,6 +77,12 @@
   line-height: 1rem;
   color: rgb(71 85 105);
 }
+.controle-zoom-acessibilidade { margin: 0 0 0.75rem; padding: 0.5rem; }
+.controle-zoom-acessibilidade .titulo-opcao-acessibilidade { display:flex; align-items:center; gap:.5rem; }
+.opcoes-zoom-acessibilidade { display:flex; gap:.5rem; margin-top:.5rem; }
+.botao-zoom-acessibilidade { flex:1; min-height:2.5rem; border:1px solid rgb(148 163 184); border-radius:.375rem; font-weight:700; color:rgb(15 23 42); }
+.botao-zoom-acessibilidade[aria-pressed="true"] { background:rgb(2 6 23); color:white; border-color:rgb(2 6 23); }
+.botao-zoom-acessibilidade:focus-visible { outline:3px solid #a51f1d; outline-offset:2px; }
 .leitura-indisponivel-acessibilidade {
   padding-left: 0.5rem;
   padding-right: 0.5rem;

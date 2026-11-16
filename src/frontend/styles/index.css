@@ -62,9 +62,8 @@ html.navegacao-por-teclado [tabindex]:focus {
   }
 }
 
-html.acessibilidade-fonte-grande {
-  font-size: 118%;
-}
+html[data-zoom-acessibilidade="2"] { font-size: 200%; }
+html[data-zoom-acessibilidade="3"] { font-size: 300%; }
 
 html.acessibilidade-reduzir-animacoes *,
 html.acessibilidade-reduzir-animacoes *::before,
