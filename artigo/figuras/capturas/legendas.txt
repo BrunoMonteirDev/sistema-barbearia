@@ -1,0 +1,27 @@
+CAPTURAS PARA O ARTIGO — 16/11/2026
+
+01-dashboard.png
+Legenda: Painel administrativo com indicadores de agenda, clientes, faturamento e próximos atendimentos, além do acesso à gestão de dias bloqueados.
+
+02-dias-bloqueados.png
+Legenda: Interface de gestão de dias bloqueados, com campos de data e motivo e exibição de uma data sem atendimento.
+
+03-agendamentos.png
+Legenda: Lista administrativa de agendamentos, com filtros, identificação do atendimento, status e ações disponíveis.
+
+04-confirmacao-cancelamento.png
+Legenda: Confirmação de cancelamento, com aviso de que a escolha de outra data ou horário exige um novo agendamento.
+
+05-agendamento-cancelado.png
+Legenda: Exibição do status Cancelado após a confirmação no fluxo de demonstração.
+
+Fonte sugerida para todas as figuras: Elaborado pelo autor (2026), com dados fictícios de demonstração.
+
+CONDIÇÕES DE CAPTURA
+Capturas do front-end atual compilado com Vite e renderizado no Microsoft Edge.
+Viewport: 1600 x 1000 pixels CSS; PNGs: 2400 x 1500 pixels.
+Data/hora de referência do cenário: 16/11/2026, às 10h, em America/Sao_Paulo.
+Clientes, profissionais, serviços, reservas e bloqueios foram fornecidos por uma API local de demonstração em memória.
+A confirmação de cancelamento alterou somente os dados em memória desse cenário. Não houve conexão com o banco de dados real.
+As imagens documentam os estados e o fluxo visual da interface; não constituem evidência de teste integrado do backend ou de persistência no banco.
+O formulário de bloqueio fica na página Dias bloqueados, acessível pelo menu do painel.
