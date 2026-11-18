@@ -1,26 +1,25 @@
-# Barbearia Web
+# Sistema de Barbearia
 
-Sistema acadêmico de agendamento para uma única barbearia, desenvolvido como TCC do IFPR. Clientes reservam horários online; administradores e funcionários acompanham agenda, serviços e profissionais.
+Repositório do sistema acadêmico de agendamento para barbearias e de sua documentação de TCC. O conteúdo foi separado para que a aplicação possa ser executada sem misturar código-fonte, artigo, diagramas e registros históricos.
 
-## Tecnologias
+## Organização
 
-- Interface: React, JavaScript e Vite.
-- API: Node.js, Express e JWT.
-- Dados: PostgreSQL e Prisma ORM.
+| Caminho | Conteúdo |
+| --- | --- |
+| [`sistema/`](sistema/) | Aplicação completa: frontend, backend, banco, configurações e dependências do projeto |
+| [`docs/tecnica/`](docs/tecnica/) | Backlog, relatório de acessibilidade e diagramas atuais |
+| [`docs/tcc/`](docs/tcc/) | Manuscrito vigente e versão renderizada do TCC |
+| [`docs/historico/`](docs/historico/) | Material antigo preservado apenas para consulta |
 
-## Execução local
+## Executar a aplicação
 
-1. Configure `.env` a partir de `.env.example`, com `DATABASE_URL` e `JWT_SECRET`.
-2. Instale dependências com `npm install` e gere o cliente Prisma com `npm run prisma:generate`.
-3. Aplique as migrations com `npm run prisma:deploy`.
-4. Inicie a aplicação com `npm run dev`, ou use `npm run dev:frontend` e `npm run dev:backend` em terminais separados.
+Entre na pasta do sistema antes de usar qualquer comando do projeto:
 
-O Vite usa polling para detectar alterações no frontend, e o backend usa `nodemon --legacy-watch`.
+```bash
+cd sistema
+npm install
+npm run prisma:generate
+npm run dev
+```
 
-## Verificação
-
-Use `npm run lint` e `npm run build` para verificar o código.
-
-## Estrutura
-
-`src/frontend` contém interface, páginas e serviços HTTP. `src/backend` organiza rotas, controllers, services e repositories por domínio. `prisma` contém o schema e as migrations do banco.
+As instruções completas estão no [README da aplicação](sistema/README.md). Para localizar documentos atuais e históricos, consulte o [índice da documentação](docs/README.md).

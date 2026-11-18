@@ -1,0 +1,47 @@
+{
+  "name": "sistema-barbearia",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24.0.0"
+  },
+  "scripts": {
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "vite --host 0.0.0.0 --port 5000",
+    "dev:backend": "node --watch --watch-preserve-output src/backend/server.js",
+    "start": "node src/backend/server.js",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "vite build",
+    "build:backend": "node scripts/check-backend.js",
+    "lint": "eslint .",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:deploy": "prisma migrate deploy"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "7.10.1",
+    "@prisma/client": "7.10.1",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "google-auth-library": "10.5.0",
+    "jsonwebtoken": "^9.0.3",
+    "lucide-react": "^0.441.0",
+    "pg": "8.22.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hot-toast": "2.6.0",
+    "wouter": "3.8.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "5.2.0",
+    "autoprefixer": "10.4.22",
+    "concurrently": "^9.2.1",
+    "eslint": "10.15.0",
+    "postcss": "8.5.25",
+    "prisma": "7.10.1",
+    "vite": "6.4.6"
+  }
+}

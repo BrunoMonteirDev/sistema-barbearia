@@ -24,10 +24,14 @@ vite.config.d.ts
 # logs
 *.log
 
+# artefatos temporários de revisão e renderização
+tmp/
+
 # SO / editor
 .DS_Store
 Thumbs.db
 .vscode
+.~lock.*#
 
 # infraestrutura local de integrações externas
 integrations/
