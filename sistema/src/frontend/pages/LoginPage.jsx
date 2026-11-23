@@ -2,7 +2,7 @@
 import "./LoginPage.css";
 import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { useLocation } from "wouter";
+import { Link, useLocation } from "wouter";
 import toast from "react-hot-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { GoogleLoginButton } from "@/components/GoogleLoginButton";
@@ -149,6 +149,11 @@ export default function LoginPage() {
         <button className="botao-principal-login">
           {register ? "Cadastrar" : "Entrar"}
         </button>
+        {!register && (
+          <Link href="/esqueci-senha" className="link-recuperacao-login">
+            Esqueci minha senha
+          </Link>
+        )}
         <button
           type="button"
           className="botao-alternar-cadastro"

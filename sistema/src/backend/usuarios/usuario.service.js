@@ -41,7 +41,13 @@ export class UsuarioService {
       typeof senha === "string" && senha ? await gerarHash(senha) : undefined;
     return this.usuarioRepository.atualizar(id, {
       ...dadosUsuario,
-      ...(senhaHash ? { senhaHash } : {}),
+      ...(senhaHash ? {
+        senhaHash,
+        // A troca administrativa também invalida links e sessões anteriores.
+        recuperacaoTokenHash: null,
+        recuperacaoExpiraEm: null,
+        versaoSessao: { increment: 1 },
+      } : {}),
     });
   }
   async atualizarPerfil(id, dados) {
@@ -77,6 +83,9 @@ export class UsuarioService {
       telefone: null,
       dataNascimento: null,
       senhaHash: null,
+      recuperacaoTokenHash: null,
+      recuperacaoExpiraEm: null,
+      versaoSessao: { increment: 1 },
       provedorAuth: "LOCAL",
       googleSubject: null,
       cadastroConcluido: false,

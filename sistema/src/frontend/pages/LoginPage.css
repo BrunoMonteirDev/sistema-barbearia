@@ -126,6 +126,15 @@
   color: #a51f1d;
 }
 
+.link-recuperacao-login {
+  display: block;
+  padding: 0.5rem;
+  color: #a51f1d;
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
 /* As regras globais de foco por teclado continuam aplicáveis. */
 html.acessibilidade-alto-contraste .formulario-login,
 html.acessibilidade-alto-contraste .mensagem-autenticando-google {

@@ -6,6 +6,8 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { AdminRoute, UserRoute } from "@/components/ProtectedRoute";
 import HomePage from "@/pages/HomePage";
 import LoginPage from "@/pages/LoginPage";
+import EsqueciSenhaPage from "@/pages/EsqueciSenhaPage";
+import RedefinirSenhaPage from "@/pages/RedefinirSenhaPage";
 import PaginaAgendamento from "@/pages/agendar/PaginaAgendamento";
 import PainelPage from "@/pages/PainelPage";
 import MinhaContaPage from "@/pages/user/MinhaContaPage";
@@ -59,6 +61,8 @@ export default function App() {
           <Switch>
             <Route path="/" component={HomePage} />
             <Route path="/login" component={LoginPage} />
+            <Route path="/esqueci-senha" component={EsqueciSenhaPage} />
+            <Route path="/redefinir-senha" component={RedefinirSenhaPage} />
             <Route path="/agendamento" component={PaginaAgendamento} />
             <Route
               path="/privacidade"

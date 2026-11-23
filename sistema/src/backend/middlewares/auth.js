@@ -26,9 +26,10 @@ export async function authenticate(req, res, next) {
     // O nível é relido no banco para que mudanças de permissão valham mesmo com um JWT já emitido.
     const usuario = await prisma.usuario.findUnique({
       where: { id: payload.sub },
-      select: { id: true, nivel: true, ativo: true },
+      select: { id: true, nivel: true, ativo: true, versaoSessao: true },
     });
-    if (!usuario?.ativo) {
+    // JWTs antigos sem versão equivalem à versão inicial (zero).
+    if (!usuario?.ativo || (payload.versaoSessao ?? 0) !== usuario.versaoSessao) {
       return res
         .status(401)
         .json({ error: "Sessão inválida ou conta desativada." });
@@ -46,7 +47,7 @@ export function requireAdmin(req, res, next) {
   return next();
 }
 export function signToken(user) {
-  return jwt.sign({ sub: user.id, nivel: user.nivel }, secret(), {
+  return jwt.sign({ sub: user.id, nivel: user.nivel, versaoSessao: user.versaoSessao ?? 0 }, secret(), {
     expiresIn: "8h",
   });
 }
