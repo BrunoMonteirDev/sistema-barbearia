@@ -1,3 +1,4 @@
+/** Papel do módulo: Converte as ações de consulta e gravação de contatos da barbearia em respostas HTTP. */
 import { DadosConfiguracaoInvalidosError } from "./configuracao.service.js";
 export class ConfiguracaoController {
   configuracaoService;

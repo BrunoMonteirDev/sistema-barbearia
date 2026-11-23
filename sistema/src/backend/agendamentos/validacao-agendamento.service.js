@@ -1,3 +1,4 @@
+/** Papel do módulo: Valida formato de datas, horários, status e dados recebidos antes de executar operações de agenda. */
 import { isValidBlock } from "./horarios.service.js";
 import { horarioAgendamentoJaPassou } from "./regras-agendamento.service.js";
 const appointmentStatuses = [

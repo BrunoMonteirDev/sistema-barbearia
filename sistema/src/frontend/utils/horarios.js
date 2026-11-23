@@ -1,3 +1,4 @@
+/** Papel do módulo: Reúne funções de interface para gerar blocos de 30 minutos e formatar horários. */
 export const DIAS_SEMANA = [
   { value: 0, label: "Domingo" },
   { value: 1, label: "Segunda" },

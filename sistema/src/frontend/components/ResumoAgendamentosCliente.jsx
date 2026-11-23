@@ -1,3 +1,4 @@
+/** Papel do módulo: Resume os próximos agendamentos do cliente em um componente reutilizável. */
 import "./ResumoAgendamentosCliente.css";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowRight } from "lucide-react";

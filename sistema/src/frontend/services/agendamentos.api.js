@@ -1,3 +1,4 @@
+/** Papel do módulo: Define as chamadas HTTP para consultar, criar, cancelar e atualizar agendamentos. */
 import { request, body } from "../lib/http";
 export const agendamentos = {
   list: () => request("/agendamentos"),

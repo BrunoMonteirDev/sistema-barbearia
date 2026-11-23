@@ -1,3 +1,4 @@
+/** Papel do módulo: Renderiza a navegação lateral do painel administrativo e identifica a seção selecionada. */
 import "./Sidebar.css";
 import { LogOut, Scissors } from "lucide-react";
 import { Link, useLocation } from "wouter";

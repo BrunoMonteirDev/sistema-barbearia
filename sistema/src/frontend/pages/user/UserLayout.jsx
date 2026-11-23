@@ -1,3 +1,4 @@
+/** Papel do módulo: Fornece navegação e estrutura visual comum às páginas da área do cliente. */
 import "./UserLayout.css";
 import { useLocation } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";

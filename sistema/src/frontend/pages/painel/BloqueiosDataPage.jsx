@@ -1,3 +1,4 @@
+/** Papel do módulo: Permite ao administrador bloquear e liberar datas sem atendimento. */
 import "./BloqueiosDataPage.css";
 import { useEffect, useState } from "react";
 import { CalendarOff, Trash2 } from "lucide-react";

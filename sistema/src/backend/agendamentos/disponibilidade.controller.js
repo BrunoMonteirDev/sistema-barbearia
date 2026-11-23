@@ -1,3 +1,4 @@
+/** Papel do módulo: Recebe os parâmetros da consulta de horários e converte erros de entrada em respostas HTTP. */
 import { ParametrosDisponibilidadeInvalidosError } from "./disponibilidade.service.js";
 
 export class DisponibilidadeController {

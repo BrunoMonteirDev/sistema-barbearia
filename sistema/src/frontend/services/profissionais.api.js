@@ -1,3 +1,4 @@
+/** Papel do módulo: Define as chamadas HTTP para profissionais e suas disponibilidades. */
 import { request, body } from "../lib/http";
 export const profissionais = {
   list: () => request("/profissionais"),

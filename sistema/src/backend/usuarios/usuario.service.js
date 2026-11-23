@@ -1,3 +1,5 @@
+/** Papel do módulo: Coordena criação, atualização, conclusão de cadastro e anonimização de contas. */
+import { randomUUID } from "node:crypto";
 import { UsuarioRepository } from "./usuario.repository.js";
 import { gerarHash } from "../auth/senha.service.js";
 export class UsuarioService {
@@ -68,7 +70,21 @@ export class UsuarioService {
     return this.usuarioRepository.desativar(id);
   }
   async excluirPropriaConta(id) {
-    return this.usuarioRepository.desativar(id);
+    // O registro fica para preservar relações com agendamentos antigos, mas os dados pessoais são removidos.
+    return this.usuarioRepository.anonimizarConta(id, {
+      nome: "Conta excluída",
+      email: `conta-excluida-${randomUUID()}@anonimizada.local`,
+      telefone: null,
+      dataNascimento: null,
+      senhaHash: null,
+      provedorAuth: "LOCAL",
+      googleSubject: null,
+      cadastroConcluido: false,
+      fotoUrl: null,
+      nivel: "Cliente",
+      ativo: false,
+      atendimento: false,
+    });
   }
 }
 export const usuarioService = new UsuarioService(new UsuarioRepository());

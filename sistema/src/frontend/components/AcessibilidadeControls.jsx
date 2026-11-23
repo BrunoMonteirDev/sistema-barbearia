@@ -1,3 +1,4 @@
+/** Papel do módulo: Oferece controles de contraste, tamanho de texto, redução de animações e leitura em voz alta. */
 import "./AcessibilidadeControls.css";
 import { useEffect, useRef, useState } from "react";
 import { Accessibility, Eye, Square, Type, Volume2 } from "lucide-react";

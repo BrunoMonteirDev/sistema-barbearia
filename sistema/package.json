@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
     "dev:frontend": "vite --host 0.0.0.0 --port 5000",
-    "dev:backend": "node --watch --watch-preserve-output src/backend/server.js",
+    "dev:backend": "node --watch-path=src/backend --watch-path=.env --watch-preserve-output src/backend/server.js",
     "start": "node src/backend/server.js",
     "build": "npm run build:frontend && npm run build:backend",
     "build:frontend": "vite build",
@@ -43,5 +43,10 @@
     "postcss": "8.5.25",
     "prisma": "7.10.1",
     "vite": "6.4.6"
+  },
+  "allowScripts": {
+    "@prisma/engines@7.10.1": true,
+    "esbuild@0.25.12": true,
+    "prisma@7.10.1": true
   }
 }

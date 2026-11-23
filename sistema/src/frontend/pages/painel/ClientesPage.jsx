@@ -1,3 +1,4 @@
+/** Papel do módulo: Lista e gerencia os dados dos clientes na área administrativa. */
 import "./ClientesPage.css";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";

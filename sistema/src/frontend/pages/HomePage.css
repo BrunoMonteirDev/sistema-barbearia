@@ -1,3 +1,4 @@
+/* Papel do arquivo: estilos de Home Page; agrupa apresentação, estados visuais e ajustes responsivos da respectiva tela ou componente. */
 .pagina-inicial {
   min-height: 100vh;
   overflow-wrap: anywhere;
@@ -153,10 +154,9 @@
   min-width: 0;
   max-width: 60rem;
   border-radius: 1rem;
-  background-color: rgb(2 6 23);
+  background-color: transparent;
   padding: clamp(1.5rem, 2vw + 1rem, 3rem);
   color: rgb(255 255 255);
-  box-shadow: 0 24px 60px rgb(0 0 0 / 0.28);
 }
 
 .hero-inicial-titulo {
@@ -164,10 +164,12 @@
   font-weight: 800;
   line-height: 1.08;
   letter-spacing: -0.025em;
+  -webkit-text-stroke: 1.6px #000;
+  paint-order: stroke fill;
 }
 
 .hero-inicial-destaque {
-  color: rgb(252 165 165);
+  color: rgb(239 68 68);
 }
 
 .hero-inicial-descricao {

@@ -1,11 +1,15 @@
+// Papel do schema: descreve modelos, campos, relações e restrições que definem a estrutura persistida pelo PostgreSQL.
 generator client {
+  // Gera o cliente usado pelo backend para consultar o banco via Prisma.
   provider = "prisma-client-js"
 }
 
 datasource db {
+  // A URL da conexão é fornecida pelo ambiente em prisma.config.js.
   provider = "postgresql"
 }
 
+// Conta de cliente, funcionário ou administrador; o nível controla permissões no backend.
 model Usuario {
   id              String        @id @default(uuid())
   nome            String
@@ -27,6 +31,7 @@ model Usuario {
   @@map("usuarios")
 }
 
+// Profissionais atendem agendamentos e possuem blocos de disponibilidade por dia da semana.
 model Profissional {
   id                String                       @id @default(uuid())
   nome              String
@@ -42,6 +47,7 @@ model Profissional {
   @@map("profissionais")
 }
 
+// Catálogo de serviços; duração e preço são usados na seleção e no cálculo da agenda.
 model Servico {
   id            String         @id @default(uuid())
   nome          String
@@ -56,6 +62,7 @@ model Servico {
   @@map("servicos")
 }
 
+// Reserva que liga cliente, profissional e serviço a uma data, horário e status.
 model Agendamento {
   id              String        @id @default(uuid())
   usuarioId       String        @map("usuario_id")
@@ -76,6 +83,7 @@ model Agendamento {
   @@map("agendamentos")
 }
 
+// Registra alterações de uma reserva para manter uma trilha de auditoria.
 model HistoricoAgendamento {
   id              String       @id @default(uuid())
   agendamentoId   String       @map("agendamento_id")
@@ -89,6 +97,7 @@ model HistoricoAgendamento {
   @@map("historicos_agendamentos")
 }
 
+// Cada linha representa um bloco de 30 minutos em que um profissional pode atender.
 model DisponibilidadeProfissional {
   id              String        @id @default(uuid())
   profissionalId  String        @map("profissional_id")
@@ -100,6 +109,7 @@ model DisponibilidadeProfissional {
   @@map("profissionais_disponibilidades")
 }
 
+// Dias em que novos agendamentos devem ser ocultados por decisão administrativa.
 model BloqueioData {
   id        String   @id @default(uuid())
   data      String   @unique @db.VarChar(10)
@@ -109,6 +119,7 @@ model BloqueioData {
   @@map("bloqueios_datas")
 }
 
+// Dados de contato e regras gerais exibidas ou aplicadas pela barbearia.
 model Configuracao {
   id                String    @id @default(uuid())
   nome              String    @default("Barbearia")

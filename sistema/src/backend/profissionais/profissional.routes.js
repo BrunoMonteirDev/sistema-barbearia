@@ -1,3 +1,4 @@
+/** Papel do módulo: Define os endpoints de profissionais e protege as operações administrativas. */
 import { Router } from "express";
 import { ProfissionalController } from "./profissional.controller.js";
 import { authenticate, requireAdmin } from "../middlewares/auth.js";

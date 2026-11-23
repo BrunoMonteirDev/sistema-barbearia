@@ -1,3 +1,4 @@
+/** Papel do módulo: Apresenta os filtros de cliente, profissional, status e data usados na agenda administrativa. */
 import { statusLabels } from "./agendaVisualizacao";
 function FiltroSelecao({ titulo, valor, alterar, children }) {
   return (

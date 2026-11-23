@@ -1,3 +1,4 @@
+/** Papel do módulo: Renderiza os agendamentos em tabela e oferece ações contextuais para cada reserva. */
 import { CheckCircle2, Eye, XCircle } from "lucide-react";
 import { statusLabels, statusStyle } from "./agendaVisualizacao";
 function Acao({ titulo, executar, disabled, children }) {

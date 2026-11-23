@@ -1,3 +1,4 @@
+/* Papel do arquivo: estilos de Confirmacao Agendamento Repetido Modal; agrupa apresentação, estados visuais e ajustes responsivos da respectiva tela ou componente. */
 .repeticao-mensagem { font-size: .875rem; line-height: 1.25rem; color: #334155; }
 .repeticao-agendamentos { margin-top: 1rem; }
 .repeticao-agendamentos > * + * { margin-top: .5rem; }

@@ -1,3 +1,4 @@
+/** Papel do módulo: Monta a aplicação Express, configura middlewares e conecta cada grupo de rotas da API. */
 import express from "express";
 import cors from "cors";
 import authRoutes from "./auth/auth.routes.js";

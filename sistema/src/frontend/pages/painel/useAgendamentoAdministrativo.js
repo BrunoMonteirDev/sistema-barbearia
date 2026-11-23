@@ -1,3 +1,4 @@
+/** Papel do módulo: Controla o estado e as consultas de disponibilidade no assistente de agendamento administrativo. */
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { ApiError, api } from "@/lib/api";

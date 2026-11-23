@@ -1,3 +1,4 @@
+/** Papel do módulo: Expõe os endpoints públicos de login, cadastro e autenticação com Google. */
 import { Router } from "express";
 import { AuthController } from "./auth.controller.js";
 import { AuthService } from "./auth.service.js";

@@ -1,3 +1,4 @@
+/** Papel do módulo: Busca, cria, atualiza e desativa serviços no banco de dados. */
 import { prisma } from "../lib/prisma.js";
 export class ServicoRepository {
   listarAtivos() {

@@ -1,3 +1,4 @@
+/** Papel do módulo: Centraliza a persistência e a consulta de usuários, inclusive a anonimização de contas excluídas. */
 import { prisma } from "../lib/prisma.js";
 export class UsuarioRepository {
   listarAtivos() {
@@ -23,5 +24,8 @@ export class UsuarioRepository {
   }
   desativar(id) {
     return prisma.usuario.update({ where: { id }, data: { ativo: false } });
+  }
+  anonimizarConta(id, dados) {
+    return prisma.usuario.update({ where: { id }, data: dados });
   }
 }

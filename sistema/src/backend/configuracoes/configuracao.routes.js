@@ -1,3 +1,4 @@
+/** Papel do módulo: Define as rotas de configuração e restringe alterações a administradores autenticados. */
 import { Router } from "express";
 import { ConfiguracaoController } from "./configuracao.controller.js";
 import { ConfiguracaoService } from "./configuracao.service.js";

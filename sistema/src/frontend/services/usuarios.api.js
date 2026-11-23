@@ -1,3 +1,4 @@
+/** Papel do módulo: Define as chamadas HTTP para perfil, cadastro, atualização e gestão de usuários. */
 import { request, body } from "../lib/http";
 export const usuarios = {
   me: () => request("/usuarios/me"),

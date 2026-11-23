@@ -1,3 +1,4 @@
+/** Papel do módulo: Reúne validações de senha usadas pela interface antes do envio ao backend. */
 const simbolos = "!@#$%*?_-";
 export function gerarSenhaForte(tamanho = 14) {
   const grupos = [

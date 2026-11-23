@@ -1,6 +1,9 @@
+/** Papel do módulo: Calcula blocos de 30 minutos, duração dos serviços e sobreposição entre atendimentos. */
 import { prisma } from "../lib/prisma.js";
 import { DisponibilidadeRepository } from "./disponibilidade.repository.js";
 export const BLOCK_MINUTES = 30;
+
+// Durações que não são múltiplas de 30 ocupam o próximo bloco inteiro da agenda.
 export function arredondarDuracaoParaBloco(duracao) {
   if (!Number.isFinite(duracao) || duracao <= 0) return BLOCK_MINUTES;
   return Math.ceil(duracao / BLOCK_MINUTES) * BLOCK_MINUTES;
@@ -39,6 +42,7 @@ export function temBlocosConsecutivos(disponiveis, inicio, duracao) {
   );
 }
 export function temConflito(inicioA, duracaoA, inicioB, duracaoB) {
+  // Há conflito quando os intervalos se cruzam, mesmo que os horários de início sejam diferentes.
   const aInicio = converterHorarioParaMinutos(inicioA);
   const aFim = aInicio + arredondarDuracaoParaBloco(duracaoA);
   const bInicio = converterHorarioParaMinutos(inicioB);

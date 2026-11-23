@@ -1,3 +1,4 @@
+/** Papel do módulo: Carrega o serviço oficial de identidade do Google e devolve o token de credencial ao fluxo de autenticação. */
 import "./GoogleLoginButton.css";
 import { useEffect, useRef } from "react";
 const scriptId = "google-identity-services";

@@ -1,3 +1,4 @@
+/** Papel do módulo: Serializa gravações concorrentes da agenda com locks transacionais do PostgreSQL para evitar reservas conflitantes. */
 import { prisma } from "../lib/prisma.js";
 export class HorarioIndisponivelError extends Error {
   constructor() {

@@ -1,3 +1,4 @@
+/** Papel do módulo: Renderiza os cartões da agenda diária e semanal e associa a cada um as ações administrativas. */
 import { datasDaSemana, statusLabels, statusStyle } from "./agendaVisualizacao";
 function CartaoAgendamento({
   agendamento,
@@ -110,6 +111,7 @@ export function AgendaSemanal({ items, dataReferencia, ...acoes }) {
   return (
     <div className="agenda-semanal-admin">
       {datasDaSemana(dataReferencia).map((data) => {
+        // O filtro cria uma nova lista antes da ordenação e não altera a propriedade recebida pelo componente.
         const agendamentosDoDia = items
           .filter((agendamento) => agendamento.data === data)
           .sort((primeiro, segundo) =>

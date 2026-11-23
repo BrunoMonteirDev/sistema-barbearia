@@ -1,3 +1,4 @@
+/** Papel do módulo: Valida e coordena o cadastro e a remoção de bloqueios de datas na agenda. */
 import { prisma } from "../lib/prisma.js";
 import { isValidDate } from "./validacao-agendamento.service.js";
 

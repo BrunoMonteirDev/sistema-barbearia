@@ -1,3 +1,4 @@
+/** Papel do módulo: Apresenta edição do perfil do cliente e a confirmação de exclusão da conta. */
 import "./MinhaContaPage.css";
 import { useLocation } from "wouter";
 import { UserLayout } from "./UserLayout";
@@ -64,8 +65,9 @@ export default function MinhaContaPage() {
             <section className="secao-excluir-conta">
               <h2 className="titulo-excluir-conta">Excluir conta</h2>
               <p className="aviso-excluir-conta">
-                Esta ação desativa seu acesso e encerra sua sessão. O histórico
-                de agendamentos pode ser mantido quando necessário. Digite{" "}
+                Esta ação remove seus dados pessoais e libera seu e-mail para
+                um novo cadastro. O histórico de agendamentos será mantido com
+                a identificação genérica “Conta excluída”. Digite{" "}
                 <strong>EXCLUIR MINHA CONTA</strong> para confirmar.
               </p>
               <form

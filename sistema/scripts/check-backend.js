@@ -2,6 +2,7 @@ import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
 
+// Verifica sintaxe do backend durante o build; não substitui testes funcionais.
 function javascriptFiles(directory) {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const path = join(directory, entry.name);

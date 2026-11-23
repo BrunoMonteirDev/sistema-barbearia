@@ -1,3 +1,4 @@
+/** Papel do módulo: Reúne regras temporais do agendamento, como horário passado, antecedência e identificação de atrasos. */
 import { prisma } from "../lib/prisma.js";
 export async function regrasAgendamento() {
   return {

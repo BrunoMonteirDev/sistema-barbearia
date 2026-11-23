@@ -1,3 +1,4 @@
+/** Papel do módulo: Cria, edita e desativa profissionais e abre o editor de suas disponibilidades. */
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import "./FuncionariosPage.css";

@@ -1,3 +1,4 @@
+/** Papel do módulo: Define consulta pública de serviços e restringe alterações a administradores autenticados. */
 import { Router } from "express";
 import { ServicoController } from "./servico.controller.js";
 import { authenticate, requireAdmin } from "../middlewares/auth.js";

@@ -1,3 +1,4 @@
+/** Papel do módulo: Redireciona usuários não autenticados ou com nível incompatível antes de mostrar páginas protegidas. */
 import { useLocation } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
 export function AdminRoute({ component: Component }) {

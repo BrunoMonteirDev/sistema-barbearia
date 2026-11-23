@@ -1,3 +1,4 @@
+/** Papel do módulo: Exibe os profissionais e disponibiliza ações administrativas sobre cada linha. */
 export function TabelaFuncionarios({
   funcionarios,
   carregando,

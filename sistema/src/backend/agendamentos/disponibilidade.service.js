@@ -1,3 +1,4 @@
+/** Papel do módulo: Combina calendário, horários livres, antecedência e bloqueios para responder quais opções podem ser mostradas ao cliente. */
 import {
   escolherPrimeiroProfissionalDisponivel,
   listarBlocosConfiguradosParaData,

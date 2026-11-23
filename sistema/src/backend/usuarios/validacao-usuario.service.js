@@ -1,3 +1,4 @@
+/** Papel do módulo: Normaliza e valida os dados de perfil, telefone, senha e confirmação de exclusão. */
 import { randomUUID } from "node:crypto";
 import { validarSenha } from "../auth/senha.service.js";
 export class DadosUsuarioInvalidosError extends Error {}
@@ -55,7 +56,7 @@ export function prepararConclusaoCadastro(body) {
   const nome = typeof body.nome === "string" ? body.nome.trim() : "";
   const telefone =
     typeof body.telefone === "string" ? body.telefone.replace(/\D/g, "") : "";
-  if (nome.length < 2 || telefone.length < 10) {
+  if (nome.length < 2 || telefone.length < 10 || telefone.length > 11) {
     throw new DadosUsuarioInvalidosError(
       "Informe nome e telefone válidos para concluir o cadastro.",
     );

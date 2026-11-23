@@ -1,3 +1,4 @@
+/** Papel do módulo: Define os endpoints administrativos que controlam datas sem atendimento. */
 import { Router } from "express";
 import { BloqueioDataController } from "./bloqueio-data.controller.js";
 

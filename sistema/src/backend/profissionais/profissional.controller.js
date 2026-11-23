@@ -1,3 +1,4 @@
+/** Papel do módulo: Adapta as operações de profissionais e suas disponibilidades para o protocolo HTTP. */
 import {
   DadosProfissionalInvalidosError,
   ProfissionalNaoEncontradoError,

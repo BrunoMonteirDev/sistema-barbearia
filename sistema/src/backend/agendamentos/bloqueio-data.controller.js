@@ -1,3 +1,4 @@
+/** Papel do módulo: Adapta as ações de consulta, criação e remoção de datas bloqueadas para o protocolo HTTP. */
 import {
   bloqueioDataService,
   BloqueioDataError,

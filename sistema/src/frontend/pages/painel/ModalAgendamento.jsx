@@ -1,3 +1,4 @@
+/** Papel do módulo: Mostra os detalhes de um agendamento selecionado no painel. */
 import { Modal } from "@/components/ui/modal";
 import { statusLabels } from "./agendaVisualizacao";
 

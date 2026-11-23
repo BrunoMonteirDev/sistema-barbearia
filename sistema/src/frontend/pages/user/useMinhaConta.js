@@ -1,3 +1,4 @@
+/** Papel do módulo: Concentra carregamento, edição e exclusão da conta na área do cliente. */
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { api } from "@/lib/api";

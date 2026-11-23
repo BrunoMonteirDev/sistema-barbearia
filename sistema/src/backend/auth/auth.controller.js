@@ -1,3 +1,4 @@
+/** Papel do módulo: Recebe login, cadastro e autenticação Google e devolve respostas HTTP sem concentrar regras de negócio. */
 export class AuthController {
   authService;
   constructor(authService) {

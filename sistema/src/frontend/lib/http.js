@@ -1,3 +1,4 @@
+/** Papel do módulo: Centraliza fetch, token de autorização, serialização JSON e conversão de erros HTTP. */
 export class ApiError extends Error {
   codigo;
   agendamentosRelacionados;

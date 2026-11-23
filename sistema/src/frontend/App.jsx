@@ -1,3 +1,4 @@
+/** Papel do módulo: Organiza as rotas visuais do site e envolve as páginas com contexto de autenticação e componentes globais. */
 import "./App.css";
 import { Route, Switch } from "wouter";
 import { Toaster, ToastBar, toast } from "react-hot-toast";

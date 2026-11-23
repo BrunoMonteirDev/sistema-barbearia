@@ -1,3 +1,4 @@
+/** Papel do módulo: Implementa a estrutura reutilizável de modal e diálogo de confirmação com foco e semântica acessíveis. */
 import "./modal.css";
 import { useEffect, useId, useRef } from "react";
 export function Modal({ title, children, onClose, footer, size = "default" }) {

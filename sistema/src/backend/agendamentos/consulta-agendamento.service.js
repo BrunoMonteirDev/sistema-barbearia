@@ -1,3 +1,4 @@
+/** Papel do módulo: Aplica regras de consulta, autorização por proprietário e leitura do histórico dos agendamentos. */
 import { AgendamentoRepository } from "./agendamento.repository.js";
 import { atualizarAtrasados } from "./regras-agendamento.service.js";
 import { ValidacaoAgendamentoError } from "./validacao-agendamento.service.js";

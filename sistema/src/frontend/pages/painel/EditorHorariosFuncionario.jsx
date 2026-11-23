@@ -1,3 +1,4 @@
+/** Papel do módulo: Permite marcar, remover e copiar blocos de disponibilidade semanal de profissionais. */
 import { Copy, Eraser, ListChecks } from "lucide-react";
 import { DIAS_SEMANA, obterBlocos } from "@/utils/horarios";
 const blocos = obterBlocos("00:00", "24:00");

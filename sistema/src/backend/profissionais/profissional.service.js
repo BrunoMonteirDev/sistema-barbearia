@@ -1,3 +1,4 @@
+/** Papel do módulo: Valida os dados dos profissionais e transforma a disponibilidade semanal para persistência. */
 import { isValidBlock } from "../agendamentos/horarios.service.js";
 export class DadosProfissionalInvalidosError extends Error {}
 export class ProfissionalNaoEncontradoError extends Error {}

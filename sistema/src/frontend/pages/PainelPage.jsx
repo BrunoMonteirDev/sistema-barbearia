@@ -1,3 +1,4 @@
+/** Papel do módulo: Organiza as rotas internas e o layout principal do painel administrativo. */
 import "./PainelPage.css";
 import { Route, Switch, useLocation } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";

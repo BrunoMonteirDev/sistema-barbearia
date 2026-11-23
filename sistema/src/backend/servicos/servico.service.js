@@ -1,3 +1,4 @@
+/** Papel do módulo: Valida nome, preço, duração e estado antes de solicitar alterações no repositório. */
 export class DadosServicoInvalidosError extends Error {}
 function validarDadosServico(body, parcial = false) {
   const dados = {};

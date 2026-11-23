@@ -1,3 +1,4 @@
+/** Papel do módulo: Carrega agenda, clientes, profissionais e serviços para as páginas do painel. */
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { api } from "@/lib/api";

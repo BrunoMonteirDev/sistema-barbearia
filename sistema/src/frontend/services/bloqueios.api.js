@@ -1,3 +1,4 @@
+/** Papel do módulo: Define as chamadas HTTP para consultar e administrar datas bloqueadas. */
 import { request, body } from "../lib/http";
 
 export const bloqueios = {

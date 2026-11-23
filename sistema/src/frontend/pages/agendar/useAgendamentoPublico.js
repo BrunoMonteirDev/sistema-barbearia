@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+/** Papel do módulo: Mantém o estado e as regras do fluxo público, incluindo disponibilidade, retorno do login e confirmação da reserva. */
+import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "wouter";
 import toast from "react-hot-toast";
 import { ApiError, api } from "@/lib/api";
@@ -26,19 +27,55 @@ export const anosDisponiveis = Array.from(
   { length: 6 },
   (_, indice) => anoAtual + indice,
 );
+const chaveRascunhoAgendamento = "barbearia.agendamento.em-andamento";
+const validadeRascunhoAgendamentoMs = 30 * 60 * 1000;
+
+function limparRascunhoAgendamento() {
+  try {
+    sessionStorage.removeItem(chaveRascunhoAgendamento);
+  } catch {
+    // Alguns navegadores podem bloquear o armazenamento da sessão.
+  }
+}
+
+function dadosDoRascunho() {
+  // A sessão do navegador preserva escolhas durante o login e descarta rascunhos com mais de 30 minutos.
+  try {
+    const salvo = JSON.parse(
+      sessionStorage.getItem(chaveRascunhoAgendamento) ?? "null",
+    );
+    if (
+      !salvo?.form ||
+      Date.now() - salvo.salvoEm > validadeRascunhoAgendamentoMs ||
+      !salvo.form.profissionalId ||
+      !salvo.form.servicoId ||
+      !salvo.form.data ||
+      !salvo.form.hora
+    ) {
+      limparRascunhoAgendamento();
+      return null;
+    }
+    return salvo.form;
+  } catch {
+    return null;
+  }
+}
+
 function obterDadosDaRevisao() {
   const parametros = new URLSearchParams(window.location.search);
   const profissionalId = parametros.get("profissionalId");
   const servicoId = parametros.get("servicoId");
   const data = parametros.get("data");
   const hora = parametros.get("hora");
-  return parametros.get("revisao") === "1" &&
+  // A URL permite voltar diretamente à revisão; o rascunho cobre retornos sem todos os parâmetros.
+  const dadosDaUrl = parametros.get("revisao") === "1" &&
     profissionalId &&
     servicoId &&
     data &&
     hora
     ? { profissionalId, servicoId, data, hora }
     : null;
+  return dadosDaUrl ?? dadosDoRascunho();
 }
 function formatarDataLocal(data) {
   return `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, "0")}-${String(data.getDate()).padStart(2, "0")}`;
@@ -50,7 +87,6 @@ export function useAgendamentoPublico() {
     new URLSearchParams(window.location.search).get("origem") ===
     "meus-agendamentos";
   const dadosDaRevisao = useMemo(obterDadosDaRevisao, []);
-  const preservarHorarioInicial = useRef(Boolean(dadosDaRevisao));
   const [etapa, setEtapa] = useState(dadosDaRevisao ? 4 : 1);
   const [servicos, setServicos] = useState([]);
   const [profissionais, setProfissionais] = useState([]);
@@ -60,7 +96,9 @@ export function useAgendamentoPublico() {
   const [confirmacaoHorarioProximo, setConfirmacaoHorarioProximo] =
     useState(false);
   const [carregandoHorarios, setCarregandoHorarios] = useState(false);
-  const [revisaoAceita, setRevisaoAceita] = useState(false);
+  const [revisaoAceita, setRevisaoAceita] = useState(
+    Boolean(dadosDaRevisao),
+  );
   const [confirmacaoRepeticao, setConfirmacaoRepeticao] = useState(null);
   const [mesExibido, setMesExibido] = useState(() => {
     const dataInicial = dadosDaRevisao?.data
@@ -119,9 +157,6 @@ export function useAgendamentoPublico() {
   const mesAnteriorBloqueado =
     mesExibido.getFullYear() === anoAtual && mesExibido.getMonth() === mesAtual;
   useEffect(() => {
-    if (preservarHorarioInicial.current)
-      preservarHorarioInicial.current = false;
-    else setForm((atual) => ({ ...atual, hora: "" }));
     setConfirmacaoHorarioProximo(false);
     setHorarios([]);
     setHorariosComAvisoAntecedencia([]);
@@ -176,7 +211,17 @@ export function useAgendamentoPublico() {
     if (etapa !== 4 || !revisaoAceita)
       return toast.error("Revise os dados do agendamento antes de confirmar.");
     const retorno = `/agendamento?${new URLSearchParams({ revisao: "1", ...form }).toString()}`;
-    if (!user) return go(`/login?retorno=${encodeURIComponent(retorno)}`);
+    if (!user) {
+      try {
+        sessionStorage.setItem(
+          chaveRascunhoAgendamento,
+          JSON.stringify({ form, salvoEm: Date.now() }),
+        );
+      } catch {
+        // O retorno na URL continua disponível se o navegador bloquear o armazenamento.
+      }
+      return go(`/login?retorno=${encodeURIComponent(retorno)}`);
+    }
     if (user.cadastroConcluido === false) {
       toast.error("Conclua seu cadastro antes de confirmar um agendamento.");
       return go(`/concluir-cadastro?retorno=${encodeURIComponent(retorno)}`);
@@ -185,6 +230,7 @@ export function useAgendamentoPublico() {
       return toast.error("Selecione um horário disponível.");
     try {
       await api.agendamentos.create(form);
+      limparRascunhoAgendamento();
       toast.success("Agendamento criado.");
       go("/minha-conta");
     } catch (error) {
@@ -212,6 +258,7 @@ export function useAgendamentoPublico() {
         ...confirmacaoRepeticao.snapshot,
         tokenConfirmacaoRepeticao: confirmacaoRepeticao.token,
       });
+      limparRascunhoAgendamento();
       toast.success("Agendamento criado.");
       setConfirmacaoRepeticao(null);
       go("/minha-conta");
@@ -229,8 +276,10 @@ export function useAgendamentoPublico() {
       );
     }
   };
-  const voltar = () =>
+  const voltar = () => {
+    limparRascunhoAgendamento();
     go(voltarParaAgendamentos ? "/minha-conta/agendamentos" : "/");
+  };
   return {
     user,
     etapa,

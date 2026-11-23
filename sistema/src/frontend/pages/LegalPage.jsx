@@ -1,3 +1,4 @@
+/** Papel do módulo: Exibe os textos de privacidade, termos de uso e política de cookies. */
 import "./LegalPage.css";
 import { Link } from "wouter";
 const paginas = {
@@ -24,7 +25,7 @@ const paginas = {
       {
         titulo: "Seus direitos",
         texto:
-          "Você pode atualizar seus dados em Minha conta. Também pode excluir a conta: o acesso é desativado e a sessão encerrada; registros de agendamentos podem ser mantidos quando necessários para histórico, segurança e obrigações legais.",
+          "Você pode atualizar seus dados em Minha conta. Ao excluir a conta, os dados pessoais de perfil e acesso são removidos, o e-mail fica liberado para um novo cadastro e os agendamentos são mantidos com a identificação genérica Conta excluída.",
       },
     ],
   },

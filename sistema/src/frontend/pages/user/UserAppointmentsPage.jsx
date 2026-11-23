@@ -1,3 +1,4 @@
+/** Papel do módulo: Mostra os agendamentos do cliente e permite consultar ou cancelar reservas permitidas. */
 import "./UserAppointmentsPage.css";
 import { Link } from "wouter";
 import { CalendarPlus, History } from "lucide-react";

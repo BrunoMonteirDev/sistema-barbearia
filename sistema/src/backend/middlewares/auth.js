@@ -1,3 +1,4 @@
+/** Papel do módulo: Verifica tokens JWT, confirma no banco se a conta está ativa e aplica a autorização administrativa. */
 import jwt from "jsonwebtoken";
 import { prisma } from "../lib/prisma.js";
 const secret = () => {
@@ -22,6 +23,7 @@ export async function authenticate(req, res, next) {
   }
 
   try {
+    // O nível é relido no banco para que mudanças de permissão valham mesmo com um JWT já emitido.
     const usuario = await prisma.usuario.findUnique({
       where: { id: payload.sub },
       select: { id: true, nivel: true, ativo: true },

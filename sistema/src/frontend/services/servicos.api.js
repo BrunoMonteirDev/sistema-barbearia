@@ -1,3 +1,4 @@
+/** Papel do módulo: Define as chamadas HTTP para consultar e administrar serviços. */
 import { request, body } from "../lib/http";
 export const servicos = {
   list: () => request("/servicos"),

@@ -1,3 +1,4 @@
+/** Papel do módulo: Encapsula a síntese de voz do navegador para leitura de textos da interface. */
 import { useCallback, useEffect, useRef, useState } from "react";
 function recursoDisponivel() {
   return (

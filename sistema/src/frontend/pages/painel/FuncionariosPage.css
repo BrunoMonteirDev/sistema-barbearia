@@ -1,3 +1,4 @@
+/* Papel do arquivo: estilos de Funcionarios Page; agrupa apresentação, estados visuais e ajustes responsivos da respectiva tela ou componente. */
 .pagina-profissionais > * + * {
   margin-top: 1.25rem;
 }

@@ -1,3 +1,4 @@
+/** Papel do módulo: Centraliza as consultas e gravações de agendamentos e do histórico usando o Prisma. */
 import { prisma } from "../lib/prisma.js";
 import { usuarioPublicoSelect } from "../usuarios/usuario.dto.js";
 export class AgendamentoRepository {
@@ -13,7 +14,8 @@ export class AgendamentoRepository {
         profissional: true,
         servico: true,
       },
-      orderBy: { createdAt: "desc" },
+      // A listagem geral fica em ordem cronológica pelo dia e pelo horário do atendimento.
+      orderBy: [{ data: "asc" }, { hora: "asc" }],
     });
   }
   buscarPorId(id) {

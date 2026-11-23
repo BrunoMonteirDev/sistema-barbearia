@@ -1,3 +1,4 @@
+/** Papel do módulo: Cria, edita, lista e desativa os serviços oferecidos pela barbearia. */
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { api } from "@/lib/api";

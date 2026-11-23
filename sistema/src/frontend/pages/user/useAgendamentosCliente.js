@@ -1,3 +1,4 @@
+/** Papel do módulo: Carrega e atualiza a lista de agendamentos pertencentes ao cliente autenticado. */
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { api } from "@/lib/api";

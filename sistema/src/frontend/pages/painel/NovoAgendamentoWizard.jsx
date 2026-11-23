@@ -1,3 +1,4 @@
+/** Papel do módulo: Guia o administrador pela criação de uma reserva em nome de um cliente. */
 import "./NovoAgendamentoWizard.css";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { Modal } from "@/components/ui/modal";

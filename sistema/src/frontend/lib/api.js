@@ -1,3 +1,4 @@
+/** Papel do módulo: Agrupa os clientes de cada domínio para disponibilizar uma interface única de chamadas à API. */
 import { auth } from "../services/auth.api";
 import { usuarios } from "../services/usuarios.api";
 import { servicos } from "../services/servicos.api";

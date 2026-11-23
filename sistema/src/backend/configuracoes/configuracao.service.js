@@ -1,3 +1,4 @@
+/** Papel do módulo: Valida os contatos informados e escolhe entre criar a primeira configuração ou atualizar a existente. */
 export class DadosConfiguracaoInvalidosError extends Error {}
 function dadosContatoValidos(body) {
   const telefoneWhatsApp =

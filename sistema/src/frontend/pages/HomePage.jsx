@@ -1,3 +1,4 @@
+/** Papel do módulo: Apresenta a página inicial, links de acesso e contatos públicos configurados pela barbearia. */
 import "./HomePage.css";
 import {
   CalendarDays,

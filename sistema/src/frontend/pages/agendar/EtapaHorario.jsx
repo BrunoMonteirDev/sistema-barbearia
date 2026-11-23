@@ -1,3 +1,4 @@
+/** Papel do módulo: Apresenta calendário e horários disponíveis e permite selecionar o horário do agendamento público. */
 import { AlertTriangle, ChevronLeft, ChevronRight, Clock3 } from "lucide-react";
 import { ResumoAgendamentosCliente } from "@/components/ResumoAgendamentosCliente";
 import { arredondarDuracaoParaBloco } from "@/utils/horarios";

@@ -1,3 +1,4 @@
+/** Papel do módulo: Implementa autenticação local e Google, associação de contas e criação dos dados da sessão. */
 import { OAuth2Client } from "google-auth-library";
 import { compararSenha, validarSenha } from "./senha.service.js";
 import { signToken } from "../middlewares/auth.js";
@@ -22,6 +23,13 @@ export class AuthService {
     return senhaValida ? usuario : null;
   }
   async cadastrarUsuario(dados) {
+    const telefone =
+      typeof dados.telefone === "string"
+        ? dados.telefone.replace(/\D/g, "")
+        : "";
+    if (telefone.length < 10 || telefone.length > 11)
+      return { erro: "Informe um telefone válido com DDD." };
+
     const erroSenha = validarSenha(dados.senha);
     if (erroSenha) return { erro: erroSenha };
     const existente = await this.usuarioService.buscarPorEmail(dados.email);
@@ -30,7 +38,7 @@ export class AuthService {
     const usuario = await this.usuarioService.criar({
       nome: dados.nome,
       email: dados.email,
-      telefone: dados.telefone,
+      telefone,
       senha: dados.senha,
       nivel: "Cliente",
     });

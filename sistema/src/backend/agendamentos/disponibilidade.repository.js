@@ -1,3 +1,4 @@
+/** Papel do módulo: Busca no banco os horários configurados, serviços ativos, profissionais e reservas que afetam a disponibilidade. */
 import { prisma } from "../lib/prisma.js";
 export class DisponibilidadeRepository {
   db;

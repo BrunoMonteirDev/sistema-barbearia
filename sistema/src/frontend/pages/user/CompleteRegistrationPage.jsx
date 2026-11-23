@@ -1,3 +1,4 @@
+/** Papel do módulo: Solicita os dados que faltam após o primeiro login Google e conclui o perfil do cliente. */
 import "./CompleteRegistrationPage.css";
 import { useState } from "react";
 import { useLocation } from "wouter";

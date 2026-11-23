@@ -1,3 +1,4 @@
+/** Papel do módulo: Compartilha rótulos de status e funções para calcular e nomear os dias mostrados na agenda. */
 export const statusLabels = {
   PENDENTE: "Pendente",
   CONFIRMADO: "Confirmado",

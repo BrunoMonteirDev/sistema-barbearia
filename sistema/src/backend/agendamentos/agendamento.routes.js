@@ -1,3 +1,4 @@
+/** Papel do módulo: Declara os endpoints de agendamento e quais operações exigem autenticação ou permissão administrativa. */
 import { Router } from "express";
 import { requireAdmin } from "../middlewares/auth.js";
 import { AgendamentoController } from "./agendamento.controller.js";

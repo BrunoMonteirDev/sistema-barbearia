@@ -1,3 +1,4 @@
+/** Papel do módulo: Centraliza as consultas, alterações e substituição transacional dos horários dos profissionais. */
 import { prisma } from "../lib/prisma.js";
 export class ProfissionalRepository {
   listarAtivos() {

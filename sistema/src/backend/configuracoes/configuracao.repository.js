@@ -1,3 +1,4 @@
+/** Papel do módulo: Faz a leitura e a persistência dos dados de configuração no PostgreSQL por meio do Prisma. */
 import { prisma } from "../lib/prisma.js";
 export class ConfiguracaoRepository {
   buscar() {

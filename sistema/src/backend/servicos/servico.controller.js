@@ -1,3 +1,4 @@
+/** Papel do módulo: Recebe operações sobre serviços e transforma resultados ou erros em respostas HTTP. */
 import { DadosServicoInvalidosError } from "./servico.service.js";
 export class ServicoController {
   servicoService;

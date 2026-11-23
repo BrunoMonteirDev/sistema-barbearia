@@ -1,3 +1,4 @@
+/** Papel do módulo: Apresenta o aviso de cookies e registra a escolha feita neste navegador. */
 import "./CookieNotice.css";
 import { useState } from "react";
 import { Link } from "wouter";

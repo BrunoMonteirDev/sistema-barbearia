@@ -1,3 +1,4 @@
+/** Papel do módulo: Define rotas de perfil e gestão de usuários, aplicando autorização administrativa onde necessário. */
 import { Router } from "express";
 import { UsuarioController } from "./usuario.controller.js";
 import { requireAdmin } from "../middlewares/auth.js";

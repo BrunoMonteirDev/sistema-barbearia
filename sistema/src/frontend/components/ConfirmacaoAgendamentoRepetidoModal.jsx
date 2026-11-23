@@ -1,3 +1,4 @@
+/** Papel do módulo: Pede uma confirmação explícita quando o cliente tenta criar uma reserva possivelmente repetida. */
 import "./ConfirmacaoAgendamentoRepetidoModal.css";
 import { useEffect, useState } from "react";
 import { Modal } from "./ui/modal";

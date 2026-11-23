@@ -1,3 +1,4 @@
+/** Papel do módulo: Gera e compara hashes de senha e aplica os critérios mínimos de segurança definidos pelo sistema. */
 import bcrypt from "bcryptjs";
 export function gerarHash(senha) {
   return bcrypt.hash(senha, 10);

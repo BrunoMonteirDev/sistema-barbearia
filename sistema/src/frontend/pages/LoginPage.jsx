@@ -1,3 +1,4 @@
+/** Papel do módulo: Apresenta login, cadastro de cliente e entrada com Google, preservando o destino de retorno. */
 import "./LoginPage.css";
 import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
@@ -5,6 +6,7 @@ import { useLocation } from "wouter";
 import toast from "react-hot-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { GoogleLoginButton } from "@/components/GoogleLoginButton";
+import { formatarTelefoneBrasileiro } from "@/utils/telefone";
 export function destinoAposLoginGoogle(cadastroConcluido) {
   return cadastroConcluido === false ? "/concluir-cadastro" : "/minha-conta";
 }
@@ -20,6 +22,7 @@ export default function LoginPage() {
   const [register, setRegister] = useState(false);
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
+  const [telefone, setTelefone] = useState("");
   const [senha, setSenha] = useState("");
   const [senhaVisivel, setSenhaVisivel] = useState(false);
   const [autenticandoGoogle, setAutenticandoGoogle] = useState(false);
@@ -32,7 +35,7 @@ export default function LoginPage() {
   const enviarFormulario = async (event) => {
     event.preventDefault();
     try {
-      if (register) await signUp(nome, email, senha);
+      if (register) await signUp(nome, email, senha, telefone);
       else await signIn(email, senha);
       toast.success("Acesso realizado.");
       go(retorno ?? (register ? "/minha-conta" : "/"));
@@ -92,6 +95,26 @@ export default function LoginPage() {
               className="input-login"
               value={nome}
               onChange={(event) => setNome(event.target.value)}
+            />
+          </label>
+        )}
+        {register && (
+          <label className="rotulo-login" htmlFor="telefone">
+            <span>Telefone com DDD</span>
+            <input
+              id="telefone"
+              required
+              type="tel"
+              inputMode="tel"
+              minLength={14}
+              maxLength={15}
+              autoComplete="tel"
+              placeholder="(00) 00000-0000"
+              className="input-login"
+              value={telefone}
+              onChange={(event) =>
+                setTelefone(formatarTelefoneBrasileiro(event.target.value))
+              }
             />
           </label>
         )}

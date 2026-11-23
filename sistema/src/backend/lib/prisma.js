@@ -1,3 +1,4 @@
+/** Papel do módulo: Cria e compartilha a conexão do Prisma com PostgreSQL usando a URL do ambiente. */
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";

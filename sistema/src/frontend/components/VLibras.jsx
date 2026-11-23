@@ -1,3 +1,4 @@
+/** Papel do módulo: Integra o recurso VLibras para apoiar a tradução de conteúdo da interface em Libras. */
 import { useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 const scriptId = "vlibras-plugin";

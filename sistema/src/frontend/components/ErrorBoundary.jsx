@@ -1,3 +1,4 @@
+/** Papel do módulo: Captura erros de renderização do React e exibe uma alternativa em vez de deixar a tela em branco. */
 import "./ErrorBoundary.css";
 import { Component } from "react";
 export class ErrorBoundary extends Component {

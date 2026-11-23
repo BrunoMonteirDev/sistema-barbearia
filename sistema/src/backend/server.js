@@ -1,3 +1,4 @@
+/** Papel do módulo: Carrega as variáveis de ambiente e inicia o servidor HTTP da API. */
 import dotenv from "dotenv";
 import { app } from "./app.js";
 dotenv.config();

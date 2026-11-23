@@ -1,3 +1,4 @@
+/** Papel do módulo: Implementa cancelamento, mudança de status, regras de acesso e gravação do histórico de alterações. */
 import { AgendamentoRepository } from "./agendamento.repository.js";
 import { buscarAgendamento, validarAcessoAgendamento } from "./consulta-agendamento.service.js";
 import { regrasAgendamento, respeitaAntecedencia } from "./regras-agendamento.service.js";

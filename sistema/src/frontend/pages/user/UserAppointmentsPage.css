@@ -1,3 +1,4 @@
+/* Papel do arquivo: estilos de User Appointments Page; agrupa apresentação, estados visuais e ajustes responsivos da respectiva tela ou componente. */
 .pagina-agendamentos-cliente{margin-inline:auto;max-width:48rem}
 .cabecalho-agendamentos-cliente{display:flex;flex-direction:column;justify-content:space-between;gap:.75rem;margin-bottom:1.5rem}
 .identificacao-agendamentos-cliente{color:#8c1917;font-size:.875rem;font-weight:600}

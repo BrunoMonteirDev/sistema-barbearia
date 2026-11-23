@@ -1,3 +1,4 @@
+/** Papel do módulo: Recebe as requisições de agendamento, chama os serviços de negócio e traduz resultados ou erros em respostas HTTP. */
 import { HorarioIndisponivelError } from "./bloqueio-agenda.service.js";
 import { criarAgendamento } from "./criacao-agendamento.service.js";
 import {

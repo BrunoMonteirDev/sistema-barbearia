@@ -1,3 +1,4 @@
+/** Papel do módulo: Resume indicadores e próximos atendimentos para a abertura do painel administrativo. */
 import "./DashboardPage.css";
 import { useEffect, useMemo, useState } from "react";
 import {

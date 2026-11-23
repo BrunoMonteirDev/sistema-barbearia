@@ -1,3 +1,4 @@
+/** Papel do módulo: Trata perfil, cadastro, listagem e exclusão de usuários, convertendo validações em respostas HTTP. */
 import {
   DadosUsuarioInvalidosError,
   prepararDadosUsuario,

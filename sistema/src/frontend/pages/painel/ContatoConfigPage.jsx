@@ -1,3 +1,4 @@
+/** Papel do módulo: Edita telefone, e-mail e Instagram que aparecem nos contatos públicos da barbearia. */
 import "./ContatoConfigPage.css";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -12,15 +13,17 @@ export default function ContatoConfigPage() {
   useEffect(() => {
     void api.configuracoes
       .get()
-      .then((config) =>
+      .then((config) => {
+        // Na primeira visita pode não existir registro de configuração; nesse caso, os campos começam vazios.
+        const dados = config ?? {};
         setForm({
           telefoneWhatsApp: formatarTelefoneBrasileiro(
-            config.telefoneWhatsApp ?? "",
+            dados.telefoneWhatsApp ?? "",
           ),
-          email: config.email ?? "",
-          instagram: config.instagram ?? "",
-        }),
-      )
+          email: dados.email ?? "",
+          instagram: dados.instagram ?? "",
+        });
+      })
       .catch((error) => toast.error(error.message));
   }, []);
   const save = async (event) => {

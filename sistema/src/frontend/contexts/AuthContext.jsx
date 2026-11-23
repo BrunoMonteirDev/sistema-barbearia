@@ -1,3 +1,4 @@
+/** Papel do módulo: Compartilha usuário, sessão e ações de entrar, cadastrar, atualizar perfil e sair entre páginas React. */
 import { createContext, useContext, useEffect, useState } from "react";
 import { api, authStorage } from "@/lib/api";
 const Context = createContext(undefined);
@@ -29,8 +30,8 @@ export function AuthProvider({ children }) {
     setUser(resultado.user);
     return resultado.user;
   };
-  const signUp = async (nome, email, password) => {
-    const resultado = await api.auth.register({ nome, email, password });
+  const signUp = async (nome, email, password, telefone) => {
+    const resultado = await api.auth.register({ nome, email, password, telefone });
     authStorage.set(resultado.token);
     setUser(resultado.user);
   };

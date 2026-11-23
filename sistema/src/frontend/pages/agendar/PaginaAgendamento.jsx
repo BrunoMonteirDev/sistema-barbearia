@@ -1,3 +1,4 @@
+/** Papel do módulo: Compõe as quatro etapas do agendamento público e mostra a revisão antes da confirmação. */
 import "./PaginaAgendamento.css";
 import {
   ArrowLeft,

@@ -1,3 +1,4 @@
+/** Papel do módulo: Formata telefones brasileiros com DDD para facilitar a entrada no formulário. */
 /** Formata números brasileiros com DDD, aceitando fixo (10 dígitos) e celular (11 dígitos). */
 export function formatarTelefoneBrasileiro(valor) {
   const numeros = valor.replace(/\D/g, "").slice(0, 11);

@@ -1,3 +1,4 @@
+/** Papel do módulo: Escolhe e formata os campos de usuário que podem ser enviados às respostas da API. */
 export const usuarioPublicoSelect = {
   id: true,
   nome: true,

@@ -1,3 +1,4 @@
+/* Papel do arquivo: estilos de Error Boundary; agrupa apresentação, estados visuais e ajustes responsivos da respectiva tela ou componente. */
 .pagina-falha {
   display: grid;
   min-height: 100vh;

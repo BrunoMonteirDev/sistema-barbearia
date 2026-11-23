@@ -1,3 +1,4 @@
+/** Papel do módulo: Detecta reservas possivelmente repetidas e valida a confirmação temporária do cliente. */
 import jwt from "jsonwebtoken";
 import { prisma } from "../lib/prisma.js";
 export const CONFIRMACAO_REPETICAO_EXPIRACAO_SEGUNDOS = 60;

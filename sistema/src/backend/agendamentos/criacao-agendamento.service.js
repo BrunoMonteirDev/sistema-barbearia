@@ -1,3 +1,4 @@
+/** Papel do módulo: Coordena o fluxo de reserva: valida recursos, detecta repetição, verifica disponibilidade e grava com proteção contra concorrência. */
 import { AgendamentoRepository } from "./agendamento.repository.js";
 import {
   escolherPrimeiroProfissionalDisponivel,
@@ -29,6 +30,7 @@ async function verificarRecursosDaCriacao(
   };
 }
 export async function criarAgendamento(dados) {
+  // A ordem importa: escolher o profissional, validar recursos e regras e só então gravar a reserva.
   let profissionalId = dados.profissionalId;
   if (profissionalId === "sem-preferencia") {
     const profissionalEscolhido = await escolherPrimeiroProfissionalDisponivel(
@@ -87,6 +89,7 @@ export async function criarAgendamento(dados) {
     dados.hora,
   );
   if (!horarioDisponivel) throw new HorarioIndisponivelError();
+  // A disponibilidade é conferida outra vez dentro do lock para impedir reservas simultâneas no mesmo horário.
   return executarComLockAgenda(
     profissionalId,
     dados.data,

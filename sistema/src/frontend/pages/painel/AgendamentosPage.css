@@ -1,3 +1,4 @@
+/* Papel do arquivo: estilos de Agendamentos Page; agrupa apresentação, estados visuais e ajustes responsivos da respectiva tela ou componente. */
 .cabecalho-agendamentos {
   display: flex;
   flex-direction: column;
@@ -531,4 +532,96 @@ html.acessibilidade-alto-contraste
     .titulo-dia-semana-agenda
   ) {
   border-color: #fff !important;
+}
+.aviso-whatsapp-agendamento {
+  position: fixed;
+  z-index: 1200;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  width: min(26rem, calc(100vw - 2rem));
+  padding: 1rem;
+  border: 1px solid rgb(203 213 225);
+  border-radius: 0.9rem;
+  background: rgb(255 255 255);
+  color: rgb(15 23 42);
+  box-shadow: 0 16px 42px rgb(15 23 42 / 0.24);
+}
+
+.aviso-whatsapp-cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.aviso-whatsapp-fechar {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 9999px;
+  color: rgb(71 85 105);
+  font-size: 1.4rem;
+}
+
+.aviso-whatsapp-fechar:hover {
+  background: rgb(241 245 249);
+}
+
+.aviso-whatsapp-mensagem {
+  margin-block: 0.65rem 0.9rem;
+  color: rgb(51 65 85);
+  line-height: 1.5;
+}
+
+.aviso-whatsapp-botao {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: rgb(22 163 74);
+  padding: 0.65rem 1rem;
+  color: white;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.aviso-whatsapp-botao:hover {
+  background: rgb(21 128 61);
+}
+
+.aviso-whatsapp-sem-telefone {
+  color: rgb(153 27 27);
+  font-size: 0.9rem;
+}
+
+.aviso-whatsapp-contagem {
+  height: 0.3rem;
+  margin-top: 0.9rem;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: rgb(226 232 240);
+}
+
+.aviso-whatsapp-contagem span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: rgb(22 163 74);
+  transition: width 100ms linear;
+}
+
+.aviso-whatsapp-segundos {
+  display: block;
+  margin-top: 0.35rem;
+  color: rgb(100 116 139);
+  text-align: right;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aviso-whatsapp-contagem span {
+    transition: none;
+  }
 }

@@ -1,3 +1,4 @@
+// Regras de análise estática aplicadas ao código para encontrar erros comuns e inconsistências.
 export default [
   { ignores: ["dist", "coverage", "node_modules"] },
   {
