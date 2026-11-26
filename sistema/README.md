@@ -27,7 +27,9 @@ Execute `npm test` para os testes de recuperação de senha. Os testes de integr
 
 ## Recuperação de senha por e-mail
 
-O usuário escolhe **Esqueci minha senha** no login, informa seu e-mail e recebe um link válido por 30 minutos. Ao abrir o link, informa e confirma uma nova senha. Depois da redefinição, precisa entrar novamente; as sessões anteriores deixam de funcionar.
+O usuário escolhe **Esqueci minha senha**, informa seu e-mail e recebe um código de **6 dígitos**, válido por **10 minutos**. Na mesma tela, digita o código, a nova senha e sua confirmação. É possível solicitar outro código a cada **60 segundos**; cada novo envio aceito substitui o anterior. A tela mostra a contagem regressiva para o reenvio.
+
+O código é de uso único e aceita até **5 tentativas**. Depois da redefinição, é necessário entrar novamente; as sessões anteriores deixam de funcionar. Esgotar as tentativas do código não bloqueia o login normal.
 
 ### Configuração do Mailtrap
 
@@ -35,7 +37,6 @@ Copie as variáveis de `.env.example` para seu `.env` local. As credenciais fica
 
 | Variável | Conteúdo |
 | --- | --- |
-| `APP_URL` | URL da interface, como `http://localhost:5000`; em produção, HTTPS |
 | `SMTP_HOST` | Host exibido na integração SMTP do Mailtrap |
 | `SMTP_PORT` | Porta SMTP fornecida pelo Mailtrap |
 | `SMTP_USER` | Usuário SMTP |
@@ -53,41 +54,41 @@ npm run prisma:deploy
 npm run dev
 ```
 
-Sem configuração completa, a API retorna indisponibilidade temporária e o restante da autenticação continua disponível. Uma falha SMTP não expõe a existência da conta: a resposta permanece genérica, o token que falhou é removido e o servidor registra uma mensagem sem credenciais ou link. O sucesso da solicitação não é uma confirmação de entrega; confira a caixa de entrada/Sandbox e os logs do provedor.
+Sem configuração SMTP completa, a API retorna indisponibilidade temporária e o restante da autenticação continua disponível. Uma falha SMTP mantém a resposta genérica, remove somente o código cujo envio falhou e preserva o intervalo de reenvio. O sucesso da solicitação não confirma entrega: confira a caixa de entrada/Sandbox e os logs do provedor. `APP_URL` não é mais necessária para recuperação.
 
-### Código e roteiro para explicar o fluxo
+### Funcionamento
 
-1. `src/frontend/pages/EsqueciSenhaPage.jsx` envia o e-mail para `POST /api/auth/esqueci-senha`.
-2. `src/backend/auth/recuperacao-senha.service.js` gera 32 bytes aleatórios, calcula SHA-256 e define o prazo de 30 minutos. O hash fica no banco; o token original vai no link. Um novo pedido substitui o link anterior.
-3. `src/backend/auth/email.service.js` usa Nodemailer para entregar a mensagem ao SMTP do Mailtrap com TLS. `APP_URL` determina o destino do link, sem depender de cabeçalhos enviados pelo cliente.
-4. `src/frontend/pages/RedefinirSenhaPage.jsx` lê o token do fragmento da URL (`#token=...`) e envia a nova senha com confirmação para `POST /api/auth/redefinir-senha`. O fragmento não é enviado ao servidor no GET nem no cabeçalho Referer; ele continua sendo um segredo que não deve ser compartilhado.
-5. `src/backend/auth/recuperacao-senha.repository.js` executa um UPDATE condicional: verifica token, prazo e conta ativa, grava a senha com bcrypt, apaga o token e incrementa `versaoSessao`. Somente uma requisição consegue consumir o link, inclusive sob concorrência.
-6. `src/backend/middlewares/auth.js` compara a versão do JWT com a versão atual do usuário. Assim, sessões anteriores são recusadas. A troca de senha pelo administrador também invalida links e sessões.
+1. `EsqueciSenhaPage.jsx` envia `{ email }` para `POST /api/auth/esqueci-senha`. A resposta contém uma mensagem genérica e `reenvioEmSegundos: 60`.
+2. O serviço gera seis dígitos com `crypto.randomInt`, preservando zeros à esquerda. Apenas o HMAC-SHA-256 do código vinculado ao usuário fica no banco, usando `JWT_SECRET` como chave. Alterar esse segredo invalida códigos pendentes e sessões.
+3. O repositório substitui o código com um UPDATE condicional, verificando o intervalo de 60 segundos persistido no PostgreSQL. Pedidos simultâneos, reinícios ou múltiplas instâncias não permitem enviar dois códigos nesse intervalo. O prazo de 10 minutos começa na emissão.
+4. `EmailService` envia o código e seu prazo via SMTP com TLS, sem link de redefinição.
+5. `RedefinirSenhaPage.jsx` recebe o código e envia `{ email, codigo, senha, confirmacaoSenha }` para `POST /api/auth/redefinir-senha`. O código é uma string de exatamente seis dígitos; não é colocado na URL nem no armazenamento do navegador.
+6. Uma transação contabiliza a tentativa, verifica o código e o prazo, grava a senha com bcrypt, apaga o código e incrementa `versaoSessao`. A linha fica bloqueada até o commit para garantir o limite de tentativas e o uso único sob concorrência. Após cinco tentativas incorretas, é necessário solicitar outro código.
+7. O middleware de autenticação recusa as sessões anteriores. A troca administrativa de senha também invalida a recuperação pendente e as sessões.
 
-Fala sugerida para a apresentação:
+Contas apenas Google, desativadas, inexistentes ou ambíguas recebem a mesma resposta pública, sem envio. O código de uma conta não pode redefinir outra. O limitador HTTP por e-mail permite uma solicitação por minuto, inclusive para contas inexistentes, e devolve HTTP 429 com `Retry-After` e `reenvioEmSegundos` quando excedido. Há limites adicionais de 30 solicitações e 20 redefinições por IP em 15 minutos.
 
-> O sistema gera um link temporário quando o usuário esquece a senha. O Mailtrap é responsável pelo envio do e-mail por SMTP; as regras de recuperação são executadas pelo meu backend. No banco, guardo apenas o hash do token e sua validade. Quando a pessoa define uma nova senha, o servidor verifica o link, salva a senha como hash e invalida o token em uma única operação. Isso faz com que o link seja de uso único. Depois, a pessoa precisa entrar com a nova senha, pois as sessões antigas também são invalidadas.
+Os limitadores HTTP usam memória por processo; múltiplas instâncias devem compartilhar um store para uniformizar esses limites. O intervalo de emissão e as cinco tentativas por código são persistidos no banco. Atrás de proxy, configure `trust proxy` somente para proxies confiáveis. O envio SMTP síncrono ainda pode produzir diferenças de tempo entre contas existentes e inexistentes.
 
-Contas criadas apenas com Google continuam usando o acesso Google. Contas desativadas ou endereços não cadastrados recebem a mesma resposta pública, sem envio. Cadastros antigos com variações de maiúsculas são aceitos quando há uma única conta ativa correspondente; correspondências ambíguas não geram links.
+### Atualização e validação
 
-As solicitações possuem limites de 10 por IP e 3 por e-mail em 15 minutos; a redefinição aceita até 20 tentativas por IP nesse intervalo. Os limites ficam na memória de cada processo. Para várias instâncias, configure um armazenamento compartilhado; atrás de proxy, configure `trust proxy` apenas para os proxies confiáveis da implantação. A resposta genérica reduz a exposição de contas, mas o envio SMTP síncrono pode produzir diferenças de tempo; uma implantação que exija uniformidade temporal deve usar uma fila de e-mails.
+A migration `20261126000000_recuperacao_codigo` acrescenta o horário da última solicitação e o contador de tentativas, e invalida links do fluxo antigo. Aplique-a antes de iniciar a nova versão do backend:
 
-### Validação
+```bash
+npm run prisma:generate
+npm run prisma:deploy
+```
 
-Os testes cobrem expiração, uso único, concorrência real no PostgreSQL, troca administrativa, conta desativada, login com senha nova e invalidação da sessão antiga. O transporte SMTP é substituído nos testes, portanto eles não comprovam entrega pelo Mailtrap.
+Os testes cobrem prazo de 10 minutos, fronteira exata dos 60 segundos, reenvios simultâneos, invalidação do código anterior, uso único, cinco tentativas sob concorrência, zeros à esquerda, conta incorreta, troca administrativa, login com senha nova e invalidação de sessões. O transporte SMTP é substituído nos testes; a entrega real deve ser validada no ambiente de destino.
 
-Para executar a integração, crie um banco exclusivo de testes e aplique as migrations nele. Nunca use o banco de produção:
+Para executar a integração, use um PostgreSQL exclusivo de testes com as migrations aplicadas:
 
 ```bash
 DATABASE_URL="$TEST_DATABASE_URL" npm run prisma:deploy
 npm test
 ```
 
-Depois de configurar o Mailtrap: solicite um link para uma conta local de teste, confira o remetente e a URL recebida, redefina a senha, teste o login e tente reutilizar o mesmo link. A entrega real deve ser validada com as credenciais do ambiente de destino.
-
-Verificação realizada em 23/11/2026: lint e build passaram; 14 testes passaram com PostgreSQL isolado. O fluxo de interface foi verificado no Chrome com respostas HTTP simuladas, em desktop e largura de 360 px, incluindo confirmação divergente, link incompleto, abertura de outro token na mesma aba, sucesso e retorno ao login. Não houve erros JavaScript nem rolagem horizontal no cenário móvel. O aviso global de cookies foi fechado pelo botão “Entendi” antes da interação.
-
-O axe-core não encontrou violações nos formulários de solicitação (desktop) e redefinição (desktop e celular), no escopo das regras WCAG A/AA executadas. Essa checagem não certifica conformidade completa: navegação integral por teclado, leitura com NVDA/VoiceOver e zoom de 400% ainda precisam de revisão manual. A integração SMTP real permanece pendente das credenciais.
+No navegador, confira o fluxo completo, a contagem regressiva, a possibilidade de colar o código, os erros e o retorno ao login em desktop e celular. Os campos têm rótulos, o código aceita preenchimento automático e as mensagens de resultado usam regiões de status/alerta. A revisão manual com teclado e leitor de tela continua necessária.
 
 ## Estrutura
 

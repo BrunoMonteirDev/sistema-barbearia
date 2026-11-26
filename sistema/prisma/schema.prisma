@@ -17,9 +17,11 @@ model Usuario {
   telefone        String?
   dataNascimento  DateTime?     @map("data_nascimento")
   senhaHash       String?       @map("senha_hash")
-  // O link contém o token original; somente seu hash e prazo ficam no banco.
+  // O código vai por e-mail; somente seu HMAC e prazo ficam no banco.
   recuperacaoTokenHash String?  @unique @map("recuperacao_token_hash")
   recuperacaoExpiraEm DateTime? @map("recuperacao_expira_em")
+  recuperacaoSolicitadaEm DateTime? @map("recuperacao_solicitada_em")
+  recuperacaoTentativas Int @default(0) @map("recuperacao_tentativas")
   // Incrementar esta versão invalida as sessões emitidas antes da troca de senha.
   versaoSessao    Int           @default(0) @map("versao_sessao")
   provedorAuth    String        @default("LOCAL") @map("provedor_auth")

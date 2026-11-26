@@ -1,5 +1,5 @@
 /** Traduz o resultado da recuperação em respostas HTTP, sem expor dados da conta. */
-import { MENSAGEM_RECUPERACAO, RecuperacaoSenhaError } from "./recuperacao-senha.service.js";
+import { MENSAGEM_RECUPERACAO, INTERVALO_RECUPERACAO_SEGUNDOS, RecuperacaoSenhaError } from "./recuperacao-senha.service.js";
 
 export class RecuperacaoSenhaController {
   constructor(service) {
@@ -18,7 +18,7 @@ export class RecuperacaoSenhaController {
     res.set("Cache-Control", "no-store");
     try {
       await this.service.solicitar(req.body?.email);
-      return res.json({ message: MENSAGEM_RECUPERACAO });
+      return res.json({ message: MENSAGEM_RECUPERACAO, reenvioEmSegundos: INTERVALO_RECUPERACAO_SEGUNDOS });
     } catch (error) {
       return this.responderErro(res, error);
     }

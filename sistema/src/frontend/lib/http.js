@@ -9,6 +9,7 @@ export class ApiError extends Error {
         ? data.error
         : "Não foi possível concluir a solicitação.",
     );
+    this.reenvioEmSegundos = Number.isFinite(data.reenvioEmSegundos) ? data.reenvioEmSegundos : undefined;
     this.codigo = typeof data.codigo === "string" ? data.codigo : undefined;
     this.agendamentosRelacionados = Array.isArray(data.agendamentosRelacionados)
       ? data.agendamentosRelacionados

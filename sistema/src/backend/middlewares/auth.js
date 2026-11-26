@@ -6,6 +6,7 @@ const secret = () => {
   if (!value) throw new Error("JWT_SECRET não foi configurado.");
   return value;
 };
+
 export async function authenticate(req, res, next) {
   const token = req.header("authorization")?.replace(/^Bearer\s+/i, "");
   if (!token)
@@ -41,6 +42,7 @@ export async function authenticate(req, res, next) {
     return res.status(500).json({ error: "Erro interno ao validar a sessão." });
   }
 }
+
 export function requireAdmin(req, res, next) {
   if (req.auth?.nivel !== "Administrador")
     return res.status(403).json({ error: "Acesso restrito ao administrador." });
