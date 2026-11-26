@@ -3,6 +3,7 @@
 .formulario-bloqueio-data label{display:grid;gap:.45rem;color:#1f2937;font-size:.9rem;font-weight:600}
 .formulario-bloqueio-data input{min-height:2.75rem;padding:.6rem .75rem;border:1px solid #cbd5e1;border-radius:.5rem;font:inherit}
 .formulario-bloqueio-data button{justify-self:start;min-height:2.75rem;padding:.65rem 1rem}
+.ordenacao-bloqueios-data{max-width:56rem;margin-bottom:.75rem}
 .lista-bloqueios-data{display:grid;gap:.75rem;max-width:56rem}
 .cartao-bloqueio-data{display:flex;align-items:center;gap:1rem;padding:1rem;border:1px solid #e5e7eb;border-radius:.75rem;background:#fff}
 .cartao-bloqueio-data strong{text-transform:capitalize;color:#0e3746}

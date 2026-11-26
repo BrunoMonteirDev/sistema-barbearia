@@ -1,6 +1,19 @@
 /** Papel do módulo: Renderiza os agendamentos em tabela e oferece ações contextuais para cada reserva. */
 import { CheckCircle2, Eye, XCircle } from "lucide-react";
 import { statusLabels, statusStyle } from "./agendaVisualizacao";
+import { CabecalhoOrdenavel } from "./OrdenacaoPainel";
+
+const colunas = [
+  ["cliente", "Cliente", (item) => item.usuario?.nome],
+  ["funcionario", "Funcionário", (item) => item.profissional?.nome],
+  ["servico", "Serviço", (item) => item.servico?.nome],
+  ["data", "Data", (item) => `${item.data}T${item.hora}`],
+  ["hora", "Hora", (item) => item.hora],
+  ["valor", "Valor", (item) => item.servico?.preco == null ? undefined : Number(item.servico.preco)],
+  ["status", "Status", (item) => statusLabels[item.status] ?? item.status],
+];
+const campos = Object.fromEntries(colunas.map(([campo, , selecionar]) => [campo, selecionar]));
+
 function Acao({ titulo, executar, disabled, children }) {
   return (
     <button
@@ -17,35 +30,33 @@ function Acao({ titulo, executar, disabled, children }) {
 }
 export function ListaAgendamentos({
   agendamentos,
+  ordenacaoLista: { ordenacao, alternar, ordenar },
   confirmar,
   concluir,
   visualizar,
   cancelar,
 }) {
-  const colunas = [
-    "Cliente",
-    "Funcionário",
-    "Serviço",
-    "Data",
-    "Hora",
-    "Valor",
-    "Status",
-    "Ações",
-  ];
   return (
     <div className="lista-agendamentos">
       <table className="tabela-agendamentos">
         <thead className="cabecalho-tabela-agenda">
           <tr>
-            {colunas.map((coluna) => (
-              <th key={coluna} className="titulo-coluna-agenda">
-                {coluna}
-              </th>
+            {colunas.map(([campo, titulo]) => (
+              <CabecalhoOrdenavel
+                key={campo}
+                campo={campo}
+                ordenacao={ordenacao}
+                alternar={alternar}
+                className="titulo-coluna-agenda"
+              >
+                {titulo}
+              </CabecalhoOrdenavel>
             ))}
+            <th scope="col" className="titulo-coluna-agenda">Ações</th>
           </tr>
         </thead>
         <tbody className="corpo-tabela-agenda">
-          {agendamentos.map((agendamento) => (
+          {ordenar(agendamentos, campos).map((agendamento) => (
             <tr key={agendamento.id} className="linha-tabela-agenda">
               <td className="celula-agenda cliente-agendamento">
                 {agendamento.usuario?.nome ?? "—"}
@@ -118,7 +129,7 @@ export function ListaAgendamentos({
           ))}
           {agendamentos.length === 0 && (
             <tr>
-              <td colSpan={8} className="mensagem-lista-vazia-agenda">
+              <td colSpan={colunas.length + 1} className="mensagem-lista-vazia-agenda">
                 Nenhum agendamento encontrado.
               </td>
             </tr>

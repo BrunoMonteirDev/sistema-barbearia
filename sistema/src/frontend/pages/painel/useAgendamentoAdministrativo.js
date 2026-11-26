@@ -1,7 +1,12 @@
 /** Papel do módulo: Controla o estado e as consultas de disponibilidade no assistente de agendamento administrativo. */
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { ApiError, api } from "@/lib/api";
+
+function normalizarBusca(texto) {
+  return texto.normalize("NFD").replace(/\p{Diacritic}/gu, "").trim().toLowerCase();
+}
+
 export function useAgendamentoAdministrativo({
   clientes,
   profissionais,
@@ -17,19 +22,19 @@ export function useAgendamentoAdministrativo({
   const [servicoId, setServicoId] = useState("");
   const [data, setData] = useState("");
   const [hora, setHora] = useState("");
-  const [horarios, setHorarios] = useState([]);
-  const [carregandoHorarios, setCarregandoHorarios] = useState(false);
+  const [disponibilidade, setDisponibilidade] = useState(null);
   const [salvando, setSalvando] = useState(false);
+  const salvandoRef = useRef(false);
+  const clienteCriado = useRef(null);
   const [confirmacaoRepeticao, setConfirmacaoRepeticao] = useState(null);
-  const clientesFiltrados = useMemo(
-    () =>
-      clientes.filter((cliente) =>
-        `${cliente.nome} ${cliente.telefone ?? ""}`
-          .toLowerCase()
-          .includes(busca.toLowerCase()),
-      ),
-    [busca, clientes],
-  );
+  const clientesFiltrados = useMemo(() => {
+    const texto = normalizarBusca(busca);
+    const numero = /^[\d ()+.\-]+$/.test(texto) ? texto.replace(/\D/g, "") : "";
+    return clientes.filter((cliente) =>
+      normalizarBusca(`${cliente.nome} ${cliente.telefone ?? ""}`).includes(texto) ||
+      (numero && cliente.telefone?.replace(/\D/g, "").includes(numero)),
+    );
+  }, [busca, clientes]);
   const clienteSelecionado = clientes.find(
     (cliente) => cliente.id === clienteId,
   );
@@ -52,57 +57,83 @@ export function useAgendamentoAdministrativo({
       }),
     [],
   );
+  const temConsulta = Boolean(profissionalId && servicoId && data);
+  const horarios = disponibilidade?.horarios ?? [];
+  const erroHorarios = disponibilidade?.erro ?? "";
+  const carregandoHorarios = temConsulta && disponibilidade === null;
   useEffect(() => {
-    setHora("");
-    setHorarios([]);
-    if (!profissionalId || !servicoId || !data) return;
-    setCarregandoHorarios(true);
+    if (!temConsulta) return;
+    let ignorar = false;
     api.agendamentos
       .disponibilidade(profissionalId, servicoId, data)
-      .then((resultado) => setHorarios(resultado.horarios))
-      .catch((error) =>
-        toast.error(
-          error instanceof Error
+      .then(({ horarios }) => {
+        if (!ignorar) setDisponibilidade({ horarios });
+      })
+      .catch((error) => {
+        if (ignorar) return;
+        setDisponibilidade({
+          erro: error instanceof Error
             ? error.message
             : "Não foi possível carregar os horários.",
-        ),
-      )
-      .finally(() => setCarregandoHorarios(false));
-  }, [profissionalId, servicoId, data]);
+        });
+      });
+    return () => { ignorar = true; };
+  }, [profissionalId, servicoId, data, temConsulta]);
+
+  function alterarConsulta(definir, atual, valor) {
+    if (valor === atual) return;
+    definir(valor);
+    setHora("");
+    setDisponibilidade(null);
+    setConfirmacaoRepeticao(null);
+  }
+
+  const nomeNovoCliente = novoCliente.nome.trim();
+  const telefoneNovoCliente = novoCliente.telefone.trim();
+  const telefonePreenchido = telefoneNovoCliente.replace(/\D/g, "");
+  const erroNovoCliente = !nomeNovoCliente
+    ? "Informe o nome do cliente."
+    : telefoneNovoCliente && !/^\d{10,11}$/.test(telefonePreenchido)
+      ? "Informe um telefone brasileiro válido com DDD."
+      : "";
+  const errosPorEtapa = {
+    1: criarCliente ? erroNovoCliente : !clienteSelecionado && "Selecione ou cadastre um cliente para continuar.",
+    2: !profissionalSelecionado && "Escolha um profissional para continuar.",
+    3: !servicoSelecionado && "Escolha um serviço para continuar.",
+    4: !horarios.includes(hora) && "Selecione um horário disponível para continuar.",
+  };
+  const erroEtapa = errosPorEtapa[etapa];
   const avancarEtapa = () => {
-    if (etapa === 1 && !clienteId && !(criarCliente && novoCliente.nome.trim()))
-      return toast.error("Selecione ou cadastre um cliente para continuar.");
-    if (etapa === 2 && !profissionalId)
-      return toast.error("Escolha um profissional para continuar.");
-    if (etapa === 3 && !servicoId)
-      return toast.error("Escolha um serviço para continuar.");
-    if (etapa === 4 && !hora)
-      return toast.error("Selecione um horário disponível para continuar.");
-    setEtapa((atual) => atual + 1);
+    if (erroEtapa) return toast.error(erroEtapa);
+    if (etapa < 5) setEtapa(etapa + 1);
   };
   const confirmarAgendamento = async (tokenConfirmacaoRepeticao) => {
-    if (!horarios.includes(hora) && !tokenConfirmacaoRepeticao) {
-      toast.error("Selecione um horário disponível.");
-      return;
-    }
+    if (salvandoRef.current) return;
+    const erroConfirmacao = Object.values(errosPorEtapa).find(Boolean);
+    if (erroConfirmacao) return toast.error(erroConfirmacao);
+    if (tokenConfirmacaoRepeticao && tokenConfirmacaoRepeticao !== confirmacaoRepeticao?.token) return;
+
+    salvandoRef.current = true;
     setSalvando(true);
-    let usuarioId = clienteId;
+    let reserva = confirmacaoRepeticao && tokenConfirmacaoRepeticao
+      ? confirmacaoRepeticao.snapshot
+      : { usuarioId: clienteId, profissionalId, servicoId, data, hora };
     try {
       if (criarCliente && !tokenConfirmacaoRepeticao) {
-        const cliente = await api.usuarios.create({
-          nome: novoCliente.nome.trim(),
-          telefone: novoCliente.telefone || undefined,
-          nivel: "Cliente",
-          ativo: true,
-        });
-        usuarioId = cliente.id;
+        const chave = JSON.stringify([nomeNovoCliente, telefonePreenchido]);
+        if (clienteCriado.current?.chave !== chave) {
+          const cliente = await api.usuarios.create({
+            nome: nomeNovoCliente,
+            telefone: telefoneNovoCliente || undefined,
+            nivel: "Cliente",
+            ativo: true,
+          });
+          clienteCriado.current = { chave, id: cliente.id };
+        }
+        reserva = { ...reserva, usuarioId: clienteCriado.current.id };
       }
       await api.agendamentos.create({
-        usuarioId,
-        profissionalId,
-        servicoId,
-        data,
-        hora,
+        ...reserva,
         ...(tokenConfirmacaoRepeticao ? { tokenConfirmacaoRepeticao } : {}),
       });
       toast.success("Agendamento criado.");
@@ -117,7 +148,7 @@ export function useAgendamentoAdministrativo({
         setConfirmacaoRepeticao({
           token: error.tokenConfirmacaoRepeticao,
           relacionados: error.agendamentosRelacionados ?? [],
-          snapshot: { usuarioId, profissionalId, servicoId, data, hora },
+          snapshot: reserva,
         });
         return;
       }
@@ -135,6 +166,7 @@ export function useAgendamentoAdministrativo({
           : "Não foi possível criar o agendamento.",
       );
     } finally {
+      salvandoRef.current = false;
       setSalvando(false);
     }
   };
@@ -152,6 +184,9 @@ export function useAgendamentoAdministrativo({
     hora,
     horarios,
     carregandoHorarios,
+    erroHorarios,
+    erroNovoCliente,
+    podeAvancar: !erroEtapa,
     salvando,
     confirmacaoRepeticao,
     clientesFiltrados,
@@ -162,9 +197,9 @@ export function useAgendamentoAdministrativo({
     setCriarCliente,
     setNovoCliente,
     setClienteId,
-    setProfissionalId,
-    setServicoId,
-    setData,
+    setProfissionalId: (valor) => alterarConsulta(setProfissionalId, profissionalId, valor),
+    setServicoId: (valor) => alterarConsulta(setServicoId, servicoId, valor),
+    setData: (valor) => alterarConsulta(setData, data, valor),
     setHora,
     setConfirmacaoRepeticao,
     avancarEtapa,

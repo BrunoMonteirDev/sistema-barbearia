@@ -8,6 +8,8 @@
 .mostrar-senha-recuperacao { display: flex; align-items: center; gap: 0.5rem; min-height: 2.75rem; cursor: pointer; }
 .mostrar-senha-recuperacao input { width: 1.125rem; height: 1.125rem; }
 .pagina-recuperacao [aria-disabled="true"] { cursor: progress; }
+.aviso-recuperacao { width: calc(100% - 2rem); max-height: calc(100% - 2rem); margin: auto; color: inherit; }
+.aviso-recuperacao::backdrop { background: rgb(15 23 42 / 60%); }
 /* WCAG 2.4.7: foco visível em todos os campos, botões e links destas telas. */
 .pagina-recuperacao :is(input, button, a):focus-visible,
 .link-recuperacao-login:focus-visible { outline: 3px solid #0e3746; outline-offset: 3px; }

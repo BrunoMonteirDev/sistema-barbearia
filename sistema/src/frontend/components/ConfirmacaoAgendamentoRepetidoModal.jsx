@@ -6,9 +6,11 @@ export function ConfirmacaoAgendamentoRepetidoModal({
   relacionados = [],
   onClose,
   onConfirm,
+  confirmando = false,
 }) {
   const [restante, setRestante] = useState(60);
   const [enviando, setEnviando] = useState(false);
+  const emAndamento = confirmando || enviando;
   useEffect(() => {
     const timer = window.setInterval(
       () => setRestante((atual) => Math.max(0, atual - 1)),
@@ -17,7 +19,7 @@ export function ConfirmacaoAgendamentoRepetidoModal({
     return () => window.clearInterval(timer);
   }, []);
   const confirmar = async () => {
-    if (!restante || enviando) return;
+    if (!restante || emAndamento) return;
     setEnviando(true);
     try {
       await onConfirm();
@@ -29,22 +31,24 @@ export function ConfirmacaoAgendamentoRepetidoModal({
     <Modal
       title="Confirmar novo agendamento"
       onClose={onClose}
+      closeDisabled={emAndamento}
       footer={
         <>
           <button
             type="button"
             onClick={onClose}
+            disabled={emAndamento}
             className="repeticao-botao-voltar"
           >
             Voltar
           </button>
           <button
             type="button"
-            disabled={!restante || enviando}
+            disabled={!restante || emAndamento}
             onClick={() => void confirmar()}
             className="repeticao-botao-confirmar"
           >
-            {enviando ? "Confirmando..." : "Confirmar"}
+            {emAndamento ? "Confirmando..." : "Confirmar"}
           </button>
         </>
       }

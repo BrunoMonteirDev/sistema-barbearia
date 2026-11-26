@@ -6,6 +6,15 @@ import { api } from "@/lib/api";
 import { ConfirmDialog, Modal } from "@/components/ui/modal";
 import { formatarTelefoneBrasileiro } from "@/utils/telefone";
 import { gerarSenhaForte, validarSenha } from "@/utils/senha";
+import { SelecaoOrdenacao, useOrdenacao } from "./OrdenacaoPainel";
+
+const opcoesOrdenacao = { nome: "Nome", telefone: "Telefone", email: "E-mail" };
+const camposOrdenacao = {
+  nome: (item) => item.nome,
+  telefone: (item) => item.telefone?.replace(/\D/g, ""),
+  email: (item) => item.email?.endsWith("@sem-email.local") ? undefined : item.email,
+};
+
 const emptyForm = {
   nome: "",
   email: "",
@@ -14,6 +23,7 @@ const emptyForm = {
   ativo: true,
 };
 export default function ClientesPage() {
+  const { ordenacao, definirOrdenacao, ordenar } = useOrdenacao("nome");
   const [items, setItems] = useState([]);
   const [form, setForm] = useState(emptyForm);
   const [formOpen, setFormOpen] = useState(false);
@@ -103,17 +113,19 @@ export default function ClientesPage() {
           Adicionar cliente
         </button>
       </div>
+      {items.length > 0 && (
+        <SelecaoOrdenacao ordenacao={ordenacao} definirOrdenacao={definirOrdenacao} opcoes={opcoesOrdenacao} />
+      )}
       <div className="lista-clientes">
         {items.length === 0 ? (
           <p className="mensagem-lista-clientes">Nenhum cliente cadastrado.</p>
         ) : (
-          items.map((item) => (
+          ordenar(items, camposOrdenacao).map((item) => (
             <div key={item.id} className="cartao-cliente">
-              <span>
+              <span className="identificacao-cliente">
                 <strong>{item.nome}</strong>
-                <small className="contato-cliente">
-                  {item.telefone || item.email}
-                </small>
+                {item.telefone && <small className="contato-cliente">{item.telefone}</small>}
+                {camposOrdenacao.email(item) && <small className="contato-cliente">{item.email}</small>}
               </span>
               <div className="acoes-cliente">
                 <button

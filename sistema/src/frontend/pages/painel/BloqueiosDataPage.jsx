@@ -4,12 +4,20 @@ import { useEffect, useState } from "react";
 import { CalendarOff, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { api } from "@/lib/api";
+import { SelecaoOrdenacao, useOrdenacao } from "./OrdenacaoPainel";
+
+const opcoesOrdenacao = { data: "Data", motivo: "Motivo" };
+const camposOrdenacao = {
+  data: (bloqueio) => bloqueio.data,
+  motivo: (bloqueio) => bloqueio.motivo,
+};
 
 export default function BloqueiosDataPage() {
   const [bloqueios, setBloqueios] = useState([]);
   const [data, setData] = useState("");
   const [motivo, setMotivo] = useState("");
   const [salvando, setSalvando] = useState(false);
+  const { ordenacao, definirOrdenacao, ordenar } = useOrdenacao("data");
   const carregar = () => void api.bloqueios.list().then(setBloqueios).catch((error) => toast.error(error.message));
   useEffect(() => { carregar(); }, []);
 
@@ -46,8 +54,13 @@ export default function BloqueiosDataPage() {
       <label>Motivo<input required maxLength={180} value={motivo} onChange={(event) => setMotivo(event.target.value)} placeholder="Ex.: Feriado, férias ou compromisso" /></label>
       <button disabled={salvando} className="botao-principal-agenda">{salvando ? "Salvando..." : "Bloquear data"}</button>
     </form>
+    {bloqueios.length > 0 && (
+      <div className="ordenacao-bloqueios-data">
+        <SelecaoOrdenacao ordenacao={ordenacao} definirOrdenacao={definirOrdenacao} opcoes={opcoesOrdenacao} />
+      </div>
+    )}
     <div className="lista-bloqueios-data" aria-live="polite">
-      {bloqueios.length ? bloqueios.map((item) => <article key={item.id} className="cartao-bloqueio-data">
+      {bloqueios.length ? ordenar(bloqueios, camposOrdenacao).map((item) => <article key={item.id} className="cartao-bloqueio-data">
         <span className="icone-bloqueio-data"><CalendarOff aria-hidden="true" /></span>
         <div><strong>{new Date(`${item.data}T12:00:00`).toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long", year: "numeric" })}</strong><p>{item.motivo}</p></div>
         <button type="button" aria-label={`Remover bloqueio de ${item.data}`} title="Remover bloqueio" onClick={() => void remover(item)}><Trash2 aria-hidden="true" /></button>

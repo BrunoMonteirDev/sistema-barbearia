@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { api } from "@/lib/api";
 import { ConfirmDialog, Modal } from "@/components/ui/modal";
+import { SelecaoOrdenacao, useOrdenacao } from "./OrdenacaoPainel";
 import "./ServicosAdminPage.css";
 const emptyForm = {
   nome: "",
@@ -11,6 +12,12 @@ const emptyForm = {
   duracao: "30",
   ativo: true,
 };
+const opcoesOrdenacao = { nome: "Nome", preco: "Preço", duracao: "Duração" };
+const camposOrdenacao = {
+  nome: (servico) => servico.nome,
+  preco: (servico) => Number(servico.preco),
+  duracao: (servico) => Number(servico.duracao),
+};
 export default function ServicosAdminPage() {
   const [servicos, setServicos] = useState([]);
   const [form, setForm] = useState(emptyForm);
@@ -18,6 +25,7 @@ export default function ServicosAdminPage() {
   const [servicoEmEdicao, setServicoEmEdicao] = useState(null);
   const [servicoParaDesativar, setServicoParaDesativar] = useState(null);
   const [saving, setSaving] = useState(false);
+  const { ordenacao, definirOrdenacao, ordenar } = useOrdenacao("nome");
   const carregarServicos = () => {
     void api.servicos
       .list()
@@ -103,11 +111,14 @@ export default function ServicosAdminPage() {
         </button>
       </div>
 
+      {servicos.length > 0 && (
+        <SelecaoOrdenacao ordenacao={ordenacao} definirOrdenacao={definirOrdenacao} opcoes={opcoesOrdenacao} />
+      )}
       <div className="lista-servicos">
         {servicos.length === 0 ? (
           <p className="mensagem-lista-vazia">Nenhum serviço cadastrado.</p>
         ) : (
-          servicos.map((servico) => (
+          ordenar(servicos, camposOrdenacao).map((servico) => (
             <div className="cartao-servico" key={servico.id}>
               <span className="resumo-servico">
                 <strong>{servico.nome}</strong>

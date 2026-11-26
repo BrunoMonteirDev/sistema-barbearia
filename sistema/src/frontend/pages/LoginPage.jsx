@@ -1,11 +1,12 @@
 /** Papel do módulo: Apresenta login, cadastro de cliente e entrada com Google, preservando o destino de retorno. */
 import "./LoginPage.css";
 import { useEffect, useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Check, Eye, EyeOff, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import toast from "react-hot-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { GoogleLoginButton } from "@/components/GoogleLoginButton";
+import { requisitosSenha, validarSenha } from "@/utils/senha";
 import { formatarTelefoneBrasileiro } from "@/utils/telefone";
 export function destinoAposLoginGoogle(cadastroConcluido) {
   return cadastroConcluido === false ? "/concluir-cadastro" : "/minha-conta";
@@ -34,6 +35,8 @@ export default function LoginPage() {
   }, [destinoGoogle, go, user]);
   const enviarFormulario = async (event) => {
     event.preventDefault();
+    const erroSenha = register ? validarSenha(senha) : null;
+    if (erroSenha) return toast.error(erroSenha);
     try {
       if (register) await signUp(nome, email, senha, telefone);
       else await signIn(email, senha);
@@ -133,18 +136,34 @@ export default function LoginPage() {
           <label htmlFor="senha">Senha</label>
           <div className="campo-senha-login">
             <input
-            id="senha"
-            required
-            minLength={6}
-            type={senhaVisivel ? "text" : "password"}
-            className="input-login"
-            value={senha}
-            onChange={(event) => setSenha(event.target.value)}
+              id="senha"
+              required
+              minLength={register ? 10 : 6}
+              type={senhaVisivel ? "text" : "password"}
+              className="input-login"
+              autoComplete={register ? "new-password" : "current-password"}
+              aria-describedby={register ? "requisitos-senha-cadastro" : undefined}
+              value={senha}
+              onChange={(event) => setSenha(event.target.value)}
             />
             <button type="button" className="botao-visibilidade-senha" onClick={() => setSenhaVisivel((visivel) => !visivel)} aria-label={senhaVisivel ? "Ocultar senha" : "Mostrar senha"} aria-pressed={senhaVisivel}>
               {senhaVisivel ? <EyeOff aria-hidden="true" /> : <Eye aria-hidden="true" />}
             </button>
           </div>
+          {register && (
+            <ul id="requisitos-senha-cadastro" className="requisitos-senha-cadastro" aria-label="Requisitos da senha">
+              {requisitosSenha(senha).map(({ atendido, mensagem, detalhe }) => {
+                const cumprido = Boolean(senha) && atendido;
+                const Icone = cumprido ? Check : X;
+                return (
+                  <li key={mensagem} className={cumprido ? "requisito-senha-cumprido" : "requisito-senha-pendente"}>
+                    <Icone role="img" aria-label={cumprido ? "Atendido" : "Pendente"} />
+                    <span>{mensagem}{detalhe && ` ${detalhe}`}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </div>
         <button className="botao-principal-login">
           {register ? "Cadastrar" : "Entrar"}

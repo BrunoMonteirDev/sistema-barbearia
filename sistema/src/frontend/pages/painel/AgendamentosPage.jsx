@@ -12,6 +12,7 @@ import { rotuloSemana } from "./agendaVisualizacao";
 import { FiltrosAgenda } from "./FiltrosAgenda";
 import { NovoAgendamentoWizard } from "./NovoAgendamentoWizard";
 import { useAgendaAdministrativa } from "./useAgendaAdministrativa";
+import { useOrdenacao } from "./OrdenacaoPainel";
 
 const duracaoAvisoWhatsApp = 15;
 
@@ -55,6 +56,7 @@ export default function AgendamentosPage() {
   const [avisoWhatsApp, setAvisoWhatsApp] = useState(null);
   const [segundosAviso, setSegundosAviso] = useState(duracaoAvisoWhatsApp);
   const [visualizacao, setVisualizacao] = useState("lista");
+  const ordenacaoLista = useOrdenacao("data");
 
   useEffect(() => {
     if (!avisoWhatsApp) return undefined;
@@ -135,7 +137,7 @@ export default function AgendamentosPage() {
       </div>
       {visualizacao === "agenda" && <AgendaDiaria items={filtradosPorCampo.filter((item) => item.data === dataAgenda)} profissionais={profissionais.filter((item) => !filtros.profissional || item.id === filtros.profissional)} onView={visualizar} onConfirm={(item) => void atualizarStatus(item, "CONFIRMADO")} onConclude={(item) => void atualizarStatus(item, "CONCLUIDO")} />}
       {visualizacao === "semana" && <AgendaSemanal items={filtradosPorCampo} dataReferencia={dataAgenda} onView={visualizar} onConfirm={(item) => void atualizarStatus(item, "CONFIRMADO")} onConclude={(item) => void atualizarStatus(item, "CONCLUIDO")} />}
-      {visualizacao === "lista" && <ListaAgendamentos agendamentos={filtrados} confirmar={(item) => void atualizarStatus(item, "CONFIRMADO")} concluir={(item) => void atualizarStatus(item, "CONCLUIDO")} visualizar={visualizar} cancelar={(item) => setAcaoPendente(item)} />}
+      {visualizacao === "lista" && <ListaAgendamentos agendamentos={filtrados} ordenacaoLista={ordenacaoLista} confirmar={(item) => void atualizarStatus(item, "CONFIRMADO")} concluir={(item) => void atualizarStatus(item, "CONCLUIDO")} visualizar={visualizar} cancelar={(item) => setAcaoPendente(item)} />}
       {modal === "novo" && <NovoAgendamentoWizard clientes={clientes} profissionais={profissionais} servicos={servicos} onClose={fecharModal} onCreated={() => { fecharModal(); carregarAgendamentos(); }} />}
       {modal === "visualizar" && <ModalAgendamento agendamento={selecionado} fechar={fecharModal} />}
       {acaoPendente && <ConfirmDialog title="Cancelar agendamento" message={`Deseja cancelar o agendamento de ${acaoPendente.usuario?.nome ?? "cliente"}? Para escolher outra data ou horário, será necessário criar um novo agendamento.`} confirmLabel="Cancelar agendamento" danger onConfirm={() => void confirmarAcao()} onClose={() => setAcaoPendente(null)} />}

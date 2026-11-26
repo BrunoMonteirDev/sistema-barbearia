@@ -48,6 +48,8 @@ export async function prepararCancelamento(id, autor) {
   if (agendamento.status === "CANCELADO") {
     throw new ValidacaoAgendamentoError("dadosInvalidos", "Este agendamento já está cancelado.");
   }
+  if (autor.nivel === "Administrador") return agendamento;
+
   const regras = await regrasAgendamento();
   if (!respeitaAntecedencia(agendamento.data, agendamento.hora, regras.antecedenciaCancelamentoHoras)) {
     throw new ValidacaoAgendamentoError(

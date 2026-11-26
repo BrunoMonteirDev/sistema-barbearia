@@ -29,8 +29,8 @@ Este documento registra o estado do código após a atualização funcional e fo
 - Mudança de data, horário, profissional ou serviço deixou de ser uma edição de reserva existente. Para escolher outro período, é necessário cancelar a reserva e criar outra pelo fluxo normal de horários.
 - O administrador deixou de ter formulário de edição direta, endpoint de atualização ou exclusão definitiva de agendamento. A agenda administrativa mostra detalhes e mantém ações de estado, confirmação, conclusão e cancelamento.
 - O cliente deixou de ter ação e diálogo de remarcação. Depois de cancelar, usa “Novo agendamento”.
-- Cancelamento aplica a mesma antecedência mínima de 24 horas a cliente e administrador. O administrador pode cancelar reservas de clientes, mas segue o mesmo prazo.
-- A página e as rotas administrativas de regras de negócio foram removidas. Os valores fixos são 24 horas para cancelar, aviso de 30 minutos e tolerância de atraso de zero minutos.
+- O cliente pode cancelar a própria reserva com pelo menos 24 horas de antecedência. O administrador pode cancelar reservas de clientes pelo painel a qualquer momento.
+- A página e as rotas administrativas de regras de negócio foram removidas. Os valores fixos são 24 horas para cancelamento pelo cliente, aviso de 30 minutos e tolerância de atraso de zero minutos.
 - Reservas canceladas não podem ser reativadas por mudança de status; a API mantém o cancelamento como operação própria. Os endpoints de estado não aceitam definir `CANCELADO`.
 - Os arquivos de acompanhamento do dashboard e das reservas foram retirados da integração de notificações.
 
@@ -57,7 +57,7 @@ O telefone de contato da barbearia e o link público para iniciar uma conversa c
 ### Cancelamento e alteração
 
 - O cancelamento altera o status para `CANCELADO`, grava histórico e libera os blocos ocupados para consultas futuras.
-- O prazo mínimo padrão é 24 horas. A regra vale para clientes e administradores; administradores podem atuar sobre reserva de outro usuário, mas não ignoram o prazo.
+- O prazo mínimo de 24 horas vale para cancelamentos na área do cliente. O painel administrativo permite cancelar reservas de clientes sem antecedência mínima.
 - Uma reserva existente não pode receber nova data, hora, profissional ou serviço. Cliente ou administrador cancela primeiro e cria uma nova reserva, que passa por todas as validações atuais.
 - Status de reservas canceladas é terminal na API. A agenda administrativa permite confirmar, concluir ou marcar como atrasado reservas não canceladas.
 
@@ -147,7 +147,7 @@ Outra evolução possível é um agente conversacional criado no n8n e integrado
 | Fundamentação teórica | Revisar apenas referências a teste automatizado, notificações e integrações na medida em que a implementação mudou; não atribuir ao sistema capacidades não entregues. |
 | Materiais e métodos | Retirar a execução de Vitest/Supertest como procedimento vigente; descrever análise do código, build, lint e validações manuais que forem efetivamente realizadas e documentadas na próxima etapa. |
 | Quadro de tecnologias | Substituir TypeScript por JavaScript e Vitest por ESLint/verificação sintática do build. Não chamar lint de teste funcional. |
-| Requisitos e regras de negócio | Acrescentar CRUD de bloqueios e suas regras; remover remarcação, edição de data/hora existente e notificações de WhatsApp da lista entregue. Descrever cancelamento seguido de nova reserva e prazo igual para cliente/admin. |
+| Requisitos e regras de negócio | Acrescentar CRUD de bloqueios e suas regras; remover remarcação, edição de data/hora existente e notificações de WhatsApp da lista entregue. Descrever cancelamento seguido de nova reserva e a antecedência de 24 horas aplicada ao cliente. |
 | Desenvolvimento/implementação | Atualizar telas e fluxos do cliente e painel, rotas, serviços, banco e migration de bloqueios/remoção de notificações. Explicar que a criação valida disponibilidade no servidor. |
 | Modelagem | Atualizar DER, schema e campos de `Configuracao`; registrar a unicidade de `BloqueioData.data` e remoção da persistência de notificações. |
 | Apresentação das funcionalidades | Atualizar capturas e menu do painel; substituir tela de WhatsApp por “Dias bloqueados”; conservar telefone somente como contato, se mostrado. |

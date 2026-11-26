@@ -1,71 +1,118 @@
-/* Papel do arquivo: estilos de Novo Agendamento Wizard; agrupa apresentação, estados visuais e ajustes responsivos da respectiva tela ou componente. */
 .acoes-novo-agendamento {
-  display:flex;
-  width:100%;
-  justify-content:space-between;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  width: 100%;
 }
 
-.icone-voltar-novo-agendamento {
-  margin-right:.25rem;
-  display:inline;
-  height:1rem;
-  width:1rem;
-}
-
-.icone-avancar-novo-agendamento {
-  margin-left:.25rem;
-  display:inline;
-  height:1rem;
-  width:1rem;
-}
-
-.progresso-novo-agendamento {
-  margin-bottom:1.5rem;
-}
-
-.trilho-novo-agendamento {
-  margin-top:.5rem;
-  height:.5rem;
-  background:#e2e8f0;
-}
-
-.barra-novo-agendamento {
-  height:100%;
-  background:#a51f1d;
-}
-
-.etapas-novo-agendamento {
-  margin-top:.75rem;
-  display:flex;
-  justify-content:space-between;
-  font-size:.75rem;
-  line-height:1rem;
-}
-
-.etapa-novo-agendamento { color: #475569; }
-.etapa-novo-agendamento.ativa { font-weight: 700; color: #8c1917; }
-.opcao-novo-agendamento.selecionada { border-color: #a51f1d; }
-
-.campo-novo-agendamento {
-  display: grid;
-  gap: .375rem;
-  margin-bottom: .75rem;
-  color: #334155;
+.botao-principal-novo-agendamento,
+.botao-secundario-novo-agendamento {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+  min-height: 2.75rem;
+  max-width: 100%;
+  padding: .55rem .85rem;
+  border: 1px solid transparent;
+  border-radius: .5rem;
   font-size: .875rem;
   font-weight: 600;
 }
 
+.botao-principal-novo-agendamento { margin-left: auto; background: #a51f1d; color: #fff; }
+.botao-principal-novo-agendamento:not(:disabled):hover { background: #8c1917; }
+.botao-principal-novo-agendamento:disabled { background: #e2e8f0; color: #475569; cursor: not-allowed; }
+.botao-secundario-novo-agendamento { border-color: #cbd5e1; background: #fff; color: #0e3746; }
+.botao-secundario-novo-agendamento:not(:disabled):hover { background: #f1f5f9; }
+.botao-secundario-novo-agendamento:disabled { cursor: not-allowed; }
+
+.acoes-novo-agendamento svg,
+.etapa-novo-agendamento button svg { width: 1rem; height: 1rem; flex: none; }
+
+.progresso-novo-agendamento { margin-bottom: 1.25rem; }
+.trilho-novo-agendamento { height: .5rem; margin: .45rem 0; border-radius: 999px; background: #e2e8f0; }
+.trilho-novo-agendamento span { display: block; height: 100%; border-radius: inherit; background: #a51f1d; }
+.etapas-novo-agendamento { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .25rem .65rem; list-style: none; font-size: .75rem; color: #475569; }
+.etapas-novo-agendamento [aria-current="step"] { font-weight: 700; color: #8c1917; text-decoration: underline; text-underline-offset: .2em; }
+.etapa-novo-agendamento { display: grid; gap: .75rem; }
+.etapa-novo-agendamento > button { justify-self: start; }
+.etapa-novo-agendamento h3 { font-size: 1.05rem; font-weight: 700; color: #0e3746; }
+
+.campo-novo-agendamento { display: grid; gap: .375rem; min-width: 0; color: #334155; font-size: .875rem; font-weight: 600; }
 .campo-novo-agendamento input {
   width: 100%;
-  border: 1px solid #cbd5e1;
-  border-radius: .375rem;
-  padding: .625rem .75rem;
+  min-width: 0;
+  min-height: 2.75rem;
+  border: 1px solid #94a3b8;
+  border-radius: .5rem;
+  padding: .5rem .7rem;
   color: #0f172a;
   font-weight: 400;
 }
+.campo-data-novo-agendamento { width: min(100%, 16rem); }
+.campos-cliente-novo-agendamento { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: .75rem; }
+.busca-cliente-novo-agendamento { display: flex; flex-wrap: wrap; align-items: flex-end; gap: .75rem; }
+.busca-cliente-novo-agendamento .campo-novo-agendamento { flex: 1 1 13rem; }
 
-html.acessibilidade-alto-contraste :is(.trilho-novo-agendamento, .barra-novo-agendamento) {
-  background-color: #000 !important;
+.opcoes-novo-agendamento {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+  gap: .65rem;
+  padding: .5rem;
+  list-style: none;
 }
-html.acessibilidade-alto-contraste .etapa-novo-agendamento { color: #fff !important; }
-html.acessibilidade-alto-contraste .opcao-novo-agendamento.selecionada { border-color: #fff !important; }
+.opcoes-novo-agendamento li { min-width: 0; }
+.opcao-novo-agendamento {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  width: 100%;
+  height: 100%;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.opcao-novo-agendamento,
+.dias-novo-agendamento button,
+.horarios-novo-agendamento button {
+  min-height: 2.75rem;
+  padding: .5rem .7rem;
+  border: 1px solid #cbd5e1;
+  border-radius: .5rem;
+  background: #fff;
+  color: #0f172a;
+}
+.opcao-novo-agendamento:hover,
+.dias-novo-agendamento button:hover,
+.horarios-novo-agendamento button:hover { border-color: #64748b; background: #f8fafc; }
+.etapa-novo-agendamento button[aria-pressed="true"] { border-color: #a51f1d; background: #fef2f2; color: #8c1917; box-shadow: inset 0 0 0 1px currentColor; }
+.opcao-novo-agendamento strong,
+.opcao-novo-agendamento small { display: block; }
+.opcao-novo-agendamento small { margin-top: .125rem; color: #475569; font-size: .8rem; }
+.texto-opcao-novo-agendamento { min-width: 0; }
+.opcoes-clientes-novo-agendamento small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.dias-novo-agendamento,
+.horarios-novo-agendamento { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 4.75rem), 1fr)); gap: .5rem; }
+.dias-novo-agendamento button span,
+.dias-novo-agendamento button strong { display: block; }
+.dias-novo-agendamento button span { font-size: .75rem; text-transform: capitalize; }
+.horarios-novo-agendamento button { font-variant-numeric: tabular-nums; }
+.estado-novo-agendamento,
+.erro-novo-agendamento { padding: .7rem .85rem; border-radius: .5rem; font-size: .875rem; }
+.estado-novo-agendamento { background: #f1f5f9; color: #334155; }
+.erro-novo-agendamento { background: #fef2f2; color: #991b1b; }
+
+.resumo-novo-agendamento { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: .75rem; }
+.resumo-novo-agendamento div { min-width: 0; padding: .7rem .85rem; border: 1px solid #e2e8f0; border-radius: .5rem; }
+.resumo-novo-agendamento dt { color: #475569; font-size: .8rem; }
+.resumo-novo-agendamento dd { color: #0f172a; font-weight: 600; overflow-wrap: anywhere; }
+
+html.acessibilidade-alto-contraste :is(.etapas-novo-agendamento, .etapa-novo-agendamento h3, .campo-novo-agendamento, .opcao-novo-agendamento small, .resumo-novo-agendamento dt, .resumo-novo-agendamento dd) { color: #fff !important; }
+html.acessibilidade-alto-contraste .etapas-novo-agendamento [aria-current="step"] { color: #fbbf24; }
+html.acessibilidade-alto-contraste .etapa-novo-agendamento button[aria-pressed="true"] { border-color: #fbbf24 !important; color: #fbbf24 !important; }
+html.acessibilidade-alto-contraste .trilho-novo-agendamento { background: #fff; }
+html.acessibilidade-alto-contraste .trilho-novo-agendamento span { background: #fbbf24; }

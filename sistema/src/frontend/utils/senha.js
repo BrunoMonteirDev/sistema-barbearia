@@ -29,16 +29,7 @@ export function gerarSenhaForte(tamanho = 14) {
   }
   throw new Error("Não foi possível gerar uma senha segura.");
 }
-export function validarSenha(senha) {
-  if (senha.length < 10) return "Use pelo menos 10 caracteres.";
-  if (!/[a-z]/.test(senha) || !/[A-Z]/.test(senha))
-    return "Use letras maiúsculas e minúsculas.";
-  if (!/\d/.test(senha)) return "Inclua pelo menos um número.";
-  if (!/[!@#$%*?_\-]/.test(senha))
-    return "Inclua pelo menos um caractere especial.";
-  if (/\s/.test(senha)) return "A senha não pode conter espaços.";
-  if (/(.)\1\1/.test(senha))
-    return "Evite repetir o mesmo caractere três vezes.";
+function temSequenciaNumerica(senha) {
   const numeros = "0123456789";
   const inverso = numeros.split("").reverse().join("");
   for (let indice = 0; indice <= senha.length - 3; indice++) {
@@ -47,7 +38,27 @@ export function validarSenha(senha) {
       /^\d{3}$/.test(trecho) &&
       (numeros.includes(trecho) || inverso.includes(trecho))
     )
-      return "Evite sequências numéricas, como 123.";
+      return true;
   }
-  return null;
+  return false;
+}
+
+export function requisitosSenha(senha) {
+  return [
+    { atendido: senha.length >= 10, mensagem: "Use pelo menos 10 caracteres." },
+    { atendido: /[a-z]/.test(senha) && /[A-Z]/.test(senha), mensagem: "Use letras maiúsculas e minúsculas." },
+    { atendido: /\d/.test(senha), mensagem: "Inclua pelo menos um número." },
+    {
+      atendido: [...simbolos].some((simbolo) => senha.includes(simbolo)),
+      mensagem: "Inclua pelo menos um caractere especial.",
+      detalhe: `(${[...simbolos].join(" ")})`,
+    },
+    { atendido: !/\s/.test(senha), mensagem: "A senha não pode conter espaços." },
+    { atendido: !/(.)\1\1/.test(senha), mensagem: "Evite repetir o mesmo caractere três vezes." },
+    { atendido: !temSequenciaNumerica(senha), mensagem: "Evite sequências numéricas, como 123." },
+  ];
+}
+
+export function validarSenha(senha) {
+  return requisitosSenha(senha).find(({ atendido }) => !atendido)?.mensagem ?? null;
 }

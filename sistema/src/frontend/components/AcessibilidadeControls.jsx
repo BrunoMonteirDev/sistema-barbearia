@@ -268,12 +268,13 @@ export function AcessibilidadeControls() {
           ref={botaoAbrirRef}
           type="button"
           onClick={() => setAberto((atual) => !atual)}
+          aria-label="Acessibilidade"
           aria-expanded={aberto}
           aria-controls="opcoes-acessibilidade"
           className="botao-abrir-acessibilidade"
         >
-          <Accessibility className="icone-abrir-acessibilidade" />
-          Acessibilidade
+          <span className="rotulo-abrir-acessibilidade" aria-hidden="true">Acessibilidade</span>
+          <Accessibility className="icone-abrir-acessibilidade" aria-hidden="true" />
         </button>
       </aside>
       {selecionandoLeitura && (

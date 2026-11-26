@@ -24,6 +24,7 @@ export default function RedefinirSenhaPage({ solicitacao } = {}) {
   const [erro, setErro] = useState("");
   const { signOut } = useAuth();
   const tituloRef = useRef(null);
+  const avisoRef = useRef(null);
   const envioEmCurso = useRef(false);
 
   useEffect(() => {
@@ -44,6 +45,11 @@ export default function RedefinirSenhaPage({ solicitacao } = {}) {
     tituloRef.current?.focus();
     return () => { document.title = tituloAnterior; };
   }, []);
+
+  useEffect(() => {
+    const aviso = avisoRef.current;
+    if (aviso && !aviso.open) aviso.showModal();
+  }, [solicitacao]);
 
   const salvar = async (event) => {
     event.preventDefault();
@@ -100,6 +106,22 @@ export default function RedefinirSenhaPage({ solicitacao } = {}) {
 
   return (
     <main className="pagina-login pagina-recuperacao">
+      {solicitacao && (
+        <dialog
+          ref={avisoRef}
+          className="formulario-login aviso-recuperacao"
+          aria-labelledby="titulo-aviso-recuperacao"
+          aria-describedby="texto-aviso-recuperacao"
+          onClose={() => codigoRef.current?.focus()}
+        >
+          <h2 id="titulo-aviso-recuperacao" className="titulo-login">Recuperação de senha</h2>
+          <p id="texto-aviso-recuperacao">Se você usa apenas o Google para entrar, sua conta não tem senha na barbearia e não recebe código de recuperação. Volte à tela de login e escolha “Continuar com o Google”.</p>
+          <form method="dialog">
+            <button className="botao-principal-login" type="submit">Inserir código</button>
+          </form>
+          <Link href="/login" className="link-recuperacao-login">Voltar para entrar</Link>
+        </dialog>
+      )}
       <section className="formulario-login" aria-labelledby="titulo-nova-senha">
         <Link href="/login" className="botao-voltar-login">← Voltar para entrar</Link>
         <h1 id="titulo-nova-senha" className="titulo-login" tabIndex={-1} ref={tituloRef}>Redefinir senha</h1>

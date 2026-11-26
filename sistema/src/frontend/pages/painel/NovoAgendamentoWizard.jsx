@@ -1,262 +1,246 @@
-/** Papel do módulo: Guia o administrador pela criação de uma reserva em nome de um cliente. */
+/** Guia o administrador pelas etapas de uma nova reserva. */
 import "./NovoAgendamentoWizard.css";
-import { ArrowLeft, ArrowRight, Check } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { ArrowLeft, ArrowRight, Check, Plus } from "lucide-react";
 import { Modal } from "@/components/ui/modal";
 import { ConfirmacaoAgendamentoRepetidoModal } from "@/components/ConfirmacaoAgendamentoRepetidoModal";
+import { formatarTelefoneBrasileiro } from "@/utils/telefone";
 import { useAgendamentoAdministrativo } from "./useAgendamentoAdministrativo";
+
+const etapas = ["Cliente", "Profissional", "Serviço", "Horário", "Revisão"];
+const titulos = ["Escolha o cliente", "Escolha o profissional", "Escolha o serviço", "Escolha o horário", "Revise o agendamento"];
+const moeda = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+const dataCompleta = new Intl.DateTimeFormat("pt-BR", { dateStyle: "full" });
+
 export function NovoAgendamentoWizard(props) {
   const fluxo = useAgendamentoAdministrativo(props);
-  const { etapa, setEtapa, confirmacaoRepeticao } = fluxo;
-  const nomes = ["Cliente", "Profissional", "Serviço", "Horário", "Revisão"];
+  const { etapa, setEtapa, confirmacaoRepeticao, salvando } = fluxo;
+  const etapaAnterior = useRef(etapa);
+  const tituloRef = useRef(null);
+
+  useEffect(() => {
+    if (etapaAnterior.current === etapa) return;
+    etapaAnterior.current = etapa;
+    tituloRef.current?.focus();
+  }, [etapa]);
+
   return (
     <>
       <Modal
         title="Novo agendamento"
         onClose={props.onClose}
+        closeDisabled={salvando}
         size="wide"
         footer={
           <div className="acoes-novo-agendamento">
-            {etapa === 1 ? (
-              <button type="button" onClick={props.onClose}>
-                Cancelar
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setEtapa((atual) => atual - 1)}
-              >
-                <ArrowLeft className="icone-voltar-novo-agendamento" />
-                Voltar
-              </button>
-            )}
-            {etapa < 5 ? (
-              <button type="button" onClick={fluxo.avancarEtapa}>
+            <button
+              type="button"
+              className="botao-secundario-novo-agendamento"
+              disabled={salvando}
+              onClick={etapa === 1 ? props.onClose : () => setEtapa(etapa - 1)}
+            >
+              {etapa > 1 && <ArrowLeft aria-hidden="true" />}
+              {etapa === 1 ? "Cancelar" : "Voltar"}
+            </button>
+            {etapa < etapas.length ? (
+              <button type="button" className="botao-principal-novo-agendamento" disabled={!fluxo.podeAvancar} onClick={fluxo.avancarEtapa}>
                 {etapa === 4 ? "Revisar agendamento" : "Avançar"}
-                <ArrowRight className="icone-avancar-novo-agendamento" />
+                <ArrowRight aria-hidden="true" />
               </button>
             ) : (
-              <button
-                type="button"
-                disabled={fluxo.salvando}
-                onClick={() => void fluxo.confirmarAgendamento()}
-              >
-                Confirmar agendamento
-                <Check className="icone-avancar-novo-agendamento" />
+              <button type="button" className="botao-principal-novo-agendamento" disabled={salvando} onClick={() => void fluxo.confirmarAgendamento()}>
+                {salvando ? "Salvando…" : "Confirmar agendamento"}
+                {!salvando && <Check aria-hidden="true" />}
               </button>
             )}
           </div>
         }
       >
         <div className="progresso-novo-agendamento">
-          <strong>Etapa {etapa} de 5</strong>
-          <div className="trilho-novo-agendamento">
-            <div
-              className="barra-novo-agendamento"
-              style={{ width: (etapa / 5) * 100 + "%" }}
-            />
+          <strong>Etapa {etapa} de {etapas.length}</strong>
+          <div className="trilho-novo-agendamento" role="progressbar" aria-label="Progresso do agendamento" aria-valuenow={etapa} aria-valuemax={etapas.length}>
+            <span style={{ width: `${(etapa / etapas.length) * 100}%` }} />
           </div>
-          <div className="etapas-novo-agendamento">
-            {nomes.map((nome, indice) => (
-              <span
-                key={nome}
-                className={
-                  indice + 1 <= etapa
-                    ? "etapa-novo-agendamento ativa"
-                    : "etapa-novo-agendamento"
-                }
-              >
-                {nome}
-              </span>
+          <ol className="etapas-novo-agendamento">
+            {etapas.map((nome, indice) => (
+              <li key={nome} aria-current={indice + 1 === etapa ? "step" : undefined}>{nome}</li>
             ))}
-          </div>
+          </ol>
         </div>
-        {etapa === 1 && <Cliente etapa={fluxo} />}
-        {etapa === 2 && (
-          <Opcoes
-            titulo="Escolha o profissional"
-            itens={props.profissionais
-              .filter((item) => item.ativo)
-              .map((item) => ({
-                id: item.id,
-                titulo: item.nome,
-                descricao: item.especialidade || "Profissional da barbearia",
+        <section className="etapa-novo-agendamento" aria-labelledby="titulo-etapa-novo-agendamento">
+          <h3 id="titulo-etapa-novo-agendamento" tabIndex={-1} ref={tituloRef}>
+            {etapa === 1 && fluxo.criarCliente ? "Cadastre o cliente" : titulos[etapa - 1]}
+          </h3>
+          {etapa === 1 && <Cliente fluxo={fluxo} />}
+          {etapa === 2 && (
+            <Opcoes
+              itens={props.profissionais.filter((item) => item.ativo).map((item) => ({
+                id: item.id, titulo: item.nome, descricao: item.especialidade,
               }))}
-            selecionado={fluxo.profissionalId}
-            selecionar={(id) => {
-              fluxo.setProfissionalId(id);
-              fluxo.setHora("");
-            }}
-          />
-        )}
-        {etapa === 3 && (
-          <Opcoes
-            titulo="Escolha o serviço"
-            itens={props.servicos
-              .filter((item) => item.ativo)
-              .map((item) => ({
-                id: item.id,
-                titulo: item.nome,
-                descricao:
-                  String(item.preco) + " · " + String(item.duracao) + " min",
+              vazio="Nenhum profissional ativo disponível."
+              selecionado={fluxo.profissionalId}
+              selecionar={fluxo.setProfissionalId}
+            />
+          )}
+          {etapa === 3 && (
+            <Opcoes
+              itens={props.servicos.filter((item) => item.ativo).map((item) => ({
+                id: item.id, titulo: item.nome, descricao: moeda.format(Number(item.preco)) + " · " + item.duracao + " min",
               }))}
-            selecionado={fluxo.servicoId}
-            selecionar={(id) => {
-              fluxo.setServicoId(id);
-              fluxo.setHora("");
-            }}
-          />
-        )}
-        {etapa === 4 && <Horario fluxo={fluxo} />}
-        {etapa === 5 && <Resumo fluxo={fluxo} />}
+              vazio="Nenhum serviço ativo disponível."
+              selecionado={fluxo.servicoId}
+              selecionar={fluxo.setServicoId}
+            />
+          )}
+          {etapa === 4 && <Horario fluxo={fluxo} />}
+          {etapa === 5 && <Resumo fluxo={fluxo} />}
+        </section>
       </Modal>
       {confirmacaoRepeticao && (
         <ConfirmacaoAgendamentoRepetidoModal
           relacionados={confirmacaoRepeticao.relacionados}
+          confirmando={salvando}
           onClose={() => fluxo.setConfirmacaoRepeticao(null)}
-          onConfirm={() =>
-            fluxo.confirmarAgendamento(confirmacaoRepeticao.token)
-          }
+          onConfirm={() => fluxo.confirmarAgendamento(confirmacaoRepeticao.token)}
         />
       )}
     </>
   );
 }
-function Cliente({ etapa }) {
-  return (
-    <section>
-      <h3>Escolha o cliente</h3>
-      {etapa.criarCliente ? (
-        <>
+
+function Cliente({ fluxo }) {
+  const buscaRef = useRef(null);
+  const criandoAntes = useRef(false);
+  useEffect(() => {
+    if (criandoAntes.current && !fluxo.criarCliente) buscaRef.current?.focus();
+    criandoAntes.current = fluxo.criarCliente;
+  }, [fluxo.criarCliente]);
+
+  if (fluxo.criarCliente) {
+    return (
+      <>
+        <div className="campos-cliente-novo-agendamento">
           <label className="campo-novo-agendamento">
             Nome
-            <input
-              autoFocus
-              value={etapa.novoCliente.nome}
-              onChange={(evento) =>
-                etapa.setNovoCliente((atual) => ({
-                  ...atual,
-                  nome: evento.target.value,
-                }))
-              }
-            />
+            <input autoFocus autoComplete="name" value={fluxo.novoCliente.nome}
+              onChange={(evento) => fluxo.setNovoCliente((atual) => ({ ...atual, nome: evento.target.value }))} />
           </label>
           <label className="campo-novo-agendamento">
-            Telefone
-            <input
-              value={etapa.novoCliente.telefone}
-              onChange={(evento) =>
-                etapa.setNovoCliente((atual) => ({
-                  ...atual,
-                  telefone: evento.target.value,
-                }))
-              }
-            />
+            Telefone (opcional)
+            <input type="tel" autoComplete="tel-national" placeholder="(00) 00000-0000" value={fluxo.novoCliente.telefone}
+              onChange={(evento) => fluxo.setNovoCliente((atual) => ({ ...atual, telefone: formatarTelefoneBrasileiro(evento.target.value) }))} />
           </label>
-        </>
-      ) : (
-        <>
-          <label className="campo-novo-agendamento">
-            Buscar por nome ou telefone
-            <input
-              value={etapa.busca}
-              onChange={(evento) => etapa.setBusca(evento.target.value)}
-            />
-          </label>
-          {etapa.clientesFiltrados.map((cliente) => (
-            <button
-              type="button"
-              key={cliente.id}
-              aria-pressed={etapa.clienteId === cliente.id}
-              onClick={() => etapa.setClienteId(cliente.id)}
-            >
-              {cliente.nome}
-            </button>
-          ))}
-          <button type="button" onClick={() => etapa.setCriarCliente(true)}>
-            Cadastrar novo cliente
-          </button>
-        </>
-      )}
-    </section>
-  );
-}
-function Opcoes({ titulo, itens, selecionado, selecionar }) {
-  return (
-    <section>
-      <h3>{titulo}</h3>
-      {itens.map((item) => (
-        <button
-          type="button"
-          key={item.id}
-          aria-pressed={selecionado === item.id}
-          onClick={() => selecionar(item.id)}
-          className={
-            selecionado === item.id ? "opcao-novo-agendamento selecionada" : ""
-          }
-        >
-          {item.titulo}
-          <small>{item.descricao}</small>
+        </div>
+        {fluxo.erroNovoCliente && <p className="erro-novo-agendamento" role="status">{fluxo.erroNovoCliente}</p>}
+        <button type="button" className="botao-secundario-novo-agendamento" onClick={() => fluxo.setCriarCliente(false)}>
+          <ArrowLeft aria-hidden="true" /> Voltar à lista de clientes
         </button>
-      ))}
-    </section>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <div className="busca-cliente-novo-agendamento">
+        <label className="campo-novo-agendamento">
+          Buscar por nome ou telefone
+          <input ref={buscaRef} type="search" autoComplete="off" value={fluxo.busca}
+            onChange={(evento) => fluxo.setBusca(evento.target.value)} />
+        </label>
+        <button type="button" className="botao-secundario-novo-agendamento" onClick={() => fluxo.setCriarCliente(true)}>
+          <Plus aria-hidden="true" /> Cadastrar novo cliente
+        </button>
+      </div>
+      <Opcoes
+        itens={fluxo.clientesFiltrados.map((cliente) => ({
+          id: cliente.id,
+          titulo: cliente.nome,
+          descricao: cliente.telefone ? formatarTelefoneBrasileiro(cliente.telefone) :
+            cliente.email?.endsWith("@sem-email.local") ? undefined : cliente.email,
+        }))}
+        vazio={fluxo.busca.trim() ? "Nenhum cliente encontrado para essa busca." : "Nenhum cliente cadastrado."}
+        selecionado={fluxo.clienteId}
+        selecionar={fluxo.setClienteId}
+        listaClientes
+      />
+    </>
   );
 }
+
+function Opcoes({ itens, vazio, selecionado, selecionar, listaClientes }) {
+  if (!itens.length) return <p className="estado-novo-agendamento" role="status">{vazio}</p>;
+
+  return (
+    <ul className={listaClientes ? "opcoes-novo-agendamento opcoes-clientes-novo-agendamento" : "opcoes-novo-agendamento"}>
+      {itens.map((item) => (
+        <li key={item.id}>
+          <button type="button" aria-pressed={selecionado === item.id} onClick={() => selecionar(item.id)} className="opcao-novo-agendamento">
+            <span className="texto-opcao-novo-agendamento">
+              <strong>{item.titulo}</strong>
+              {item.descricao && <small title={listaClientes ? item.descricao : undefined}>{item.descricao}</small>}
+            </span>
+            {selecionado === item.id && <Check aria-hidden="true" />}
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function Horario({ fluxo }) {
   return (
-    <section>
-      <h3>Escolha o horário</h3>
-      <label>
-        Ou escolha outra data
-        <input
-          aria-label="Ou escolha outra data"
-          type="date"
-          value={fluxo.data}
-          onChange={(evento) => fluxo.setData(evento.target.value)}
-        />
-      </label>
-      {fluxo.carregandoHorarios ? (
-        <p>Carregando horários...</p>
-      ) : fluxo.data && fluxo.horarios.length === 0 ? (
-        <p>N&atilde;o h&aacute; hor&aacute;rios dispon&iacute;veis nesta data. Escolha outra data.</p>
-      ) : (
-        fluxo.horarios.map((item) => (
-          <button
-            type="button"
-            key={item}
-            aria-pressed={fluxo.hora === item}
-            onClick={() => fluxo.setHora(item)}
-          >
-            {item}
+    <>
+      <div className="dias-novo-agendamento" role="group" aria-label="Próximos dias">
+        {fluxo.proximosDias.map((dia) => (
+          <button key={dia.valor} type="button" aria-pressed={fluxo.data === dia.valor}
+            aria-label={dataCompleta.format(new Date(dia.valor + "T12:00"))}
+            onClick={() => fluxo.setData(dia.valor)}>
+            <span>{dia.semana}</span>
+            <strong>{dia.numero}</strong>
           </button>
-        ))
-      )}
-    </section>
+        ))}
+      </div>
+      <label className="campo-novo-agendamento campo-data-novo-agendamento">
+        Data do agendamento
+        <input type="date" min={fluxo.proximosDias[0]?.valor} value={fluxo.data}
+          onChange={(evento) => fluxo.setData(evento.target.value)} />
+      </label>
+      <div aria-busy={fluxo.carregandoHorarios}>
+        {fluxo.carregandoHorarios ? (
+          <p className="estado-novo-agendamento" role="status">Carregando horários…</p>
+        ) : fluxo.erroHorarios ? (
+          <p className="erro-novo-agendamento" role="alert">{fluxo.erroHorarios}</p>
+        ) : !fluxo.data || !fluxo.horarios.length ? (
+          <p className="estado-novo-agendamento" role="status">
+            {fluxo.data ? "Nenhum horário disponível nesta data. Escolha outro dia." : "Selecione uma data para consultar os horários."}
+          </p>
+        ) : (
+          <div className="horarios-novo-agendamento" role="group" aria-label="Horários disponíveis">
+            {fluxo.horarios.map((hora) => (
+              <button type="button" key={hora} aria-pressed={fluxo.hora === hora} onClick={() => fluxo.setHora(hora)}>{hora}</button>
+            ))}
+          </div>
+        )}
+      </div>
+    </>
   );
 }
+
 function Resumo({ fluxo }) {
+  const registros = [
+    ["Cliente", fluxo.criarCliente ? fluxo.novoCliente.nome.trim() : fluxo.clienteSelecionado?.nome],
+    ["Profissional", fluxo.profissionalSelecionado?.nome],
+    ["Serviço", fluxo.servicoSelecionado?.nome],
+    ["Data", fluxo.data && dataCompleta.format(new Date(fluxo.data + "T12:00"))],
+    ["Horário", fluxo.hora],
+    ["Valor", fluxo.servicoSelecionado && moeda.format(Number(fluxo.servicoSelecionado.preco))],
+  ];
+
   return (
-    <section>
-      <h3>Revise o agendamento</h3>
-      <p>
-        Cliente:{" "}
-        <span>
-          {fluxo.criarCliente
-            ? fluxo.novoCliente.nome
-            : fluxo.clienteSelecionado?.nome}
-        </span>
-      </p>
-      <p>
-        Profissional: <span>{fluxo.profissionalSelecionado?.nome}</span>
-      </p>
-      <p>
-        Serviço: <span>{fluxo.servicoSelecionado?.nome}</span>
-      </p>
-      <p>
-        Data:{" "}
-        <span>
-          {fluxo.data} às {fluxo.hora}
-        </span>
-      </p>
-    </section>
+    <dl className="resumo-novo-agendamento">
+      {registros.map(([rotulo, valor]) => (
+        <div key={rotulo}><dt>{rotulo}</dt><dd>{valor}</dd></div>
+      ))}
+    </dl>
   );
 }

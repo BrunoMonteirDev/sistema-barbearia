@@ -4,6 +4,9 @@
   bottom: 1rem;
   right: 1rem;
   z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 .painel-acessibilidade {
   margin-bottom: 0.75rem;
@@ -96,24 +99,33 @@
 .botao-abrir-acessibilidade {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
   border-radius: 9999px;
   background-color: rgb(2 6 23);
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
+  padding: 0.75rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
   font-weight: 700;
   color: rgb(255 255 255);
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+  transition: background-color 150ms ease, box-shadow 150ms ease;
 }
-.botao-abrir-acessibilidade:hover {
-  background-color: rgb(30 41 59);
+.rotulo-abrir-acessibilidade {
+  max-inline-size: var(--largura-rotulo-acessibilidade, 0);
+  margin-inline-end: var(--espaco-rotulo-acessibilidade, 0);
+  overflow: hidden;
+  white-space: nowrap;
+  transition: max-inline-size 180ms ease, margin-inline-end 180ms ease;
+}
+.botao-abrir-acessibilidade:focus-visible {
+  --largura-rotulo-acessibilidade: 10em;
+  --espaco-rotulo-acessibilidade: 0.5rem;
+}
+@media (hover: hover) {
+  .botao-abrir-acessibilidade:hover {
+    --largura-rotulo-acessibilidade: 10em;
+    --espaco-rotulo-acessibilidade: 0.5rem;
+    background-color: rgb(30 41 59);
+  }
 }
 .botao-abrir-acessibilidade:focus {
   outline: 2px solid transparent;
@@ -121,6 +133,7 @@
   box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgb(248 113 113), 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 .icone-abrir-acessibilidade {
+  flex: none;
   height: 1.25rem;
   width: 1.25rem;
 }
